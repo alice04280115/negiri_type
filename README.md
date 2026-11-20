@@ -1,0 +1,2 @@
+# negiri_type
+
