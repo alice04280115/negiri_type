@@ -106,6 +106,10 @@ namespace Negiri.Core.Typing
                 m[unit] = list.ToArray();
             }
 
+            // 英単語（達人の商品名など）は読みがなに小文字の英字・数字をそのまま書く
+            for (var c = 'a'; c <= 'z'; c++) m[c.ToString()] = new[] { c.ToString() };
+            for (var c = '0'; c <= '9'; c++) m[c.ToString()] = new[] { c.ToString() };
+
             return m;
         }
 

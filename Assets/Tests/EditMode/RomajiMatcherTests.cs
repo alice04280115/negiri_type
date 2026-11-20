@@ -34,6 +34,11 @@ namespace Negiri.Core.Tests
         [TestCase("ぽてとちっぷす", "potetotixtupusu")]
         [TestCase("ふく", "huku")]
         [TestCase("じゃ", "zya")]
+        [TestCase("ぷれみあむmilk", "puremiamumilk")]
+        [TestCase("ふぁみりーぱっく2", "famiri-pakku2")]
+        [TestCase("ゔぃんてーじ", "vinte-ji")]
+        [TestCase("でぃなーせっと", "dhina-setto")]
+        [TestCase("ぷれみあむ milk", "puremiamu milk")]
         public void 受け付ける打ち方(string reading, string keys)
         {
             Assert.IsTrue(TypeAll(reading, keys, out _), $"{reading} を {keys} で打てるはず");
@@ -115,6 +120,7 @@ namespace Negiri.Core.Tests
         [TestCase("ぎゅうにゅうをかう", 13)]
         [TestCase("しんぶん", 7)]
         [TestCase("がっこう", 6)]
+        [TestCase("milk", 4)]
         public void 最短打鍵数(string reading, int expected)
         {
             Assert.AreEqual(expected, RomajiMatcher.ShortestKeyCount(reading));
@@ -124,6 +130,7 @@ namespace Negiri.Core.Tests
         public void 使えない文字があると例外()
         {
             Assert.Throws<System.ArgumentException>(() => new RomajiMatcher("牛乳"));
+            Assert.Throws<System.ArgumentException>(() => new RomajiMatcher("Milk")); // 英字は小文字で書く
         }
     }
 }

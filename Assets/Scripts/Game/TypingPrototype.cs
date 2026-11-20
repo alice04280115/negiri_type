@@ -18,13 +18,14 @@ namespace Negiri.Game
     {
         enum Phase { Ready, Running, Result, ImeWarning }
 
-        // 難易度ごとの打鍵速度・猶予秒・出てくる商品名の長さ（level 以下）。すべて（仮）。
-        static readonly (string label, float kps, float grace, int maxLevel)[] Difficulties =
+        // 難易度ごとの打鍵速度・猶予秒・出てくる商品名の level。すべて（仮）。
+        // level 1：かんたんな単語 / 2：漢字多め / 3：見慣れない漢字・カタカナ多め / 4：英語とサブタイトルつき
+        static readonly (string label, float kps, float grace, int level)[] Difficulties =
         {
             ("初級", 2.0f, 2.0f, 1),
             ("中級", 2.5f, 2.0f, 2),
             ("上級", 3.5f, 1.5f, 3),
-            ("達人", 5.0f, 1.0f, 3),
+            ("達人", 5.0f, 1.0f, 4),
         };
 
         // 色（ドット絵UIの仮の配色）
@@ -106,11 +107,11 @@ namespace Negiri.Game
         void NextSentence()
         {
             var pool = new List<SentenceData>();
-            var maxLevel = Difficulties[difficulty].maxLevel;
+            var level = Difficulties[difficulty].level;
             var allowed = new List<SentenceData>();
             foreach (var s in sentences.sentences)
             {
-                if (s.level <= maxLevel) allowed.Add(s);
+                if (s.level == level) allowed.Add(s);
             }
             foreach (var s in allowed)
             {
@@ -177,7 +178,7 @@ namespace Negiri.Game
         void OnTextInput(char c)
         {
             if (phase != Phase.Running) return;
-            if (c == ' ' ) return;
+            // スペースは開始キーだが、打っている最中は英語の商品名の空白として判定に回す
 
             // 英数字以外（全角文字）が来たら IME がオンになっている
             if (c > 0x7f)
@@ -226,6 +227,8 @@ namespace Negiri.Game
         {
             priceTagText.text = $"定価 {item.basePrice:N0}円";
             sentenceText.text = sentence.text;
+            // 達人のサブタイトルつきの長い商品名でも画面からはみ出さないよう、文字を小さくする
+            sentenceText.fontSize = sentence.text.Length <= 14 ? 40 : sentence.text.Length <= 22 ? 32 : 26;
             readingText.text = sentence.reading;
 
             var (typed, remaining) = session.Matcher.Guide();
@@ -237,7 +240,7 @@ namespace Negiri.Game
 
             var p = session.Preview();
             previewText.text = phase == Phase.Running
-                ? $"いまのペース\n{RankLabel(p.Rank)}  -{p.DiscountBp / 100}%\nミス {session.Matcher.MissKeys}"
+                ? $"いまのペース\n{RankLabel(p.Rank)}  -{p.DiscountBp / 100}%\n正確率 {p.Accuracy * 100:0}%　ミス {session.Matcher.MissKeys}"
                 : $"制限時間 {session.TimeLimit:0.0}秒";
 
             switch (phase)
@@ -258,7 +261,7 @@ namespace Negiri.Game
                     var after = r.Rank == Rank.Miss
                         ? "定価でお買い上げ"
                         : $"{item.basePrice:N0}円 → <b>{lastPrice:N0}円</b>（{Pricing.Saved(item.basePrice, lastPrice):N0}円おトク）";
-                    resultText.text = $"<color=#{Hex(color)}><size=44>{RankLabel(r.Rank)}</size></color>\n{after}\n<size=16>正確率 {r.Accuracy * 100:0}%　ミス {r.MissKeys}　残り時間 {r.RemainingRatio * 100:0}%</size>";
+                    resultText.text = $"<color=#{Hex(color)}><size=44>{RankLabel(r.Rank)}</size></color>\n{after}\n<size=16>正確率 {r.Accuracy * 100:0}%　ミス {r.MissKeys}　残り時間 {r.RemainingRatio * 100:0}%</size>{MissedHint(r)}";
                     messageText.text = "Enterで次の商品";
                     messageText.color = Ink;
                     break;
@@ -272,6 +275,19 @@ namespace Negiri.Game
             var avg = challenges == 0 ? 0f : discountBpSum / 100f / challenges;
             statsText.text = $"挑戦 {challenges}回　平均割引 {avg:0.0}%　PERFECT {perfects}回　節約 {savedTotal:N0}円";
             errorText.text = pendingErrors;
+        }
+
+        // 時間は足りていたのに正確率で届かなかったとき、その理由を添える
+        string MissedHint(TypingResult r)
+        {
+            var rule = TypingEvaluator.MissedByAccuracy(r, balance);
+            if (rule == null) return "";
+            string why;
+            if (r.Accuracy + 1e-5f < rule.minAccuracy)
+                why = $"正確率があと{System.Math.Ceiling((rule.minAccuracy - r.Accuracy) * 100 - 0.001):0}%あれば";
+            else
+                why = "ミスなしなら";
+            return $"\n<size=16><color=#{Hex(Warn)}>時間は{RankLabel(rule.RankValue)}に届いています。{why}{RankLabel(rule.RankValue)}でした</color></size>";
         }
 
         static string RankLabel(Rank r)
@@ -330,7 +346,7 @@ namespace Negiri.Game
             resultText = MakeText(root, "", 24, Ink, new Vector2(0.5f, 0.5f), new Vector2(0, -60), new Vector2(900, 130), TextAnchor.UpperCenter);
             resultText.rectTransform.pivot = new Vector2(0.5f, 1f);
             resultText.lineSpacing = 1.1f;
-            messageText = MakeText(root, "", 18, Quiet, new Vector2(0.5f, 0), new Vector2(0, 40), new Vector2(900, 28), TextAnchor.MiddleCenter);
+            messageText = MakeText(root, "", 18, Quiet, new Vector2(0.5f, 0), new Vector2(0, 20), new Vector2(900, 28), TextAnchor.MiddleCenter);
             errorText = MakeText(root, "", 14, Bad, new Vector2(0, 0), new Vector2(24, 80), new Vector2(600, 200), TextAnchor.LowerLeft);
         }
 

@@ -37,6 +37,32 @@ namespace Negiri.Core.Tests
         }
 
         [Test]
+        public void 時間は足りて正確率が足りないときは届かなかった評価を返す()
+        {
+            // 残り26%で GREAT の時間は満たすが、正確率84%で GOOD になった（試遊で出たケース）
+            var r = TypingEvaluator.Evaluate(true, 0.26f, 21, 4, balance);
+            Assert.AreEqual(Rank.Good, r.Rank);
+            Assert.AreEqual(Rank.Great, TypingEvaluator.MissedByAccuracy(r, balance).RankValue);
+        }
+
+        [Test]
+        public void 時間が足りないときは理由を返さない()
+        {
+            var r = TypingEvaluator.Evaluate(true, 0.10f, 20, 0, balance);
+            Assert.IsNull(TypingEvaluator.MissedByAccuracy(r, balance));
+            var perfect = TypingEvaluator.Evaluate(true, 0.50f, 20, 0, balance);
+            Assert.IsNull(TypingEvaluator.MissedByAccuracy(perfect, balance));
+        }
+
+        [Test]
+        public void ミス1回でPERFECTを逃したときはPERFECTを返す()
+        {
+            var r = TypingEvaluator.Evaluate(true, 0.50f, 30, 1, balance); // 正確率97%
+            Assert.AreEqual(Rank.Excellent, r.Rank);
+            Assert.AreEqual(Rank.Perfect, TypingEvaluator.MissedByAccuracy(r, balance).RankValue);
+        }
+
+        [Test]
         public void セッション_打ち切ると評価が出る()
         {
             var s = new TypingSession("か", balance);

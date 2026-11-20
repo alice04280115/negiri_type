@@ -71,5 +71,23 @@ namespace Negiri.Core.Typing
             }
             return new TypingResult(Rank.Good, balance.goodDiscountBp, remainingRatio, accuracy, correctKeys, missKeys);
         }
+
+        /// <summary>
+        /// 時間は足りていたのに、正確率かミスの条件で届かなかった評価のうち、いちばん近いもの。
+        /// 結果画面で「正確率があと○%でGREAT」のように理由を出すために使う。なければ null。
+        /// </summary>
+        public static RankRule MissedByAccuracy(TypingResult result, TypingBalance balance)
+        {
+            if (result.Rank == Rank.Miss) return null;
+            const float eps = 1e-5f;
+            RankRule nearest = null;
+            foreach (var rule in balance.ranks)
+            {
+                if (rule.RankValue <= result.Rank) continue;
+                if (result.RemainingRatio + eps < rule.minRemainingRatio) continue;
+                if (nearest == null || rule.RankValue < nearest.RankValue) nearest = rule;
+            }
+            return nearest;
+        }
     }
 }
