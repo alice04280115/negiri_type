@@ -5,8 +5,8 @@
       "itemIds": [
         "milk"
       ],
-      "text": "牛乳を一パック買う",
-      "reading": "ぎゅうにゅうをいっぱっくかう",
+      "text": "牛乳",
+      "reading": "ぎゅうにゅう",
       "level": 1
     },
     {
@@ -14,17 +14,17 @@
       "itemIds": [
         "milk"
       ],
-      "text": "特売の牛乳を選ぶ",
-      "reading": "とくばいのぎゅうにゅうをえらぶ",
-      "level": 1
+      "text": "北海道産牛乳",
+      "reading": "ほっかいどうさんぎゅうにゅう",
+      "level": 2
     },
     {
       "id": "s_egg_01",
       "itemIds": [
         "egg"
       ],
-      "text": "卵を一パック買う",
-      "reading": "たまごをいっぱっくかう",
+      "text": "卵",
+      "reading": "たまご",
       "level": 1
     },
     {
@@ -32,26 +32,35 @@
       "itemIds": [
         "egg"
       ],
-      "text": "お一人様一点限りの卵を買う",
-      "reading": "おひとりさまいってんかぎりのたまごをかう",
-      "level": 2
+      "text": "赤玉たまご十個入り",
+      "reading": "あかだまたまごじゅっこいり",
+      "level": 3
     },
     {
       "id": "s_bread_01",
       "itemIds": [
         "bread"
       ],
-      "text": "朝ごはんの食パンを買う",
-      "reading": "あさごはんのしょくぱんをかう",
+      "text": "食パン",
+      "reading": "しょくぱん",
       "level": 1
+    },
+    {
+      "id": "s_bread_02",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "厚切り食パン",
+      "reading": "あつぎりしょくぱん",
+      "level": 2
     },
     {
       "id": "s_rice_01",
       "itemIds": [
         "rice"
       ],
-      "text": "お米を五キロ買う",
-      "reading": "おこめをごきろかう",
+      "text": "お米",
+      "reading": "おこめ",
       "level": 1
     },
     {
@@ -59,26 +68,26 @@
       "itemIds": [
         "rice"
       ],
-      "text": "予算を確認してからお米を買う",
-      "reading": "よさんをかくにんしてからおこめをかう",
-      "level": 2
+      "text": "新潟県産コシヒカリ",
+      "reading": "にいがたけんさんこしひかり",
+      "level": 3
     },
     {
       "id": "s_pork_01",
       "itemIds": [
         "pork"
       ],
-      "text": "特売の豚肉を二百グラム買う",
-      "reading": "とくばいのぶたにくをにひゃくぐらむかう",
-      "level": 2
+      "text": "豚肉",
+      "reading": "ぶたにく",
+      "level": 1
     },
     {
       "id": "s_pork_02",
       "itemIds": [
         "pork"
       ],
-      "text": "ポイント五倍デーなので豚肉をまとめ買いする",
-      "reading": "ぽいんとごばいでーなのでぶたにくをまとめがいする",
+      "text": "国産豚こま切れ肉",
+      "reading": "こくさんぶたこまぎれにく",
       "level": 3
     },
     {
@@ -86,90 +95,180 @@
       "itemIds": [
         "cabbage"
       ],
-      "text": "キャベツを一玉買う",
-      "reading": "きゃべつをひとたまかう",
+      "text": "キャベツ",
+      "reading": "きゃべつ",
       "level": 1
+    },
+    {
+      "id": "s_cabbage_02",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "春キャベツ",
+      "reading": "はるきゃべつ",
+      "level": 2
     },
     {
       "id": "s_natto_01",
       "itemIds": [
         "natto"
       ],
-      "text": "納豆を三パック買う",
-      "reading": "なっとうをさんぱっくかう",
+      "text": "納豆",
+      "reading": "なっとう",
       "level": 1
+    },
+    {
+      "id": "s_natto_02",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "ひきわり納豆",
+      "reading": "ひきわりなっとう",
+      "level": 2
     },
     {
       "id": "s_tea_01",
       "itemIds": [
         "tea"
       ],
-      "text": "お茶のペットボトルを買う",
-      "reading": "おちゃのぺっとぼとるをかう",
+      "text": "お茶",
+      "reading": "おちゃ",
       "level": 1
+    },
+    {
+      "id": "s_tea_02",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "緑茶ペットボトル",
+      "reading": "りょくちゃぺっとぼとる",
+      "level": 2
     },
     {
       "id": "s_detergent_01",
       "itemIds": [
         "detergent"
       ],
-      "text": "洗濯用の洗剤を買う",
-      "reading": "せんたくようのせんざいをかう",
+      "text": "洗剤",
+      "reading": "せんざい",
       "level": 1
+    },
+    {
+      "id": "s_detergent_02",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "洗濯用液体洗剤",
+      "reading": "せんたくようえきたいせんざい",
+      "level": 3
     },
     {
       "id": "s_toilet_paper_01",
       "itemIds": [
         "toilet_paper"
       ],
-      "text": "トイレットペーパーを買い足す",
-      "reading": "といれっとぺーぱーをかいたす",
-      "level": 1
+      "text": "トイレットペーパー",
+      "reading": "といれっとぺーぱー",
+      "level": 2
+    },
+    {
+      "id": "s_toilet_paper_02",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "トイレットペーパー十二ロール",
+      "reading": "といれっとぺーぱーじゅうにろーる",
+      "level": 3
     },
     {
       "id": "s_shampoo_01",
       "itemIds": [
         "shampoo"
       ],
-      "text": "詰め替え用のシャンプーを買う",
-      "reading": "つめかえようのしゃんぷーをかう",
+      "text": "シャンプー",
+      "reading": "しゃんぷー",
       "level": 1
+    },
+    {
+      "id": "s_shampoo_02",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "詰め替え用シャンプー",
+      "reading": "つめかえようしゃんぷー",
+      "level": 2
     },
     {
       "id": "s_chips_01",
       "itemIds": [
         "chips"
       ],
-      "text": "ポテトチップスをひと袋買う",
-      "reading": "ぽてとちっぷすをひとふくろかう",
+      "text": "ポテトチップス",
+      "reading": "ぽてとちっぷす",
       "level": 1
+    },
+    {
+      "id": "s_chips_02",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "ポテトチップスうすしお味",
+      "reading": "ぽてとちっぷすうすしおあじ",
+      "level": 3
     },
     {
       "id": "s_chocolate_01",
       "itemIds": [
         "chocolate"
       ],
-      "text": "新作のチョコレートを買う",
-      "reading": "しんさくのちょこれーとをかう",
+      "text": "チョコレート",
+      "reading": "ちょこれーと",
       "level": 1
+    },
+    {
+      "id": "s_chocolate_02",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "期間限定チョコレート",
+      "reading": "きかんげんていちょこれーと",
+      "level": 2
     },
     {
       "id": "s_ice_01",
       "itemIds": [
         "ice"
       ],
-      "text": "今日はご褒美にアイスを買う",
-      "reading": "きょうはごほうびにあいすをかう",
+      "text": "アイス",
+      "reading": "あいす",
       "level": 1
+    },
+    {
+      "id": "s_ice_02",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "バニラアイスクリーム",
+      "reading": "ばにらあいすくりーむ",
+      "level": 2
     },
     {
       "id": "s_magazine_01",
       "itemIds": [
         "magazine"
       ],
-      "text": "毎月読んでいる雑誌を買う",
-      "reading": "まいつきよんでいるざっしをかう",
+      "text": "雑誌",
+      "reading": "ざっし",
       "level": 1
+    },
+    {
+      "id": "s_magazine_02",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "月刊ゲーム雑誌",
+      "reading": "げっかんげーむざっし",
+      "level": 2
     }
   ]
 }
