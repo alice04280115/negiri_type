@@ -1,0 +1,175 @@
+{
+  "sentences": [
+    {
+      "id": "s_milk_01",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "牛乳を一パック買う",
+      "reading": "ぎゅうにゅうをいっぱっくかう",
+      "level": 1
+    },
+    {
+      "id": "s_milk_02",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "特売の牛乳を選ぶ",
+      "reading": "とくばいのぎゅうにゅうをえらぶ",
+      "level": 1
+    },
+    {
+      "id": "s_egg_01",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "卵を一パック買う",
+      "reading": "たまごをいっぱっくかう",
+      "level": 1
+    },
+    {
+      "id": "s_egg_02",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "お一人様一点限りの卵を買う",
+      "reading": "おひとりさまいってんかぎりのたまごをかう",
+      "level": 2
+    },
+    {
+      "id": "s_bread_01",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "朝ごはんの食パンを買う",
+      "reading": "あさごはんのしょくぱんをかう",
+      "level": 1
+    },
+    {
+      "id": "s_rice_01",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "お米を五キロ買う",
+      "reading": "おこめをごきろかう",
+      "level": 1
+    },
+    {
+      "id": "s_rice_02",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "予算を確認してからお米を買う",
+      "reading": "よさんをかくにんしてからおこめをかう",
+      "level": 2
+    },
+    {
+      "id": "s_pork_01",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "特売の豚肉を二百グラム買う",
+      "reading": "とくばいのぶたにくをにひゃくぐらむかう",
+      "level": 2
+    },
+    {
+      "id": "s_pork_02",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "ポイント五倍デーなので豚肉をまとめ買いする",
+      "reading": "ぽいんとごばいでーなのでぶたにくをまとめがいする",
+      "level": 3
+    },
+    {
+      "id": "s_cabbage_01",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "キャベツを一玉買う",
+      "reading": "きゃべつをひとたまかう",
+      "level": 1
+    },
+    {
+      "id": "s_natto_01",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "納豆を三パック買う",
+      "reading": "なっとうをさんぱっくかう",
+      "level": 1
+    },
+    {
+      "id": "s_tea_01",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "お茶のペットボトルを買う",
+      "reading": "おちゃのぺっとぼとるをかう",
+      "level": 1
+    },
+    {
+      "id": "s_detergent_01",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "洗濯用の洗剤を買う",
+      "reading": "せんたくようのせんざいをかう",
+      "level": 1
+    },
+    {
+      "id": "s_toilet_paper_01",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "トイレットペーパーを買い足す",
+      "reading": "といれっとぺーぱーをかいたす",
+      "level": 1
+    },
+    {
+      "id": "s_shampoo_01",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "詰め替え用のシャンプーを買う",
+      "reading": "つめかえようのしゃんぷーをかう",
+      "level": 1
+    },
+    {
+      "id": "s_chips_01",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "ポテトチップスをひと袋買う",
+      "reading": "ぽてとちっぷすをひとふくろかう",
+      "level": 1
+    },
+    {
+      "id": "s_chocolate_01",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "新作のチョコレートを買う",
+      "reading": "しんさくのちょこれーとをかう",
+      "level": 1
+    },
+    {
+      "id": "s_ice_01",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "今日はご褒美にアイスを買う",
+      "reading": "きょうはごほうびにあいすをかう",
+      "level": 1
+    },
+    {
+      "id": "s_magazine_01",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "毎月読んでいる雑誌を買う",
+      "reading": "まいつきよんでいるざっしをかう",
+      "level": 1
+    }
+  ]
+}

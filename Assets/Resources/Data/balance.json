@@ -1,0 +1,30 @@
+{
+  "typing": {
+    "keysPerSecond": 2.5,
+    "graceSeconds": 2.0,
+    "goodDiscountBp": 500,
+    "ranks": [
+      {
+        "rank": "Perfect",
+        "minRemainingRatio": 0.45,
+        "minAccuracy": 1.0,
+        "maxMisses": 0,
+        "discountBp": 2000
+      },
+      {
+        "rank": "Excellent",
+        "minRemainingRatio": 0.45,
+        "minAccuracy": 0.95,
+        "maxMisses": -1,
+        "discountBp": 1500
+      },
+      {
+        "rank": "Great",
+        "minRemainingRatio": 0.25,
+        "minAccuracy": 0.9,
+        "maxMisses": -1,
+        "discountBp": 1000
+      }
+    ]
+  }
+}
