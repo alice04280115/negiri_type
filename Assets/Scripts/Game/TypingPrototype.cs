@@ -18,11 +18,13 @@ namespace Negiri.Game
     {
         enum Phase { Ready, Running, Result, ImeWarning }
 
-        static readonly (string label, float kps)[] Difficulties =
+        // 難易度ごとの打鍵速度・猶予秒・出てくる商品名の長さ（level 以下）。すべて（仮）。
+        static readonly (string label, float kps, float grace, int maxLevel)[] Difficulties =
         {
-            ("初級", 2.0f),
-            ("中級", 2.5f),
-            ("上級", 3.0f),
+            ("初級", 2.0f, 2.0f, 1),
+            ("中級", 2.5f, 2.0f, 2),
+            ("上級", 3.5f, 1.5f, 3),
+            ("達人", 5.0f, 1.0f, 3),
         };
 
         // 色（ドット絵UIの仮の配色）
@@ -53,7 +55,7 @@ namespace Negiri.Game
         int savedTotal;
 
         Font font;
-        Text itemText, priceTagText, sentenceText, readingText, guideText, previewText, messageText, resultText, statsText, errorText;
+        Text priceTagText, sentenceText, readingText, guideText, previewText, messageText, resultText, statsText, errorText;
         RectTransform barFill;
         Image barFillImage;
 
@@ -90,8 +92,7 @@ namespace Negiri.Game
             sentences = JsonUtility.FromJson<SentenceList>(Resources.Load<TextAsset>("Data/sentences").text);
             var balanceData = JsonUtility.FromJson<BalanceData>(Resources.Load<TextAsset>("Data/balance").text);
             balance = balanceData.typing;
-            difficulty = 1;
-            balance.keysPerSecond = Difficulties[difficulty].kps;
+            ApplyDifficulty(1);
 
             foreach (var i in items.items) itemById[i.id] = i;
 
@@ -105,11 +106,17 @@ namespace Negiri.Game
         void NextSentence()
         {
             var pool = new List<SentenceData>();
+            var maxLevel = Difficulties[difficulty].maxLevel;
+            var allowed = new List<SentenceData>();
             foreach (var s in sentences.sentences)
+            {
+                if (s.level <= maxLevel) allowed.Add(s);
+            }
+            foreach (var s in allowed)
             {
                 if (!recent.Contains(s.id)) pool.Add(s);
             }
-            if (pool.Count == 0) pool.AddRange(sentences.sentences);
+            if (pool.Count == 0) pool.AddRange(allowed);
 
             sentence = pool[Random.Range(0, pool.Count)];
             recent.Enqueue(sentence.id);
@@ -134,6 +141,7 @@ namespace Negiri.Game
                     if (kb.digit1Key.wasPressedThisFrame) SetDifficulty(0);
                     if (kb.digit2Key.wasPressedThisFrame) SetDifficulty(1);
                     if (kb.digit3Key.wasPressedThisFrame) SetDifficulty(2);
+                    if (kb.digit4Key.wasPressedThisFrame) SetDifficulty(3);
                     if (kb.spaceKey.wasPressedThisFrame)
                     {
                         session.Start();
@@ -186,9 +194,16 @@ namespace Negiri.Game
 
         void SetDifficulty(int index)
         {
+            if (index == difficulty) return;
+            ApplyDifficulty(index);
+            NextSentence();
+        }
+
+        void ApplyDifficulty(int index)
+        {
             difficulty = index;
             balance.keysPerSecond = Difficulties[index].kps;
-            session = new TypingSession(sentence.reading, balance);
+            balance.graceSeconds = Difficulties[index].grace;
         }
 
         void OnFinished()
@@ -209,7 +224,6 @@ namespace Negiri.Game
 
         void Refresh()
         {
-            itemText.text = item.name;
             priceTagText.text = $"定価 {item.basePrice:N0}円";
             sentenceText.text = sentence.text;
             readingText.text = sentence.reading;
@@ -229,7 +243,7 @@ namespace Negiri.Game
             switch (phase)
             {
                 case Phase.Ready:
-                    messageText.text = $"スペースキーで開始　（難易度：{Difficulties[difficulty].label}　1/2/3で切り替え）";
+                    messageText.text = $"スペースキーで開始　（難易度：{Difficulties[difficulty].label}　1〜4で切り替え）";
                     messageText.color = Quiet;
                     resultText.text = "";
                     break;
@@ -302,17 +316,20 @@ namespace Negiri.Game
             MakeText(root, "ネギリタイプ　段階1プロトタイプ", 16, Quiet, new Vector2(0, 1), new Vector2(24, -16), new Vector2(600, 24), TextAnchor.UpperLeft);
             statsText = MakeText(root, "", 16, Quiet, new Vector2(1, 1), new Vector2(-24, -16), new Vector2(600, 24), TextAnchor.UpperRight);
 
-            itemText = MakeText(root, "", 36, Ink, new Vector2(0.5f, 1), new Vector2(0, -70), new Vector2(700, 48), TextAnchor.MiddleCenter);
-            priceTagText = MakeText(root, "", 22, Warn, new Vector2(0.5f, 1), new Vector2(0, -112), new Vector2(700, 30), TextAnchor.MiddleCenter);
+            // 打つ文字が商品名そのものなので、上には値札だけを出す
+            priceTagText = MakeText(root, "", 26, Warn, new Vector2(0.5f, 1), new Vector2(0, -56), new Vector2(700, 34), TextAnchor.MiddleCenter);
 
-            sentenceText = MakeText(root, "", 34, Ink, new Vector2(0.5f, 0.5f), new Vector2(0, 80), new Vector2(900, 48), TextAnchor.MiddleCenter);
-            readingText = MakeText(root, "", 20, Quiet, new Vector2(0.5f, 0.5f), new Vector2(0, 40), new Vector2(900, 28), TextAnchor.MiddleCenter);
-            guideText = MakeText(root, "", 28, Ink, new Vector2(0.5f, 0.5f), new Vector2(0, 0), new Vector2(900, 40), TextAnchor.MiddleCenter);
+            sentenceText = MakeText(root, "", 40, Ink, new Vector2(0.5f, 0.5f), new Vector2(0, 100), new Vector2(900, 52), TextAnchor.MiddleCenter);
+            readingText = MakeText(root, "", 20, Quiet, new Vector2(0.5f, 0.5f), new Vector2(0, 60), new Vector2(900, 28), TextAnchor.MiddleCenter);
+            guideText = MakeText(root, "", 28, Ink, new Vector2(0.5f, 0.5f), new Vector2(0, 22), new Vector2(900, 40), TextAnchor.MiddleCenter);
 
             BuildTimeBar(root);
 
-            previewText = MakeText(root, "", 18, Ink, new Vector2(1, 0.5f), new Vector2(-24, -110), new Vector2(200, 80), TextAnchor.UpperRight);
-            resultText = MakeText(root, "", 24, Ink, new Vector2(0.5f, 0), new Vector2(0, 150), new Vector2(900, 140), TextAnchor.MiddleCenter);
+            previewText = MakeText(root, "", 18, Ink, new Vector2(1, 0.5f), new Vector2(-24, -70), new Vector2(200, 80), TextAnchor.UpperRight);
+            // 結果は時間バーと目盛りの下に置き、上の文字と重ならないようにする
+            resultText = MakeText(root, "", 24, Ink, new Vector2(0.5f, 0.5f), new Vector2(0, -60), new Vector2(900, 130), TextAnchor.UpperCenter);
+            resultText.rectTransform.pivot = new Vector2(0.5f, 1f);
+            resultText.lineSpacing = 1.1f;
             messageText = MakeText(root, "", 18, Quiet, new Vector2(0.5f, 0), new Vector2(0, 40), new Vector2(900, 28), TextAnchor.MiddleCenter);
             errorText = MakeText(root, "", 14, Bad, new Vector2(0, 0), new Vector2(24, 80), new Vector2(600, 200), TextAnchor.LowerLeft);
         }
@@ -322,7 +339,7 @@ namespace Negiri.Game
             var frame = NewRect("TimeBar", root);
             frame.anchorMin = frame.anchorMax = new Vector2(0.5f, 0.5f);
             frame.sizeDelta = new Vector2(640, 18);
-            frame.anchoredPosition = new Vector2(0, -50);
+            frame.anchoredPosition = new Vector2(0, -20);
             frame.gameObject.AddComponent<Image>().color = new Color(1, 1, 1, 0.12f);
 
             barFill = NewRect("Fill", frame);
