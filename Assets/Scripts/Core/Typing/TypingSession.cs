@@ -54,6 +54,17 @@ namespace Negiri.Core.Typing
         {
             if (State != SessionState.Running) return KeyResult.AlreadyCompleted;
             var r = Matcher.Input(key);
+            if (r == KeyResult.Miss)
+            {
+                // ミスは残り時間を減らす。使い切ったら時間切れと同じ
+                Elapsed += balance.missPenaltySeconds;
+                if (Elapsed >= TimeLimit)
+                {
+                    Elapsed = TimeLimit;
+                    Finish(false);
+                    return r;
+                }
+            }
             if (Matcher.IsCompleted) Finish(true);
             return r;
         }

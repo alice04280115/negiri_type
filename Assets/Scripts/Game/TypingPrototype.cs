@@ -18,15 +18,30 @@ namespace Negiri.Game
     {
         enum Phase { Ready, Running, Result, ImeWarning }
 
-        // 難易度ごとの打鍵速度・猶予秒・出てくる商品名の level。すべて（仮）。
-        // level 1：かんたんな単語 / 2：漢字多め / 3：見慣れない漢字・カタカナ多め / 4：英語とサブタイトルつき
-        static readonly (string label, float kps, float grace, int level)[] Difficulties =
+        /// <summary>読みがな（とローマ字の見本）の出し方。</summary>
+        enum ReadingMode
         {
-            ("初級", 2.0f, 2.0f, 1),
-            ("中級", 2.5f, 2.0f, 2),
-            ("上級", 3.5f, 1.5f, 3),
-            ("達人", 5.0f, 1.0f, 4),
+            /// <summary>常に出す。</summary>
+            Always,
+            /// <summary>Rキーで隠せる。隠しても、残り時間が EXCELLENT の線を切ると出てくる。</summary>
+            OptionalWithReveal,
+            /// <summary>Rキーで隠せる。隠したら最後まで出ない。</summary>
+            Optional,
+        }
+
+        // 難易度ごとの打鍵速度・猶予秒・出てくる商品名の level・読みがなの出し方。数値はすべて（仮）。
+        // level 1：かんたんな単語 / 2：漢字多め / 3：見慣れない漢字・カタカナ多め / 4：英語とサブタイトルつき
+        static readonly (string label, float kps, float grace, int level, ReadingMode reading)[] Difficulties =
+        {
+            ("初級", 2.0f, 2.0f, 1, ReadingMode.Always),
+            ("中級", 2.5f, 2.0f, 2, ReadingMode.Always),
+            ("上級", 3.5f, 1.5f, 3, ReadingMode.OptionalWithReveal),
+            ("達人", 5.0f, 1.0f, 4, ReadingMode.Optional),
         };
+
+        // 上級・達人で読みがなを出すかどうか（難易度ごとに覚えておく）
+        readonly bool[] readingOn = { true, true, true, true };
+        float missFlash;
 
         // 色（ドット絵UIの仮の配色）
         static readonly Color Bg = new Color32(0x1d, 0x1f, 0x3a, 0xff);
@@ -56,7 +71,7 @@ namespace Negiri.Game
         int savedTotal;
 
         Font font;
-        Text priceTagText, sentenceText, readingText, guideText, previewText, messageText, resultText, statsText, errorText;
+        Text priceTagText, sentenceText, readingText, guideText, previewText, barRankText, messageText, resultText, statsText, errorText;
         RectTransform barFill;
         Image barFillImage;
 
@@ -143,6 +158,10 @@ namespace Negiri.Game
                     if (kb.digit2Key.wasPressedThisFrame) SetDifficulty(1);
                     if (kb.digit3Key.wasPressedThisFrame) SetDifficulty(2);
                     if (kb.digit4Key.wasPressedThisFrame) SetDifficulty(3);
+                    if (kb.rKey.wasPressedThisFrame && Difficulties[difficulty].reading != ReadingMode.Always)
+                    {
+                        readingOn[difficulty] = !readingOn[difficulty];
+                    }
                     if (kb.spaceKey.wasPressedThisFrame)
                     {
                         session.Start();
@@ -157,6 +176,7 @@ namespace Negiri.Game
                         return;
                     }
                     session.Tick(Time.deltaTime);
+                    missFlash = Mathf.Max(0f, missFlash - Time.deltaTime);
                     if (session.State == SessionState.Finished) OnFinished();
                     break;
 
@@ -189,7 +209,7 @@ namespace Negiri.Game
             }
             if (char.IsControl(c)) return;
 
-            session.Input(c);
+            if (session.Input(c) == KeyResult.Miss) missFlash = 0.2f;
             if (session.State == SessionState.Finished) OnFinished();
         }
 
@@ -229,24 +249,43 @@ namespace Negiri.Game
             sentenceText.text = sentence.text;
             // 達人のサブタイトルつきの長い商品名でも画面からはみ出さないよう、文字を小さくする
             sentenceText.fontSize = sentence.text.Length <= 14 ? 40 : sentence.text.Length <= 22 ? 32 : 26;
-            readingText.text = sentence.reading;
-
             var (typed, remaining) = session.Matcher.Guide();
-            guideText.text = $"<color=#{Hex(Quiet)}>{typed}</color><color=#{Hex(Ink)}>{remaining}</color>";
+            if (ShowReading())
+            {
+                readingText.text = sentence.reading;
+                guideText.text = $"<color=#{Hex(Quiet)}>{typed}</color><color=#{Hex(Ink)}>{remaining}</color>";
+            }
+            else
+            {
+                // 読みがなを隠しているときは、打った分のローマ字だけを出す
+                readingText.text = Difficulties[difficulty].reading == ReadingMode.OptionalWithReveal
+                    ? "（読みがなは残り時間がEXCELLENTの線を切ると出ます）"
+                    : "（読みがななし）";
+                guideText.text = $"<color=#{Hex(Quiet)}>{typed}</color><color=#{Hex(Ink)}>_</color>";
+            }
 
+            // バーは実際の評価：時間で減り、ミスでも減る。色と右の文字は、いま打ち終えたときの評価
+            var p = session.Preview();
             float ratio = phase == Phase.Ready ? 1f : session.RemainingRatio;
             barFill.anchorMax = new Vector2(ratio, 1f);
-            barFillImage.color = ratio >= 0.45f ? Good : ratio >= 0.25f ? Warn : Bad;
+            barFillImage.color = missFlash > 0f ? Ink : RankColor(phase == Phase.Result ? session.Result.Value.Rank : p.Rank);
+            barRankText.text = phase == Phase.Running
+                ? $"{RankLabel(p.Rank)}  -{p.DiscountBp / 100}%"
+                : "";
+            barRankText.color = RankColor(p.Rank);
 
-            var p = session.Preview();
-            previewText.text = phase == Phase.Running
-                ? $"いまのペース\n{RankLabel(p.Rank)}  -{p.DiscountBp / 100}%\n正確率 {p.Accuracy * 100:0}%　ミス {session.Matcher.MissKeys}"
-                : $"制限時間 {session.TimeLimit:0.0}秒";
+            // 数字は右下に
+            previewText.text = phase == Phase.Ready
+                ? $"制限時間 {session.TimeLimit:0.0}秒\nミス1回で -{balance.missPenaltySeconds:0.0}秒"
+                : $"残り {session.Remaining:0.0}秒\n正確率 {session.Preview().Accuracy * 100:0}%　ミス {session.Matcher.MissKeys}";
 
             switch (phase)
             {
                 case Phase.Ready:
-                    messageText.text = $"スペースキーで開始　（難易度：{Difficulties[difficulty].label}　1〜4で切り替え）";
+                    var readingHelp = Difficulties[difficulty].reading == ReadingMode.Always
+                        ? ""
+                        : $"　読みがな：{(readingOn[difficulty] ? "あり" : "なし")}（Rで切り替え）";
+                    messageText.text = $"スペースキーで開始　（難易度：{Difficulties[difficulty].label}　1〜4で切り替え）{readingHelp}";
                     messageText.color = Quiet;
                     resultText.text = "";
                     break;
@@ -261,7 +300,7 @@ namespace Negiri.Game
                     var after = r.Rank == Rank.Miss
                         ? "定価でお買い上げ"
                         : $"{item.basePrice:N0}円 → <b>{lastPrice:N0}円</b>（{Pricing.Saved(item.basePrice, lastPrice):N0}円おトク）";
-                    resultText.text = $"<color=#{Hex(color)}><size=44>{RankLabel(r.Rank)}</size></color>\n{after}\n<size=16>正確率 {r.Accuracy * 100:0}%　ミス {r.MissKeys}　残り時間 {r.RemainingRatio * 100:0}%</size>{MissedHint(r)}";
+                    resultText.text = $"<color=#{Hex(color)}><size=44>{RankLabel(r.Rank)}</size></color>\n{after}\n<size=16>正確率 {r.Accuracy * 100:0}%　ミス {r.MissKeys}（-{r.MissKeys * balance.missPenaltySeconds:0.0}秒）　残り時間 {r.RemainingRatio * 100:0}%</size>{MissedHint(r)}";
                     messageText.text = "Enterで次の商品";
                     messageText.color = Ink;
                     break;
@@ -288,6 +327,29 @@ namespace Negiri.Game
             else
                 why = "ミスなしなら";
             return $"\n<size=16><color=#{Hex(Warn)}>時間は{RankLabel(rule.RankValue)}に届いています。{why}{RankLabel(rule.RankValue)}でした</color></size>";
+        }
+
+        bool ShowReading()
+        {
+            var mode = Difficulties[difficulty].reading;
+            if (mode == ReadingMode.Always || readingOn[difficulty]) return true;
+            if (mode == ReadingMode.Optional) return false;
+            // 上級：隠していても、EXCELLENT の線（いちばん高い時間の条件）を切ったら出す
+            if (phase == Phase.Ready) return false;
+            float line = 0f;
+            foreach (var rule in balance.ranks) line = Mathf.Max(line, rule.minRemainingRatio);
+            return session.RemainingRatio < line;
+        }
+
+        static Color RankColor(Rank r)
+        {
+            switch (r)
+            {
+                case Rank.Perfect:
+                case Rank.Excellent: return Good;
+                case Rank.Great: return Warn;
+                default: return Bad;
+            }
         }
 
         static string RankLabel(Rank r)
@@ -341,7 +403,7 @@ namespace Negiri.Game
 
             BuildTimeBar(root);
 
-            previewText = MakeText(root, "", 18, Ink, new Vector2(1, 0.5f), new Vector2(-24, -70), new Vector2(200, 80), TextAnchor.UpperRight);
+            previewText = MakeText(root, "", 18, Ink, new Vector2(1, 0), new Vector2(-24, 20), new Vector2(260, 50), TextAnchor.LowerRight);
             // 結果は時間バーと目盛りの下に置き、上の文字と重ならないようにする
             resultText = MakeText(root, "", 24, Ink, new Vector2(0.5f, 0.5f), new Vector2(0, -60), new Vector2(900, 130), TextAnchor.UpperCenter);
             resultText.rectTransform.pivot = new Vector2(0.5f, 1f);
@@ -363,6 +425,9 @@ namespace Negiri.Game
             barFill.anchorMax = Vector2.one;
             barFill.offsetMin = barFill.offsetMax = Vector2.zero;
             barFillImage = barFill.gameObject.AddComponent<Image>();
+
+            barRankText = MakeText(frame, "", 18, Ink, new Vector2(1, 0.5f), new Vector2(12, 0), new Vector2(180, 24), TextAnchor.MiddleLeft);
+            barRankText.rectTransform.pivot = new Vector2(0, 0.5f);
 
             // 評価の境目（残り45%と25%）に目盛りを入れる
             AddMarker(frame, 0.45f, "EXCELLENT");

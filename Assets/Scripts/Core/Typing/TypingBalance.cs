@@ -16,6 +16,9 @@ namespace Negiri.Core.Typing
         /// <summary>問題文を読むための余裕時間（秒）。</summary>
         public float graceSeconds = 2.0f;
 
+        /// <summary>ミス1回ごとに減る残り時間（秒）。評価は残り時間だけで決まるので、ミスはここで効く。</summary>
+        public float missPenaltySeconds = 0.5f;
+
         /// <summary>上の評価から順に並べる。どれにも当てはまらなければ GOOD（打ち切れた場合）。</summary>
         public List<RankRule> ranks = DefaultRanks();
 
@@ -26,9 +29,10 @@ namespace Negiri.Core.Typing
         {
             return new List<RankRule>
             {
-                new RankRule { rank = "Perfect", minRemainingRatio = 0.45f, minAccuracy = 1.0f, maxMisses = 0, discountBp = 2000 },
-                new RankRule { rank = "Excellent", minRemainingRatio = 0.45f, minAccuracy = 0.95f, maxMisses = -1, discountBp = 1500 },
-                new RankRule { rank = "Great", minRemainingRatio = 0.25f, minAccuracy = 0.90f, maxMisses = -1, discountBp = 1000 },
+                // 正確率の条件は使わない（ミスは残り時間を減らすことで評価に効く）。PERFECT だけはミス0が条件。
+                new RankRule { rank = "Perfect", minRemainingRatio = 0.45f, minAccuracy = 0f, maxMisses = 0, discountBp = 2000 },
+                new RankRule { rank = "Excellent", minRemainingRatio = 0.45f, minAccuracy = 0f, maxMisses = -1, discountBp = 1500 },
+                new RankRule { rank = "Great", minRemainingRatio = 0.25f, minAccuracy = 0f, maxMisses = -1, discountBp = 1000 },
             };
         }
     }

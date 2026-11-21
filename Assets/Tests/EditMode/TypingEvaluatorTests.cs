@@ -23,10 +23,10 @@ namespace Negiri.Core.Tests
 
         // 残り時間率, 正しい打鍵, ミス, 期待する評価, 期待する割引
         [TestCase(0.10f, 20, 0, Rank.Good, 500)]
-        [TestCase(0.30f, 23, 2, Rank.Great, 1000)]     // 正確率 92%
-        [TestCase(0.50f, 24, 1, Rank.Excellent, 1500)] // 正確率 96%
+        [TestCase(0.30f, 23, 2, Rank.Great, 1000)]
+        [TestCase(0.50f, 24, 1, Rank.Excellent, 1500)] // ミスがあると PERFECT にはならない
         [TestCase(0.50f, 20, 0, Rank.Perfect, 2000)]
-        [TestCase(0.50f, 17, 3, Rank.Good, 500)]       // 正確率 85%：速くても正確率不足
+        [TestCase(0.50f, 17, 3, Rank.Excellent, 1500)] // 正確率は問わない（ミスは残り時間で効く）
         [TestCase(0.25f, 20, 0, Rank.Great, 1000)]     // 境目ちょうどは上の評価
         [TestCase(0.45f, 20, 0, Rank.Perfect, 2000)]   // 境目ちょうどは上の評価
         public void 評価と割引(float remaining, int correct, int miss, Rank rank, int bp)
@@ -37,12 +37,14 @@ namespace Negiri.Core.Tests
         }
 
         [Test]
-        public void 時間は足りて正確率が足りないときは届かなかった評価を返す()
+        public void 正確率の条件を使う設定でも動く()
         {
-            // 残り26%で GREAT の時間は満たすが、正確率84%で GOOD になった（試遊で出たケース）
-            var r = TypingEvaluator.Evaluate(true, 0.26f, 21, 4, balance);
+            // balance.json で正確率の条件を戻した場合：残り26%でも正確率84%なら GOOD、届かなかったのは GREAT
+            var strict = new TypingBalance();
+            strict.ranks[2].minAccuracy = 0.9f;
+            var r = TypingEvaluator.Evaluate(true, 0.26f, 21, 4, strict);
             Assert.AreEqual(Rank.Good, r.Rank);
-            Assert.AreEqual(Rank.Great, TypingEvaluator.MissedByAccuracy(r, balance).RankValue);
+            Assert.AreEqual(Rank.Great, TypingEvaluator.MissedByAccuracy(r, strict).RankValue);
         }
 
         [Test]
@@ -74,6 +76,29 @@ namespace Negiri.Core.Tests
             Assert.AreEqual(SessionState.Finished, s.State);
             Assert.IsTrue(s.Result.HasValue);
             Assert.AreEqual(Rank.Perfect, s.Result.Value.Rank);
+        }
+
+        [Test]
+        public void セッション_ミスで残り時間が減る()
+        {
+            var s = new TypingSession("かい", balance);
+            s.Start();
+            var before = s.Remaining;
+            Assert.AreEqual(KeyResult.Miss, s.Input('x'));
+            Assert.AreEqual(before - balance.missPenaltySeconds, s.Remaining, 1e-4f);
+            Assert.AreEqual(KeyResult.Correct, s.Input('k')); // 正しい打鍵では減らない
+            Assert.AreEqual(before - balance.missPenaltySeconds, s.Remaining, 1e-4f);
+        }
+
+        [Test]
+        public void セッション_ミスで時間を使い切るとMISS()
+        {
+            var s = new TypingSession("か", balance);
+            s.Start();
+            s.Tick(s.TimeLimit - 0.1f);
+            s.Input('x');
+            Assert.AreEqual(SessionState.Finished, s.State);
+            Assert.AreEqual(Rank.Miss, s.Result.Value.Rank);
         }
 
         [Test]
