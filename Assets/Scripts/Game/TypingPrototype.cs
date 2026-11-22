@@ -29,14 +29,14 @@ namespace Negiri.Game
             Optional,
         }
 
-        // 難易度ごとの打鍵速度・猶予秒・出てくる商品名の level・読みがなの出し方。数値はすべて（仮）。
+        // 難易度ごとの打鍵速度・猶予秒・ミス1回で減る秒・出てくる商品名の level・読みがなの出し方。数値はすべて（仮）。
         // level 1：かんたんな単語 / 2：漢字多め / 3：見慣れない漢字・カタカナ多め / 4：英語とサブタイトルつき
-        static readonly (string label, float kps, float grace, int level, ReadingMode reading)[] Difficulties =
+        static readonly (string label, float kps, float grace, float missPenalty, int level, ReadingMode reading)[] Difficulties =
         {
-            ("初級", 2.0f, 2.0f, 1, ReadingMode.Always),
-            ("中級", 2.5f, 2.0f, 2, ReadingMode.Always),
-            ("上級", 3.5f, 1.5f, 3, ReadingMode.OptionalWithReveal),
-            ("達人", 5.0f, 1.0f, 4, ReadingMode.Optional),
+            ("初級", 2.0f, 2.0f, 0.5f, 1, ReadingMode.Always),
+            ("中級", 2.5f, 2.0f, 0.5f, 2, ReadingMode.Always),
+            ("上級", 3.5f, 1.5f, 1.0f, 3, ReadingMode.OptionalWithReveal),
+            ("達人", 5.0f, 1.0f, 2.0f, 4, ReadingMode.Optional),
         };
 
         // 上級・達人で読みがなを出すかどうか（難易度ごとに覚えておく）
@@ -225,6 +225,7 @@ namespace Negiri.Game
             difficulty = index;
             balance.keysPerSecond = Difficulties[index].kps;
             balance.graceSeconds = Difficulties[index].grace;
+            balance.missPenaltySeconds = Difficulties[index].missPenalty;
         }
 
         void OnFinished()
