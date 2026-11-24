@@ -1,0 +1,139 @@
+{
+  "items": [
+    {
+      "id": "milk",
+      "name": "牛乳",
+      "category": "food",
+      "kind": "essential",
+      "basePrice": 238,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "egg",
+      "name": "卵",
+      "category": "food",
+      "kind": "essential",
+      "basePrice": 248,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "bread",
+      "name": "食パン",
+      "category": "food",
+      "kind": "essential",
+      "basePrice": 158,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "rice",
+      "name": "お米",
+      "category": "food",
+      "kind": "essential",
+      "basePrice": 2480,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "pork",
+      "name": "豚肉",
+      "category": "food",
+      "kind": "essential",
+      "basePrice": 398,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "cabbage",
+      "name": "キャベツ",
+      "category": "food",
+      "kind": "essential",
+      "basePrice": 198,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "natto",
+      "name": "納豆",
+      "category": "food",
+      "kind": "essential",
+      "basePrice": 98,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "tea",
+      "name": "お茶",
+      "category": "drink",
+      "kind": "essential",
+      "basePrice": 158,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "detergent",
+      "name": "洗剤",
+      "category": "daily",
+      "kind": "essential",
+      "basePrice": 328,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "toilet_paper",
+      "name": "トイレットペーパー",
+      "category": "daily",
+      "kind": "essential",
+      "basePrice": 398,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "shampoo",
+      "name": "シャンプー",
+      "category": "daily",
+      "kind": "essential",
+      "basePrice": 498,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "chips",
+      "name": "ポテトチップス",
+      "category": "snack",
+      "kind": "free",
+      "basePrice": 148,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "chocolate",
+      "name": "チョコレート",
+      "category": "snack",
+      "kind": "free",
+      "basePrice": 198,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "ice",
+      "name": "アイス",
+      "category": "snack",
+      "kind": "free",
+      "basePrice": 128,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    },
+    {
+      "id": "magazine",
+      "name": "雑誌",
+      "category": "hobby",
+      "kind": "free",
+      "basePrice": 690,
+      "maxDiscountBp": 5000,
+      "typingLevel": 1
+    }
+  ]
+}
