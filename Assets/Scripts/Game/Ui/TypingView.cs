@@ -11,13 +11,14 @@ namespace Negiri.Game.Ui
     /// </summary>
     public sealed class TypingView
     {
-        readonly Text sentenceText, readingText, guideText, barRankText, previewText;
+        readonly Text sentenceText, readingText, guideText, barRankText, previewText, ruleText;
         readonly RectTransform barFill;
         readonly Image barFillImage;
 
         public TypingView(RectTransform root)
         {
             sentenceText = UiFactory.MakeText(root, "", 40, UiFactory.Ink, new Vector2(0.5f, 0.5f), new Vector2(0, 100), new Vector2(900, 52), TextAnchor.MiddleCenter);
+            ruleText = UiFactory.MakeText(root, "", 15, UiFactory.Quiet, new Vector2(0.5f, 0.5f), new Vector2(0, 142), new Vector2(900, 20), TextAnchor.MiddleCenter);
             readingText = UiFactory.MakeText(root, "", 20, UiFactory.Quiet, new Vector2(0.5f, 0.5f), new Vector2(0, 60), new Vector2(900, 28), TextAnchor.MiddleCenter);
             guideText = UiFactory.MakeText(root, "", 28, UiFactory.Ink, new Vector2(0.5f, 0.5f), new Vector2(0, 22), new Vector2(900, 40), TextAnchor.MiddleCenter);
 
@@ -64,6 +65,7 @@ namespace Negiri.Game.Ui
             bool finished = session.State == SessionState.Finished;
 
             sentenceText.text = sentence.text;
+            ruleText.text = TypingRuleHint(sentence.text);
             // 達人のサブタイトルつきの長い商品名でも画面からはみ出さないよう、文字を小さくする
             sentenceText.fontSize = sentence.text.Length <= 14 ? 40 : sentence.text.Length <= 22 ? 32 : 26;
             var (typed, remaining) = session.Matcher.Guide();
@@ -92,6 +94,24 @@ namespace Negiri.Game.Ui
             previewText.text = ready
                 ? $"制限時間 {session.TimeLimit:0.0}秒\nミス1回で -{balance.missPenaltySeconds:0.0}秒"
                 : $"残り {session.Remaining:0.0}秒\n正確率 {p.Accuracy * 100:0}%　ミス {session.Matcher.MissKeys}";
+        }
+
+        /// <summary>
+        /// 商品名にスペース・記号・英字があるとき、打たなくていいものを案内する。
+        /// 読みがなはひらがなと小文字の英字だけなので、スペースと記号は打たない。英字は Shift なしでよい。
+        /// </summary>
+        public static string TypingRuleHint(string text)
+        {
+            bool symbol = false, letter = false;
+            foreach (var ch in text ?? "")
+            {
+                if (ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') letter = true;
+                else if (ch == ' ' || ch == '　' || ch == '～' || ch == '・' || ch == '！' || ch == '？' || ch == '「' || ch == '」') symbol = true;
+            }
+            if (symbol && letter) return "スペースと記号（～ など）は打ちません。英字は小文字のまま打てばOK";
+            if (symbol) return "スペースと記号（～ など）は打ちません";
+            if (letter) return "英字は小文字のまま打てばOK";
+            return "";
         }
 
         static bool ShowReading(TypingSession session, DifficultyDef difficulty, bool readingOn, TypingBalance balance)

@@ -41,10 +41,20 @@ namespace Negiri.Game
             return JsonUtility.FromJson<T>(Resources.Load<TextAsset>(path).text);
         }
 
-        /// <summary>その商品の、難易度に合う文章（打つ商品名）を選ぶ。</summary>
+        const int RecentLimit = 24;
+        readonly List<string> recentSentences = new List<string>();
+
+        /// <summary>その商品の、難易度に合う文章（打つ商品名）を選ぶ。最近出した文章はなるべく避ける。</summary>
         public SentenceData PickSentence(string itemId, int level)
         {
-            return SentenceCatalog.Pick(Sentences, itemId, level, n => Random.Range(0, n));
+            var s = SentenceCatalog.Pick(Sentences, itemId, level, n => Random.Range(0, n), recentSentences);
+            if (s != null)
+            {
+                recentSentences.Remove(s.id);
+                recentSentences.Add(s.id);
+                if (recentSentences.Count > RecentLimit) recentSentences.RemoveAt(0);
+            }
+            return s;
         }
     }
 }

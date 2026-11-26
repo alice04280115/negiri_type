@@ -19,6 +19,42 @@
       "level": 1
     },
     {
+      "id": "s_milk_08",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "牛乳パック",
+      "reading": "ぎゅうにゅうぱっく",
+      "level": 1
+    },
+    {
+      "id": "s_milk_09",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "生乳",
+      "reading": "せいにゅう",
+      "level": 1
+    },
+    {
+      "id": "s_milk_10",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "白いミルク",
+      "reading": "しろいみるく",
+      "level": 1
+    },
+    {
+      "id": "s_milk_11",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "紙パック牛乳",
+      "reading": "かみぱっくぎゅうにゅう",
+      "level": 1
+    },
+    {
       "id": "s_milk_03",
       "itemIds": [
         "milk"
@@ -34,6 +70,42 @@
       ],
       "text": "低脂肪牛乳",
       "reading": "ていしぼうぎゅうにゅう",
+      "level": 2
+    },
+    {
+      "id": "s_milk_12",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "特濃牛乳",
+      "reading": "とくのうぎゅうにゅう",
+      "level": 2
+    },
+    {
+      "id": "s_milk_13",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "低温殺菌牛乳",
+      "reading": "ていおんさっきんぎゅうにゅう",
+      "level": 2
+    },
+    {
+      "id": "s_milk_14",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "おいしい牛乳",
+      "reading": "おいしいぎゅうにゅう",
+      "level": 2
+    },
+    {
+      "id": "s_milk_15",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "一リットル牛乳",
+      "reading": "いちりっとるぎゅうにゅう",
       "level": 2
     },
     {
@@ -55,12 +127,75 @@
       "level": 3
     },
     {
+      "id": "s_milk_16",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "放牧酪農の牛乳",
+      "reading": "ほうぼくらくのうのぎゅうにゅう",
+      "level": 3
+    },
+    {
+      "id": "s_milk_17",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "高原ジャージー牛乳",
+      "reading": "こうげんじゃーじーぎゅうにゅう",
+      "level": 3
+    },
+    {
+      "id": "s_milk_18",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "ノンホモ低温殺菌牛乳",
+      "reading": "のんほもていおんさっきんぎゅうにゅう",
+      "level": 3
+    },
+    {
+      "id": "s_milk_19",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "朝しぼり特濃ミルク",
+      "reading": "あさしぼりとくのうみるく",
+      "level": 3
+    },
+    {
       "id": "s_milk_07",
       "itemIds": [
         "milk"
       ],
       "text": "Premium ジャージーミルク ～搾りたての朝～",
-      "reading": "premium じゃーじーみるくしぼりたてのあさ",
+      "reading": "premiumじゃーじーみるくしぼりたてのあさ",
+      "level": 4
+    },
+    {
+      "id": "s_milk_20",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "Farm 放牧ジャージー牛乳 ～高原の朝しぼり～",
+      "reading": "farmほうぼくじゃーじーぎゅうにゅうこうげんのあさしぼり",
+      "level": 4
+    },
+    {
+      "id": "s_milk_21",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "Organic 有機低温殺菌牛乳 ～牧草で育った牛～",
+      "reading": "organicゆうきていおんさっきんぎゅうにゅうぼくそうでそだったうし",
+      "level": 4
+    },
+    {
+      "id": "s_milk_22",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "Gold 特選濃厚ミルク ～牧場主のこだわり～",
+      "reading": "goldとくせんのうこうみるくぼくじょうぬしのこだわり",
       "level": 4
     },
     {
@@ -82,6 +217,42 @@
       "level": 1
     },
     {
+      "id": "s_egg_08",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "生卵",
+      "reading": "なまたまご",
+      "level": 1
+    },
+    {
+      "id": "s_egg_09",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "ゆで卵",
+      "reading": "ゆでたまご",
+      "level": 1
+    },
+    {
+      "id": "s_egg_10",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "卵パック",
+      "reading": "たまごぱっく",
+      "level": 1
+    },
+    {
+      "id": "s_egg_11",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "白い卵",
+      "reading": "しろいたまご",
+      "level": 1
+    },
+    {
       "id": "s_egg_03",
       "itemIds": [
         "egg"
@@ -97,6 +268,42 @@
       ],
       "text": "有精卵",
       "reading": "ゆうせいらん",
+      "level": 2
+    },
+    {
+      "id": "s_egg_12",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "赤玉卵六個入り",
+      "reading": "あかだまたまごろっこいり",
+      "level": 2
+    },
+    {
+      "id": "s_egg_13",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "温泉卵",
+      "reading": "おんせんたまご",
+      "level": 2
+    },
+    {
+      "id": "s_egg_14",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "味付け卵",
+      "reading": "あじつけたまご",
+      "level": 2
+    },
+    {
+      "id": "s_egg_15",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "朝採り新鮮卵",
+      "reading": "あさどりしんせんたまご",
       "level": 2
     },
     {
@@ -118,12 +325,75 @@
       "level": 3
     },
     {
+      "id": "s_egg_16",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "平飼い有精卵十個入り",
+      "reading": "ひらがいゆうせいらんじゅっこいり",
+      "level": 3
+    },
+    {
+      "id": "s_egg_17",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "濃厚黄身の赤玉卵",
+      "reading": "のうこうきみのあかだまたまご",
+      "level": 3
+    },
+    {
+      "id": "s_egg_18",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "地養卵ミックスパック",
+      "reading": "じようらんみっくすぱっく",
+      "level": 3
+    },
+    {
+      "id": "s_egg_19",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "放牧烏骨鶏の有精卵",
+      "reading": "ほうぼくうこっけいのゆうせいらん",
+      "level": 3
+    },
+    {
       "id": "s_egg_07",
       "itemIds": [
         "egg"
       ],
       "text": "Organic 烏骨鶏の卵 ～幻の一個～",
-      "reading": "organic うこっけいのたまごまぼろしのいっこ",
+      "reading": "organicうこっけいのたまごまぼろしのいっこ",
+      "level": 4
+    },
+    {
+      "id": "s_egg_20",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "Golden 濃厚黄身たまご ～朝一番の産みたて～",
+      "reading": "goldenのうこうきみたまごあさいちばんのうみたて",
+      "level": 4
+    },
+    {
+      "id": "s_egg_21",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "Farm 平飼い有精卵 ～庭を駆ける鶏たち～",
+      "reading": "farmひらがいゆうせいらんにわをかけるにわとりたち",
+      "level": 4
+    },
+    {
+      "id": "s_egg_22",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "Royal 烏骨鶏卵ギフト ～桐箱入り六個～",
+      "reading": "royalうこっけいらんぎふときりばこいりろっこ",
       "level": 4
     },
     {
@@ -145,6 +415,42 @@
       "level": 1
     },
     {
+      "id": "s_bread_08",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "ロールパン",
+      "reading": "ろーるぱん",
+      "level": 1
+    },
+    {
+      "id": "s_bread_09",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "菓子パン",
+      "reading": "かしぱん",
+      "level": 1
+    },
+    {
+      "id": "s_bread_10",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "角食パン",
+      "reading": "かくしょくぱん",
+      "level": 1
+    },
+    {
+      "id": "s_bread_11",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "山型食パン",
+      "reading": "やまがたしょくぱん",
+      "level": 1
+    },
+    {
       "id": "s_bread_03",
       "itemIds": [
         "bread"
@@ -160,6 +466,42 @@
       ],
       "text": "全粒粉食パン",
       "reading": "ぜんりゅうふんしょくぱん",
+      "level": 2
+    },
+    {
+      "id": "s_bread_12",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "六枚切り食パン",
+      "reading": "ろくまいぎりしょくぱん",
+      "level": 2
+    },
+    {
+      "id": "s_bread_13",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "バターロール",
+      "reading": "ばたーろーる",
+      "level": 2
+    },
+    {
+      "id": "s_bread_14",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "米粉食パン",
+      "reading": "こめこしょくぱん",
+      "level": 2
+    },
+    {
+      "id": "s_bread_15",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "ライ麦パン",
+      "reading": "らいむぎぱん",
       "level": 2
     },
     {
@@ -181,12 +523,75 @@
       "level": 3
     },
     {
+      "id": "s_bread_16",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "天然酵母ライ麦パン",
+      "reading": "てんねんこうぼらいむぎぱん",
+      "level": 3
+    },
+    {
+      "id": "s_bread_17",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "発酵バタークロワッサン",
+      "reading": "はっこうばたーくろわっさん",
+      "level": 3
+    },
+    {
+      "id": "s_bread_18",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "北海道産小麦食パン",
+      "reading": "ほっかいどうさんこむぎしょくぱん",
+      "level": 3
+    },
+    {
+      "id": "s_bread_19",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "湯種仕込み山型食パン",
+      "reading": "ゆだねじこみやまがたしょくぱん",
+      "level": 3
+    },
+    {
       "id": "s_bread_07",
       "itemIds": [
         "bread"
       ],
       "text": "Bakery 熟成バゲット ～石窯の香り～",
-      "reading": "bakery じゅくせいばげっといしがまのかおり",
+      "reading": "bakeryじゅくせいばげっといしがまのかおり",
+      "level": 4
+    },
+    {
+      "id": "s_bread_20",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "Artisan 天然酵母カンパーニュ ～薪窯で焼いた朝～",
+      "reading": "artisanてんねんこうぼかんぱーにゅまきがまでやいたあさ",
+      "level": 4
+    },
+    {
+      "id": "s_bread_21",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "Royal 生食パン ～耳までやわらか～",
+      "reading": "royalなましょくぱんみみまでやわらか",
+      "level": 4
+    },
+    {
+      "id": "s_bread_22",
+      "itemIds": [
+        "bread"
+      ],
+      "text": "Classic 発酵バターブリオッシュ ～パリの朝食～",
+      "reading": "classicはっこうばたーぶりおっしゅぱりのちょうしょく",
       "level": 4
     },
     {
@@ -208,6 +613,42 @@
       "level": 1
     },
     {
+      "id": "s_rice_08",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "白米",
+      "reading": "はくまい",
+      "level": 1
+    },
+    {
+      "id": "s_rice_09",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "玄米",
+      "reading": "げんまい",
+      "level": 1
+    },
+    {
+      "id": "s_rice_10",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "新米",
+      "reading": "しんまい",
+      "level": 1
+    },
+    {
+      "id": "s_rice_11",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "お米五キロ",
+      "reading": "おこめごきろ",
+      "level": 1
+    },
+    {
       "id": "s_rice_03",
       "itemIds": [
         "rice"
@@ -223,6 +664,42 @@
       ],
       "text": "無洗米",
       "reading": "むせんまい",
+      "level": 2
+    },
+    {
+      "id": "s_rice_12",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "秋田県産あきたこまち",
+      "reading": "あきたけんさんあきたこまち",
+      "level": 2
+    },
+    {
+      "id": "s_rice_13",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "北海道産ゆめぴりか",
+      "reading": "ほっかいどうさんゆめぴりか",
+      "level": 2
+    },
+    {
+      "id": "s_rice_14",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "胚芽米",
+      "reading": "はいがまい",
+      "level": 2
+    },
+    {
+      "id": "s_rice_15",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "発芽玄米",
+      "reading": "はつがげんまい",
       "level": 2
     },
     {
@@ -244,12 +721,75 @@
       "level": 3
     },
     {
+      "id": "s_rice_16",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "減農薬栽培ひとめぼれ",
+      "reading": "げんのうやくさいばいひとめぼれ",
+      "level": 3
+    },
+    {
+      "id": "s_rice_17",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "山形県産つや姫",
+      "reading": "やまがたけんさんつやひめ",
+      "level": 3
+    },
+    {
+      "id": "s_rice_18",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "棚田育ちのコシヒカリ",
+      "reading": "たなだそだちのこしひかり",
+      "level": 3
+    },
+    {
+      "id": "s_rice_19",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "金芽ロウカット玄米",
+      "reading": "きんめろうかっとげんまい",
+      "level": 3
+    },
+    {
       "id": "s_rice_07",
       "itemIds": [
         "rice"
       ],
       "text": "Premium 雪室熟成米 ～冬を越えた一粒～",
-      "reading": "premium ゆきむろじゅくせいまいふゆをこえたひとつぶ",
+      "reading": "premiumゆきむろじゅくせいまいふゆをこえたひとつぶ",
+      "level": 4
+    },
+    {
+      "id": "s_rice_20",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "Select 棚田米コシヒカリ ～山あいの清流育ち～",
+      "reading": "selectたなだまいこしひかりやまあいのせいりゅうそだち",
+      "level": 4
+    },
+    {
+      "id": "s_rice_21",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "Gold 特A評価ゆめぴりか ～北の大地の恵み～",
+      "reading": "goldとくえーひょうかゆめぴりかきたのだいちのめぐみ",
+      "level": 4
+    },
+    {
+      "id": "s_rice_22",
+      "itemIds": [
+        "rice"
+      ],
+      "text": "Heritage 天日干し新米 ～はさ掛けの秋～",
+      "reading": "heritageてんぴぼししんまいはさがけのあき",
       "level": 4
     },
     {
@@ -271,6 +811,42 @@
       "level": 1
     },
     {
+      "id": "s_pork_08",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "豚バラ",
+      "reading": "ぶたばら",
+      "level": 1
+    },
+    {
+      "id": "s_pork_09",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "ひき肉",
+      "reading": "ひきにく",
+      "level": 1
+    },
+    {
+      "id": "s_pork_10",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "豚ロース",
+      "reading": "ぶたろーす",
+      "level": 1
+    },
+    {
+      "id": "s_pork_11",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "とんかつ用",
+      "reading": "とんかつよう",
+      "level": 1
+    },
+    {
       "id": "s_pork_03",
       "itemIds": [
         "pork"
@@ -286,6 +862,42 @@
       ],
       "text": "豚肩ロース",
       "reading": "ぶたかたろーす",
+      "level": 2
+    },
+    {
+      "id": "s_pork_12",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "豚バラ薄切り",
+      "reading": "ぶたばらうすぎり",
+      "level": 2
+    },
+    {
+      "id": "s_pork_13",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "豚ひき肉",
+      "reading": "ぶたひきにく",
+      "level": 2
+    },
+    {
+      "id": "s_pork_14",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "豚もも切り落とし",
+      "reading": "ぶたももきりおとし",
+      "level": 2
+    },
+    {
+      "id": "s_pork_15",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "しょうが焼き用豚肉",
+      "reading": "しょうがやきようぶたにく",
       "level": 2
     },
     {
@@ -307,12 +919,75 @@
       "level": 3
     },
     {
+      "id": "s_pork_16",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "国産豚ロースとんかつ用",
+      "reading": "こくさんぶたろーすとんかつよう",
+      "level": 3
+    },
+    {
+      "id": "s_pork_17",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "黒豚しゃぶしゃぶ用",
+      "reading": "くろぶたしゃぶしゃぶよう",
+      "level": 3
+    },
+    {
+      "id": "s_pork_18",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "角煮用豚バラブロック",
+      "reading": "かくにようぶたばらぶろっく",
+      "level": 3
+    },
+    {
+      "id": "s_pork_19",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "銘柄豚スペアリブ",
+      "reading": "めいがらとんすぺありぶ",
+      "level": 3
+    },
+    {
       "id": "s_pork_07",
       "itemIds": [
         "pork"
       ],
       "text": "Iberico ベジョータ肩ロース ～どんぐりの森～",
-      "reading": "iberico べじょーたかたろーすどんぐりのもり",
+      "reading": "ibericoべじょーたかたろーすどんぐりのもり",
+      "level": 4
+    },
+    {
+      "id": "s_pork_20",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "Kurobuta 鹿児島黒豚ロース ～しゃぶしゃぶの極み～",
+      "reading": "kurobutaかごしまくろぶたろーすしゃぶしゃぶのきわみ",
+      "level": 4
+    },
+    {
+      "id": "s_pork_21",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "Craft 熟成豚バラベーコン ～桜チップの燻製～",
+      "reading": "craftじゅくせいぶたばらべーこんさくらちっぷのくんせい",
+      "level": 4
+    },
+    {
+      "id": "s_pork_22",
+      "itemIds": [
+        "pork"
+      ],
+      "text": "Select 国産豚とんかつ用 ～厚切り二センチ～",
+      "reading": "selectこくさんぶたとんかつようあつぎりにせんち",
       "level": 4
     },
     {
@@ -322,6 +997,51 @@
       ],
       "text": "キャベツ",
       "reading": "きゃべつ",
+      "level": 1
+    },
+    {
+      "id": "s_cabbage_07",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "キャベツ半分",
+      "reading": "きゃべつはんぶん",
+      "level": 1
+    },
+    {
+      "id": "s_cabbage_08",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "キャベツ一玉",
+      "reading": "きゃべつひとたま",
+      "level": 1
+    },
+    {
+      "id": "s_cabbage_09",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "千切り",
+      "reading": "せんぎり",
+      "level": 1
+    },
+    {
+      "id": "s_cabbage_10",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "玉キャベツ",
+      "reading": "たまきゃべつ",
+      "level": 1
+    },
+    {
+      "id": "s_cabbage_11",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "新キャベツ",
+      "reading": "しんきゃべつ",
       "level": 1
     },
     {
@@ -343,6 +1063,42 @@
       "level": 2
     },
     {
+      "id": "s_cabbage_12",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "千切りキャベツの袋",
+      "reading": "せんぎりきゃべつのふくろ",
+      "level": 2
+    },
+    {
+      "id": "s_cabbage_13",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "寒玉キャベツ",
+      "reading": "かんだまきゃべつ",
+      "level": 2
+    },
+    {
+      "id": "s_cabbage_14",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "グリーンボール",
+      "reading": "ぐりーんぼーる",
+      "level": 2
+    },
+    {
+      "id": "s_cabbage_15",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "キャベツ半玉",
+      "reading": "きゃべつはんたま",
+      "level": 2
+    },
+    {
       "id": "s_cabbage_04",
       "itemIds": [
         "cabbage"
@@ -361,12 +1117,75 @@
       "level": 3
     },
     {
+      "id": "s_cabbage_16",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "高原キャベツ一玉",
+      "reading": "こうげんきゃべつひとたま",
+      "level": 3
+    },
+    {
+      "id": "s_cabbage_17",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "嬬恋村産キャベツ",
+      "reading": "つまごいむらさんきゃべつ",
+      "level": 3
+    },
+    {
+      "id": "s_cabbage_18",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "甘い春キャベツ半玉",
+      "reading": "あまいはるきゃべつはんたま",
+      "level": 3
+    },
+    {
+      "id": "s_cabbage_19",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "サラダ用ミックス野菜",
+      "reading": "さらだようみっくすやさい",
+      "level": 3
+    },
+    {
       "id": "s_cabbage_06",
       "itemIds": [
         "cabbage"
       ],
       "text": "Fresh 高原キャベツ ～朝露の一玉～",
-      "reading": "fresh こうげんきゃべつあさつゆのひとたま",
+      "reading": "freshこうげんきゃべつあさつゆのひとたま",
+      "level": 4
+    },
+    {
+      "id": "s_cabbage_20",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "Farm 嬬恋高原キャベツ ～夏の朝採れ～",
+      "reading": "farmつまごいこうげんきゃべつなつのあさどれ",
+      "level": 4
+    },
+    {
+      "id": "s_cabbage_21",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "Organic 有機栽培春キャベツ ～畑から直送～",
+      "reading": "organicゆうきさいばいはるきゃべつはたけからちょくそう",
+      "level": 4
+    },
+    {
+      "id": "s_cabbage_22",
+      "itemIds": [
+        "cabbage"
+      ],
+      "text": "Green 芽キャベツの詰め合わせ ～小さな宝石～",
+      "reading": "greenめきゃべつのつめあわせちいさなほうせき",
       "level": 4
     },
     {
@@ -376,6 +1195,51 @@
       ],
       "text": "納豆",
       "reading": "なっとう",
+      "level": 1
+    },
+    {
+      "id": "s_natto_07",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "小粒納豆",
+      "reading": "こつぶなっとう",
+      "level": 1
+    },
+    {
+      "id": "s_natto_08",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "納豆パック",
+      "reading": "なっとうぱっく",
+      "level": 1
+    },
+    {
+      "id": "s_natto_09",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "大粒納豆",
+      "reading": "おおつぶなっとう",
+      "level": 1
+    },
+    {
+      "id": "s_natto_10",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "糸引き納豆",
+      "reading": "いとひきなっとう",
+      "level": 1
+    },
+    {
+      "id": "s_natto_11",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "ひきわり",
+      "reading": "ひきわり",
       "level": 1
     },
     {
@@ -397,6 +1261,42 @@
       "level": 2
     },
     {
+      "id": "s_natto_12",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "小粒納豆三個組",
+      "reading": "こつぶなっとうさんこぐみ",
+      "level": 2
+    },
+    {
+      "id": "s_natto_13",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "たれ付き納豆",
+      "reading": "たれつきなっとう",
+      "level": 2
+    },
+    {
+      "id": "s_natto_14",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "北海道産大豆納豆",
+      "reading": "ほっかいどうさんだいずなっとう",
+      "level": 2
+    },
+    {
+      "id": "s_natto_15",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "減塩たれ納豆",
+      "reading": "げんえんたれなっとう",
+      "level": 2
+    },
+    {
       "id": "s_natto_04",
       "itemIds": [
         "natto"
@@ -415,12 +1315,75 @@
       "level": 3
     },
     {
+      "id": "s_natto_16",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "国産大豆ひきわり納豆",
+      "reading": "こくさんだいずひきわりなっとう",
+      "level": 3
+    },
+    {
+      "id": "s_natto_17",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "黒酢たれ付き納豆",
+      "reading": "くろずたれつきなっとう",
+      "level": 3
+    },
+    {
+      "id": "s_natto_18",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "経木包みの大粒納豆",
+      "reading": "きょうぎづつみのおおつぶなっとう",
+      "level": 3
+    },
+    {
+      "id": "s_natto_19",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "水戸産小粒納豆",
+      "reading": "みとさんこつぶなっとう",
+      "level": 3
+    },
+    {
       "id": "s_natto_06",
       "itemIds": [
         "natto"
       ],
       "text": "Classic 藁苞納豆 ～昔ながらの香り～",
-      "reading": "classic わらづとなっとうむかしながらのかおり",
+      "reading": "classicわらづとなっとうむかしながらのかおり",
+      "level": 4
+    },
+    {
+      "id": "s_natto_20",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "Craft 経木納豆 ～職人の手包み～",
+      "reading": "craftきょうぎなっとうしょくにんのてづつみ",
+      "level": 4
+    },
+    {
+      "id": "s_natto_21",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "Premium 黒大豆納豆 ～丹波の黒豆～",
+      "reading": "premiumくろだいずなっとうたんばのくろまめ",
+      "level": 4
+    },
+    {
+      "id": "s_natto_22",
+      "itemIds": [
+        "natto"
+      ],
+      "text": "Local 水戸小粒納豆 ～朝ごはんの友～",
+      "reading": "localみとこつぶなっとうあさごはんのとも",
       "level": 4
     },
     {
@@ -430,6 +1393,51 @@
       ],
       "text": "お茶",
       "reading": "おちゃ",
+      "level": 1
+    },
+    {
+      "id": "s_tea_07",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "緑茶",
+      "reading": "りょくちゃ",
+      "level": 1
+    },
+    {
+      "id": "s_tea_08",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "紅茶",
+      "reading": "こうちゃ",
+      "level": 1
+    },
+    {
+      "id": "s_tea_09",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "ほうじ茶",
+      "reading": "ほうじちゃ",
+      "level": 1
+    },
+    {
+      "id": "s_tea_10",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "煎茶",
+      "reading": "せんちゃ",
+      "level": 1
+    },
+    {
+      "id": "s_tea_11",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "番茶",
+      "reading": "ばんちゃ",
       "level": 1
     },
     {
@@ -451,6 +1459,42 @@
       "level": 2
     },
     {
+      "id": "s_tea_12",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "烏龍茶",
+      "reading": "うーろんちゃ",
+      "level": 2
+    },
+    {
+      "id": "s_tea_13",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "ジャスミン茶",
+      "reading": "じゃすみんちゃ",
+      "level": 2
+    },
+    {
+      "id": "s_tea_14",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "玄米茶",
+      "reading": "げんまいちゃ",
+      "level": 2
+    },
+    {
+      "id": "s_tea_15",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "冷たい麦茶",
+      "reading": "つめたいむぎちゃ",
+      "level": 2
+    },
+    {
       "id": "s_tea_04",
       "itemIds": [
         "tea"
@@ -469,12 +1513,75 @@
       "level": 3
     },
     {
+      "id": "s_tea_16",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "静岡県産深蒸し茶",
+      "reading": "しずおかけんさんふかむしちゃ",
+      "level": 3
+    },
+    {
+      "id": "s_tea_17",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "宇治抹茶入り緑茶",
+      "reading": "うじまっちゃいりりょくちゃ",
+      "level": 3
+    },
+    {
+      "id": "s_tea_18",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "水出し麦茶パック",
+      "reading": "みずだしむぎちゃぱっく",
+      "level": 3
+    },
+    {
+      "id": "s_tea_19",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "鉄観音烏龍茶",
+      "reading": "てっかんのんうーろんちゃ",
+      "level": 3
+    },
+    {
       "id": "s_tea_06",
       "itemIds": [
         "tea"
       ],
       "text": "Special 八十八夜摘み煎茶 ～新茶の便り～",
-      "reading": "special はちじゅうはちやづみせんちゃしんちゃのたより",
+      "reading": "specialはちじゅうはちやづみせんちゃしんちゃのたより",
+      "level": 4
+    },
+    {
+      "id": "s_tea_20",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "Royal 宇治抹茶ラテ ～京都の茶師監修～",
+      "reading": "royalうじまっちゃらてきょうとのちゃしかんしゅう",
+      "level": 4
+    },
+    {
+      "id": "s_tea_21",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "Classic 鹿児島知覧茶 ～南国の一番摘み～",
+      "reading": "classicかごしまちらんちゃなんごくのいちばんづみ",
+      "level": 4
+    },
+    {
+      "id": "s_tea_22",
+      "itemIds": [
+        "tea"
+      ],
+      "text": "Fresh 水出し煎茶 ～夏のひとやすみ～",
+      "reading": "freshみずだしせんちゃなつのひとやすみ",
       "level": 4
     },
     {
@@ -484,6 +1591,42 @@
       ],
       "text": "洗剤",
       "reading": "せんざい",
+      "level": 1
+    },
+    {
+      "id": "s_detergent_07",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "粉洗剤",
+      "reading": "こなせんざい",
+      "level": 1
+    },
+    {
+      "id": "s_detergent_08",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "液体洗剤",
+      "reading": "えきたいせんざい",
+      "level": 1
+    },
+    {
+      "id": "s_detergent_09",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "柔軟剤",
+      "reading": "じゅうなんざい",
+      "level": 1
+    },
+    {
+      "id": "s_detergent_10",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "漂白剤",
+      "reading": "ひょうはくざい",
       "level": 1
     },
     {
@@ -505,6 +1648,42 @@
       "level": 2
     },
     {
+      "id": "s_detergent_11",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "部屋干し用洗剤",
+      "reading": "へやぼしようせんざい",
+      "level": 2
+    },
+    {
+      "id": "s_detergent_12",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "詰め替え用洗剤",
+      "reading": "つめかえようせんざい",
+      "level": 2
+    },
+    {
+      "id": "s_detergent_13",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "おしゃれ着用洗剤",
+      "reading": "おしゃれぎようせんざい",
+      "level": 2
+    },
+    {
+      "id": "s_detergent_14",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "台所用洗剤",
+      "reading": "だいどころようせんざい",
+      "level": 2
+    },
+    {
       "id": "s_detergent_04",
       "itemIds": [
         "detergent"
@@ -523,12 +1702,75 @@
       "level": 3
     },
     {
+      "id": "s_detergent_15",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "抗菌消臭液体洗剤",
+      "reading": "こうきんしょうしゅうえきたいせんざい",
+      "level": 3
+    },
+    {
+      "id": "s_detergent_16",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "詰め替え用柔軟剤",
+      "reading": "つめかえようじゅうなんざい",
+      "level": 3
+    },
+    {
+      "id": "s_detergent_17",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "衣料用酸素系漂白剤",
+      "reading": "いりょうようさんそけいひょうはくざい",
+      "level": 3
+    },
+    {
+      "id": "s_detergent_18",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "濃縮タイプ粉末洗剤",
+      "reading": "のうしゅくたいぷふんまつせんざい",
+      "level": 3
+    },
+    {
       "id": "s_detergent_06",
       "itemIds": [
         "detergent"
       ],
       "text": "Ultra 濃縮ジェル洗剤 ～部屋干しでも爽やか～",
-      "reading": "ultra のうしゅくじぇるせんざいへやぼしでもさわやか",
+      "reading": "ultraのうしゅくじぇるせんざいへやぼしでもさわやか",
+      "level": 4
+    },
+    {
+      "id": "s_detergent_19",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "Fresh 消臭柔軟剤 ～せっけんの香り～",
+      "reading": "freshしょうしゅうじゅうなんざいせっけんのかおり",
+      "level": 4
+    },
+    {
+      "id": "s_detergent_20",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "Natural 植物由来の洗剤 ～肌にやさしい～",
+      "reading": "naturalしょくぶつゆらいのせんざいはだにやさしい",
+      "level": 4
+    },
+    {
+      "id": "s_detergent_21",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "Pro 業務用濃縮洗剤 ～頑固な汚れに～",
+      "reading": "proぎょうむようのうしゅくせんざいがんこなよごれに",
       "level": 4
     },
     {
@@ -541,12 +1783,102 @@
       "level": 1
     },
     {
+      "id": "s_toilet_paper_05",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "ちり紙",
+      "reading": "ちりがみ",
+      "level": 1
+    },
+    {
+      "id": "s_toilet_paper_06",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "ペーパー",
+      "reading": "ぺーぱー",
+      "level": 1
+    },
+    {
+      "id": "s_toilet_paper_07",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "トイレの紙",
+      "reading": "といれのかみ",
+      "level": 1
+    },
+    {
+      "id": "s_toilet_paper_08",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "シングル",
+      "reading": "しんぐる",
+      "level": 1
+    },
+    {
+      "id": "s_toilet_paper_09",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "ダブル",
+      "reading": "だぶる",
+      "level": 1
+    },
+    {
       "id": "s_toilet_paper_02",
       "itemIds": [
         "toilet_paper"
       ],
       "text": "トイレットペーパー十二ロール",
       "reading": "といれっとぺーぱーじゅうにろーる",
+      "level": 2
+    },
+    {
+      "id": "s_toilet_paper_10",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "ダブル十二ロール",
+      "reading": "だぶるじゅうにろーる",
+      "level": 2
+    },
+    {
+      "id": "s_toilet_paper_11",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "シングル長持ち",
+      "reading": "しんぐるながもち",
+      "level": 2
+    },
+    {
+      "id": "s_toilet_paper_12",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "香り付きトイレットペーパー",
+      "reading": "かおりつきといれっとぺーぱー",
+      "level": 2
+    },
+    {
+      "id": "s_toilet_paper_13",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "芯なしロール",
+      "reading": "しんなしろーる",
+      "level": 2
+    },
+    {
+      "id": "s_toilet_paper_14",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "トイレットペーパー四ロール",
+      "reading": "といれっとぺーぱーよんろーる",
       "level": 2
     },
     {
@@ -559,12 +1891,84 @@
       "level": 3
     },
     {
+      "id": "s_toilet_paper_15",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "三倍巻きトイレットペーパー",
+      "reading": "さんばいまきといれっとぺーぱー",
+      "level": 3
+    },
+    {
+      "id": "s_toilet_paper_16",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "再生紙ダブル十二ロール",
+      "reading": "さいせいしだぶるじゅうにろーる",
+      "level": 3
+    },
+    {
+      "id": "s_toilet_paper_17",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "花の香りトイレットペーパー",
+      "reading": "はなのかおりといれっとぺーぱー",
+      "level": 3
+    },
+    {
+      "id": "s_toilet_paper_18",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "芯なし長巻きシングル",
+      "reading": "しんなしながまきしんぐる",
+      "level": 3
+    },
+    {
+      "id": "s_toilet_paper_19",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "ダブル二倍巻き八ロール",
+      "reading": "だぶるにばいまきはちろーる",
+      "level": 3
+    },
+    {
       "id": "s_toilet_paper_04",
       "itemIds": [
         "toilet_paper"
       ],
       "text": "Soft トイレットペーパー ～三枚重ねの贅沢～",
-      "reading": "soft といれっとぺーぱーさんまいがさねのぜいたく",
+      "reading": "softといれっとぺーぱーさんまいがさねのぜいたく",
+      "level": 4
+    },
+    {
+      "id": "s_toilet_paper_20",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "Eco 再生紙ロール ～森にやさしい選択～",
+      "reading": "ecoさいせいしろーるもりにやさしいせんたく",
+      "level": 4
+    },
+    {
+      "id": "s_toilet_paper_21",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "Long 三倍巻きシングル ～交換の手間いらず～",
+      "reading": "longさんばいまきしんぐるこうかんのてまいらず",
+      "level": 4
+    },
+    {
+      "id": "s_toilet_paper_22",
+      "itemIds": [
+        "toilet_paper"
+      ],
+      "text": "Aroma 香り付きダブル ～花畑のひととき～",
+      "reading": "aromaかおりつきだぶるはなばたけのひととき",
       "level": 4
     },
     {
@@ -574,6 +1978,42 @@
       ],
       "text": "シャンプー",
       "reading": "しゃんぷー",
+      "level": 1
+    },
+    {
+      "id": "s_shampoo_07",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "ヘアソープ",
+      "reading": "へあそーぷ",
+      "level": 1
+    },
+    {
+      "id": "s_shampoo_08",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "洗髪料",
+      "reading": "せんぱつりょう",
+      "level": 1
+    },
+    {
+      "id": "s_shampoo_09",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "シャンプー液",
+      "reading": "しゃんぷーえき",
+      "level": 1
+    },
+    {
+      "id": "s_shampoo_10",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "地肌シャンプー",
+      "reading": "じはだしゃんぷー",
       "level": 1
     },
     {
@@ -595,6 +2035,42 @@
       "level": 2
     },
     {
+      "id": "s_shampoo_11",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "リンスインシャンプー",
+      "reading": "りんすいんしゃんぷー",
+      "level": 2
+    },
+    {
+      "id": "s_shampoo_12",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "地肌ケアシャンプー",
+      "reading": "じはだけあしゃんぷー",
+      "level": 2
+    },
+    {
+      "id": "s_shampoo_13",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "子ども用シャンプー",
+      "reading": "こどもようしゃんぷー",
+      "level": 2
+    },
+    {
+      "id": "s_shampoo_14",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "ポンプ式シャンプー",
+      "reading": "ぽんぷしきしゃんぷー",
+      "level": 2
+    },
+    {
       "id": "s_shampoo_04",
       "itemIds": [
         "shampoo"
@@ -613,12 +2089,75 @@
       "level": 3
     },
     {
+      "id": "s_shampoo_15",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "詰め替え用アミノ酸シャンプー",
+      "reading": "つめかえようあみのさんしゃんぷー",
+      "level": 3
+    },
+    {
+      "id": "s_shampoo_16",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "ダメージ補修シャンプー",
+      "reading": "だめーじほしゅうしゃんぷー",
+      "level": 3
+    },
+    {
+      "id": "s_shampoo_17",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "オーガニック精油シャンプー",
+      "reading": "おーがにっくせいゆしゃんぷー",
+      "level": 3
+    },
+    {
+      "id": "s_shampoo_18",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "炭酸泡スカルプシャンプー",
+      "reading": "たんさんあわすかるぷしゃんぷー",
+      "level": 3
+    },
+    {
       "id": "s_shampoo_06",
       "itemIds": [
         "shampoo"
       ],
       "text": "Botanical ヘアシャンプー ～ダマスクローズの香り～",
-      "reading": "botanical へあしゃんぷーだますくろーずのかおり",
+      "reading": "botanicalへあしゃんぷーだますくろーずのかおり",
+      "level": 4
+    },
+    {
+      "id": "s_shampoo_19",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "Salon 補修ヘアシャンプー ～毛先までなめらか～",
+      "reading": "salonほしゅうへあしゃんぷーけさきまでなめらか",
+      "level": 4
+    },
+    {
+      "id": "s_shampoo_20",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "Herbal 精油配合シャンプー ～森林浴の香り～",
+      "reading": "herbalせいゆはいごうしゃんぷーしんりんよくのかおり",
+      "level": 4
+    },
+    {
+      "id": "s_shampoo_21",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "Scalp 炭酸泡シャンプー ～頭皮すっきり～",
+      "reading": "scalpたんさんあわしゃんぷーとうひすっきり",
       "level": 4
     },
     {
@@ -628,6 +2167,42 @@
       ],
       "text": "ポテトチップス",
       "reading": "ぽてとちっぷす",
+      "level": 1
+    },
+    {
+      "id": "s_chips_07",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "ポテチ",
+      "reading": "ぽてち",
+      "level": 1
+    },
+    {
+      "id": "s_chips_08",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "うすしお",
+      "reading": "うすしお",
+      "level": 1
+    },
+    {
+      "id": "s_chips_09",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "のり塩",
+      "reading": "のりしお",
+      "level": 1
+    },
+    {
+      "id": "s_chips_10",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "コンソメ",
+      "reading": "こんそめ",
       "level": 1
     },
     {
@@ -649,6 +2224,42 @@
       "level": 2
     },
     {
+      "id": "s_chips_11",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "ポテトチップスコンソメ味",
+      "reading": "ぽてとちっぷすこんそめあじ",
+      "level": 2
+    },
+    {
+      "id": "s_chips_12",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "波型ポテトチップス",
+      "reading": "なみがたぽてとちっぷす",
+      "level": 2
+    },
+    {
+      "id": "s_chips_13",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "大袋ポテトチップス",
+      "reading": "おおぶくろぽてとちっぷす",
+      "level": 2
+    },
+    {
+      "id": "s_chips_14",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "九州しょうゆ味",
+      "reading": "きゅうしゅうしょうゆあじ",
+      "level": 2
+    },
+    {
       "id": "s_chips_04",
       "itemIds": [
         "chips"
@@ -667,12 +2278,75 @@
       "level": 3
     },
     {
+      "id": "s_chips_15",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "北海道産じゃがいもチップス",
+      "reading": "ほっかいどうさんじゃがいもちっぷす",
+      "level": 3
+    },
+    {
+      "id": "s_chips_16",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "期間限定わさび醤油味",
+      "reading": "きかんげんていわさびしょうゆあじ",
+      "level": 3
+    },
+    {
+      "id": "s_chips_17",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "厚切りギザギザポテト",
+      "reading": "あつぎりぎざぎざぽてと",
+      "level": 3
+    },
+    {
+      "id": "s_chips_18",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "瀬戸内レモン塩ポテトチップス",
+      "reading": "せとうちれもんしおぽてとちっぷす",
+      "level": 3
+    },
+    {
       "id": "s_chips_06",
       "itemIds": [
         "chips"
       ],
       "text": "Gourmet トリュフ塩ポテトチップス ～至福のひと袋～",
-      "reading": "gourmet とりゅふしおぽてとちっぷすしふくのひとふくろ",
+      "reading": "gourmetとりゅふしおぽてとちっぷすしふくのひとふくろ",
+      "level": 4
+    },
+    {
+      "id": "s_chips_19",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "Craft 手揚げポテトチップス ～じゃがいも本来の味～",
+      "reading": "craftてあげぽてとちっぷすじゃがいもほんらいのあじ",
+      "level": 4
+    },
+    {
+      "id": "s_chips_20",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "Spicy 激辛ポテトチップス ～火を噴く辛さ～",
+      "reading": "spicyげきからぽてとちっぷすひをふくからさ",
+      "level": 4
+    },
+    {
+      "id": "s_chips_21",
+      "itemIds": [
+        "chips"
+      ],
+      "text": "Party 大袋ポテトチップス ～みんなで分けよう～",
+      "reading": "partyおおぶくろぽてとちっぷすみんなでわけよう",
       "level": 4
     },
     {
@@ -694,6 +2368,42 @@
       "level": 1
     },
     {
+      "id": "s_chocolate_08",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "ミルクチョコ",
+      "reading": "みるくちょこ",
+      "level": 1
+    },
+    {
+      "id": "s_chocolate_09",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "ビターチョコ",
+      "reading": "びたーちょこ",
+      "level": 1
+    },
+    {
+      "id": "s_chocolate_10",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "ホワイトチョコ",
+      "reading": "ほわいとちょこ",
+      "level": 1
+    },
+    {
+      "id": "s_chocolate_11",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "ナッツチョコ",
+      "reading": "なっつちょこ",
+      "level": 1
+    },
+    {
       "id": "s_chocolate_03",
       "itemIds": [
         "chocolate"
@@ -709,6 +2419,42 @@
       ],
       "text": "板チョコ",
       "reading": "いたちょこ",
+      "level": 2
+    },
+    {
+      "id": "s_chocolate_12",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "アーモンドチョコレート",
+      "reading": "あーもんどちょこれーと",
+      "level": 2
+    },
+    {
+      "id": "s_chocolate_13",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "抹茶チョコレート",
+      "reading": "まっちゃちょこれーと",
+      "level": 2
+    },
+    {
+      "id": "s_chocolate_14",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "いちごチョコ",
+      "reading": "いちごちょこ",
+      "level": 2
+    },
+    {
+      "id": "s_chocolate_15",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "大袋チョコレート",
+      "reading": "おおぶくろちょこれーと",
       "level": 2
     },
     {
@@ -730,12 +2476,75 @@
       "level": 3
     },
     {
+      "id": "s_chocolate_16",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "カカオ七十二パーセント",
+      "reading": "かかおななじゅうにぱーせんと",
+      "level": 3
+    },
+    {
+      "id": "s_chocolate_17",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "濃厚生チョコレート詰め合わせ",
+      "reading": "のうこうなまちょこれーとつめあわせ",
+      "level": 3
+    },
+    {
+      "id": "s_chocolate_18",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "苺フリーズドライチョコ",
+      "reading": "いちごふりーずどらいちょこ",
+      "level": 3
+    },
+    {
+      "id": "s_chocolate_19",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "有機カカオビターチョコ",
+      "reading": "ゆうきかかおびたーちょこ",
+      "level": 3
+    },
+    {
       "id": "s_chocolate_07",
       "itemIds": [
         "chocolate"
       ],
       "text": "Chocolatier ボンボンショコラ ～冬季限定～",
-      "reading": "chocolatier ぼんぼんしょこらとうきげんてい",
+      "reading": "chocolatierぼんぼんしょこらとうきげんてい",
+      "level": 4
+    },
+    {
+      "id": "s_chocolate_20",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "Truffle 生トリュフチョコ ～口どけの魔法～",
+      "reading": "truffleなまとりゅふちょこくちどけのまほう",
+      "level": 4
+    },
+    {
+      "id": "s_chocolate_21",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "Royal 宝石箱ショコラ ～十二粒の物語～",
+      "reading": "royalほうせきばこしょこらじゅうにつぶのものがたり",
+      "level": 4
+    },
+    {
+      "id": "s_chocolate_22",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "Single カカオ単一産地チョコ ～エクアドルの森～",
+      "reading": "singleかかおたんいつさんちちょこえくあどるのもり",
       "level": 4
     },
     {
@@ -745,6 +2554,51 @@
       ],
       "text": "アイス",
       "reading": "あいす",
+      "level": 1
+    },
+    {
+      "id": "s_ice_07",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "ソフトクリーム",
+      "reading": "そふとくりーむ",
+      "level": 1
+    },
+    {
+      "id": "s_ice_08",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "かき氷",
+      "reading": "かきごおり",
+      "level": 1
+    },
+    {
+      "id": "s_ice_09",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "アイスバー",
+      "reading": "あいすばー",
+      "level": 1
+    },
+    {
+      "id": "s_ice_10",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "シャーベット",
+      "reading": "しゃーべっと",
+      "level": 1
+    },
+    {
+      "id": "s_ice_11",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "バニラアイス",
+      "reading": "ばにらあいす",
       "level": 1
     },
     {
@@ -766,6 +2620,42 @@
       "level": 2
     },
     {
+      "id": "s_ice_12",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "チョコミントアイス",
+      "reading": "ちょこみんとあいす",
+      "level": 2
+    },
+    {
+      "id": "s_ice_13",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "ソーダ味アイスバー",
+      "reading": "そーだあじあいすばー",
+      "level": 2
+    },
+    {
+      "id": "s_ice_14",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "いちごシャーベット",
+      "reading": "いちごしゃーべっと",
+      "level": 2
+    },
+    {
+      "id": "s_ice_15",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "モナカアイス",
+      "reading": "もなかあいす",
+      "level": 2
+    },
+    {
       "id": "s_ice_04",
       "itemIds": [
         "ice"
@@ -784,12 +2674,75 @@
       "level": 3
     },
     {
+      "id": "s_ice_16",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "北海道ミルクソフトクリーム",
+      "reading": "ほっかいどうみるくそふとくりーむ",
+      "level": 3
+    },
+    {
+      "id": "s_ice_17",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "宇治抹茶あずきアイス",
+      "reading": "うじまっちゃあずきあいす",
+      "level": 3
+    },
+    {
+      "id": "s_ice_18",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "クッキーアンドクリーム",
+      "reading": "くっきーあんどくりーむ",
+      "level": 3
+    },
+    {
+      "id": "s_ice_19",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "果肉入りマンゴーシャーベット",
+      "reading": "かにくいりまんごーしゃーべっと",
+      "level": 3
+    },
+    {
       "id": "s_ice_06",
       "itemIds": [
         "ice"
       ],
       "text": "Premium 濃厚ミルクジェラート ～牧場の夏～",
-      "reading": "premium のうこうみるくじぇらーとぼくじょうのなつ",
+      "reading": "premiumのうこうみるくじぇらーとぼくじょうのなつ",
+      "level": 4
+    },
+    {
+      "id": "s_ice_20",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "Gelato ピスタチオジェラート ～シチリアの午後～",
+      "reading": "gelatoぴすたちおじぇらーとしちりあのごご",
+      "level": 4
+    },
+    {
+      "id": "s_ice_21",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "Royal 濃厚バニラアイス ～マダガスカルの香り～",
+      "reading": "royalのうこうばにらあいすまだがすかるのかおり",
+      "level": 4
+    },
+    {
+      "id": "s_ice_22",
+      "itemIds": [
+        "ice"
+      ],
+      "text": "Fresh 白桃シャーベット ～岡山の夏～",
+      "reading": "freshはくとうしゃーべっとおかやまのなつ",
       "level": 4
     },
     {
@@ -799,6 +2752,51 @@
       ],
       "text": "雑誌",
       "reading": "ざっし",
+      "level": 1
+    },
+    {
+      "id": "s_magazine_06",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "週刊誌",
+      "reading": "しゅうかんし",
+      "level": 1
+    },
+    {
+      "id": "s_magazine_07",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "漫画雑誌",
+      "reading": "まんがざっし",
+      "level": 1
+    },
+    {
+      "id": "s_magazine_08",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "情報誌",
+      "reading": "じょうほうし",
+      "level": 1
+    },
+    {
+      "id": "s_magazine_09",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "月刊誌",
+      "reading": "げっかんし",
+      "level": 1
+    },
+    {
+      "id": "s_magazine_10",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "本",
+      "reading": "ほん",
       "level": 1
     },
     {
@@ -820,6 +2818,42 @@
       "level": 2
     },
     {
+      "id": "s_magazine_11",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "ファッション雑誌",
+      "reading": "ふぁっしょんざっし",
+      "level": 2
+    },
+    {
+      "id": "s_magazine_12",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "旅行ガイド",
+      "reading": "りょこうがいど",
+      "level": 2
+    },
+    {
+      "id": "s_magazine_13",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "週刊漫画雑誌",
+      "reading": "しゅうかんまんがざっし",
+      "level": 2
+    },
+    {
+      "id": "s_magazine_14",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "映画情報誌",
+      "reading": "えいがじょうほうし",
+      "level": 2
+    },
+    {
       "id": "s_magazine_04",
       "itemIds": [
         "magazine"
@@ -829,12 +2863,75 @@
       "level": 3
     },
     {
+      "id": "s_magazine_15",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "季刊アウトドア専門誌",
+      "reading": "きかんあうとどあせんもんし",
+      "level": 3
+    },
+    {
+      "id": "s_magazine_16",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "月刊パズル雑誌増刊号",
+      "reading": "げっかんぱずるざっしぞうかんごう",
+      "level": 3
+    },
+    {
+      "id": "s_magazine_17",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "家計管理特集号",
+      "reading": "かけいかんりとくしゅうごう",
+      "level": 3
+    },
+    {
+      "id": "s_magazine_18",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "料理雑誌お弁当特集",
+      "reading": "りょうりざっしおべんとうとくしゅう",
+      "level": 3
+    },
+    {
       "id": "s_magazine_05",
       "itemIds": [
         "magazine"
       ],
       "text": "Monthly ゲーム情報誌 ～年末超大型特集号～",
-      "reading": "monthly げーむじょうほうしねんまつちょうおおがたとくしゅうごう",
+      "reading": "monthlyげーむじょうほうしねんまつちょうおおがたとくしゅうごう",
+      "level": 4
+    },
+    {
+      "id": "s_magazine_19",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "Weekly 漫画雑誌 ～新連載スタート号～",
+      "reading": "weeklyまんがざっししんれんさいすたーとごう",
+      "level": 4
+    },
+    {
+      "id": "s_magazine_20",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "Travel 旅行情報誌 ～秋の温泉めぐり～",
+      "reading": "travelりょこうじょうほうしあきのおんせんめぐり",
+      "level": 4
+    },
+    {
+      "id": "s_magazine_21",
+      "itemIds": [
+        "magazine"
+      ],
+      "text": "Home 家計簿付録つき雑誌 ～節約上手の一年～",
+      "reading": "homeかけいぼふろくつきざっしせつやくじょうずのいちねん",
       "level": 4
     }
   ]

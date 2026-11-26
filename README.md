@@ -78,6 +78,7 @@
   - `shopping.startingCash` は段階2の試作用で、今は使っていません。
 - `Assets/Resources/Data/stores.json`：店舗と特売。`days` に曜日（例：`"火金"`）を書くとその曜日だけ、空なら毎日。割引はベーシスポイント（1000 = 10%）。
 - `Assets/Resources/Data/items.json` の `effects`：商品の効果（食料＋○日、日用品＋○日、満足度＋○）。
+- `Assets/Resources/Data/sentences.json`：レジで打つ商品名。`level` は 1＝初級、2＝中級、3＝上級、4＝達人。各商品・各レベルに4〜6個あり、最近出た商品名はなるべく続けて出しません。`reading` はひらがな・「ー」・小文字の英字だけ（スペースや「～」は打たないので入れない）。
 
 ### 絵を入れる
 

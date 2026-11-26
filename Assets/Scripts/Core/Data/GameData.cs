@@ -156,8 +156,16 @@ namespace Negiri.Core.Data
             foreach (var s in sentences?.sentences ?? Array.Empty<SentenceData>())
             {
                 if (string.IsNullOrEmpty(s.reading)) { errors.Add($"読みがながありません: {s.id}"); continue; }
+                bool readable = true;
                 try { RomajiMatcher.Tokenize(s.reading); }
-                catch (ArgumentException e) { errors.Add($"{s.id}: {e.Message}"); }
+                catch (ArgumentException e) { errors.Add($"{s.id}: {e.Message}"); readable = false; }
+                // 打つのはローマ字だけにする。スペースや記号は読みがなに入れない（商品名の「～」なども打たない）
+                foreach (var ch in readable ? s.reading : "")
+                {
+                    bool kana = ch >= 'ぁ' && ch <= 'ゖ' || ch == 'ー';
+                    bool letter = ch >= 'a' && ch <= 'z';
+                    if (!kana && !letter) { errors.Add($"{s.id}: 読みがなには、ひらがな・「ー」・小文字の英字だけを使ってください（'{ch}'）"); break; }
+                }
                 foreach (var itemId in s.itemIds ?? Array.Empty<string>())
                 {
                     if (!ids.Contains(itemId)) errors.Add($"存在しない商品IDです: {s.id} → {itemId}");
@@ -272,6 +280,13 @@ namespace Negiri.Core.Data
         /// pick は「候補の数を受け取り、0～数－1 を返す」関数（画面ではランダム、テストでは固定）。
         /// </summary>
         public static SentenceData Pick(SentenceList sentences, string itemId, int level, Func<int, int> pick)
+            => Pick(sentences, itemId, level, pick, null);
+
+        /// <summary>
+        /// recent（最近出した文章のID）にあるものは避けて選ぶ。全部が recent に入っているときは、
+        /// いちばん最近出したもの以外から選ぶ（候補が1つしかなければそれを出す）。
+        /// </summary>
+        public static SentenceData Pick(SentenceList sentences, string itemId, int level, Func<int, int> pick, IList<string> recent)
         {
             var candidates = new List<SentenceData>();
             int bestDistance = int.MaxValue;
@@ -290,6 +305,20 @@ namespace Negiri.Core.Data
                 if (distance == bestDistance && s.level == bestLevel) candidates.Add(s);
             }
             if (candidates.Count == 0) return null;
+            if (recent != null && recent.Count > 0 && candidates.Count > 1)
+            {
+                var fresh = candidates.FindAll(c => !recent.Contains(c.id));
+                if (fresh.Count == 0)
+                {
+                    string last = null;
+                    for (int i = recent.Count - 1; i >= 0 && last == null; i--)
+                    {
+                        if (candidates.Exists(c => c.id == recent[i])) last = recent[i];
+                    }
+                    fresh = candidates.FindAll(c => c.id != last);
+                }
+                candidates = fresh;
+            }
             int index = pick(candidates.Count);
             if (index < 0 || index >= candidates.Count) index = 0;
             return candidates[index];

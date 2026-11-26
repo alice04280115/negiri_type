@@ -451,5 +451,45 @@ namespace Negiri.Core.Tests
             Assert.AreEqual("e1", SentenceCatalog.Pick(sentences, "egg", 4, n => 0).id);
             Assert.IsNull(SentenceCatalog.Pick(sentences, "rice", 1, n => 0));
         }
+            [Test]
+        public void 最近出した文章は避けて選ぶ()
+        {
+            var sentences = new SentenceList
+            {
+                sentences = new[]
+                {
+                    new SentenceData { id = "a", itemIds = new[] { "milk" }, reading = "ぎゅうにゅう", level = 1 },
+                    new SentenceData { id = "b", itemIds = new[] { "milk" }, reading = "みるく", level = 1 },
+                    new SentenceData { id = "c", itemIds = new[] { "milk" }, reading = "せいにゅう", level = 1 },
+                    new SentenceData { id = "e", itemIds = new[] { "egg" }, reading = "たまご", level = 1 },
+                },
+            };
+            // a と c は最近出したので b しか残らない
+            Assert.AreEqual("b", SentenceCatalog.Pick(sentences, "milk", 1, n => { Assert.AreEqual(1, n); return 0; }, new List<string> { "a", "c" }).id);
+            // 全部出していたら、いちばん最近のもの（b）以外から
+            var picked = SentenceCatalog.Pick(sentences, "milk", 1, n => { Assert.AreEqual(2, n); return 1; }, new List<string> { "a", "c", "b" });
+            Assert.AreEqual("c", picked.id);
+            // 候補が1つだけなら、最近出していてもそれを出す
+            Assert.AreEqual("e", SentenceCatalog.Pick(sentences, "egg", 1, n => 0, new List<string> { "e" }).id);
+        }
+
+        [Test]
+        public void 読みがなにスペースや記号があるとエラー()
+        {
+            var items = new ItemList { items = new[] { new ItemData { id = "milk", name = "牛乳", category = "food", kind = "essential", basePrice = 100, effects = new[] { new ItemEffect { stat = "food", amount = 1 } } } } };
+            var sentences = new SentenceList
+            {
+                sentences = new[]
+                {
+                    new SentenceData { id = "ok", itemIds = new[] { "milk" }, reading = "premiumみるく", level = 1 },
+                    new SentenceData { id = "sp", itemIds = new[] { "milk" }, reading = "premium みるく", level = 1 },
+                    new SentenceData { id = "up", itemIds = new[] { "milk" }, reading = "Premiumみるく", level = 1 },
+                },
+            };
+            var errors = DataValidator.Validate(items, sentences);
+            Assert.IsFalse(errors.Exists(e => e.StartsWith("ok:")), string.Join("\n", errors));
+            Assert.IsTrue(errors.Exists(e => e.StartsWith("sp:")), string.Join("\n", errors));
+            Assert.IsTrue(errors.Exists(e => e.StartsWith("up:")), string.Join("\n", errors));
+        }
     }
 }
