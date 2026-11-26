@@ -30,7 +30,7 @@ namespace Negiri.Game.Ui
             var satColor = sat < month.Life.satisfaction.passLine ? UiFactory.Bad : UiFactory.Ink;
             right.text =
                 $"財布 {UiFactory.Paint(UiFactory.Yen(month.Wallet.Cash), UiFactory.Warn)}　" +
-                $"ロック {UiFactory.Paint(UiFactory.Yen(month.Wallet.Locked), UiFactory.Gold)}　" +
+                $"貯金箱 {UiFactory.Paint(UiFactory.Yen(month.Wallet.Locked), UiFactory.Gold)}　" +
                 $"満足度 {UiFactory.Paint(sat.ToString(), satColor)}";
         }
     }

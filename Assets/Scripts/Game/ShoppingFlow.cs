@@ -229,10 +229,10 @@ namespace Negiri.Game
         }
 
         /// <summary>数日進める：買い物できる日か、在庫が切れる日の朝か、月末まで。</summary>
-        public void AdvanceDays()
+        public void AdvanceDays(int nights)
         {
             ClearShopping();
-            LastNights = Month.AdvanceDays();
+            LastNights = Month.AdvanceDays(nights);
             Save();
             Switch(night);
         }

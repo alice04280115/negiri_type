@@ -37,7 +37,7 @@ namespace Negiri.Core.Life
             }
         }
 
-        /// <summary>今月の節約額（通常価格 − 支払額 の合計）。統計専用。</summary>
+        /// <summary>今月の節約額（通常価格 － 支払額 の合計）。統計専用。</summary>
         public int TotalSaved
         {
             get

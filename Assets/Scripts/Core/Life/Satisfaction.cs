@@ -2,7 +2,7 @@ using System;
 
 namespace Negiri.Core.Life
 {
-    /// <summary>満足度（0〜上限）。増減はかならず Change を通し、範囲の外に出ないようにする。</summary>
+    /// <summary>満足度（0～上限）。増減はかならず Change を通し、範囲の外に出ないようにする。</summary>
     public sealed class Satisfaction
     {
         public int Value { get; private set; }

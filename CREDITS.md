@@ -5,4 +5,4 @@
 
 | 素材 | 置き場所 | 作者・出典 | 利用規約 | 商用利用 | クレジット表記 |
 | --- | --- | --- | --- | --- | --- |
-| （まだありません） | | | | | |
+| フォント PixelMplus12 Regular（PixelMplus-20130602） | `Assets/Resources/Fonts/main.ttf` | M+ FONTS PROJECT／PixelMplus: Itou Hiroki（https://github.com/itouhiro/PixelMplus） | M+ FONT LICENSE（`Assets/Resources/Fonts/LICENSE_PixelMplus.txt`） | 可（改変・再配布も可、無保証） | 不要（任意で「PixelMplus（M+ FONTS）」と書く） |

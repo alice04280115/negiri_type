@@ -31,7 +31,7 @@ namespace Negiri.Game.Screens
         readonly RowList shelf, cartList;
         readonly List<ItemData>[] shelfItems = new List<ItemData>[Tabs.Length];
 
-        /// <summary>0〜2：売り場、3（Tabs.Length）：カート。</summary>
+        /// <summary>0～2：売り場、3（Tabs.Length）：カート。</summary>
         int tab;
         int shelfCursor;
         /// <summary>カートを選んでいる間も棚に出しておく、直前の売り場。</summary>

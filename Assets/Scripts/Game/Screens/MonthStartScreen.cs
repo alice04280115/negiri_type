@@ -27,7 +27,7 @@ namespace Negiri.Game.Screens
 
             // 右：ロック額
             UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0, 1), new Vector2(390, -104), new Vector2(510, 300));
-            UiFactory.MakeText(Root, "ロック貯金（目標商品にしか使えないお金）", 18, UiFactory.Quiet, new Vector2(0, 1), new Vector2(410, -118), new Vector2(480, 26), TextAnchor.MiddleLeft);
+            UiFactory.MakeText(Root, "貯金箱（目標商品のためだけのお金）", 18, UiFactory.Quiet, new Vector2(0, 1), new Vector2(410, -118), new Vector2(480, 26), TextAnchor.MiddleLeft);
             lockText = UiFactory.MakeText(Root, "", 36, UiFactory.Gold, new Vector2(0, 1), new Vector2(410, -156), new Vector2(480, 50), TextAnchor.MiddleCenter);
             hintText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(410, -222), new Vector2(480, 170), TextAnchor.UpperLeft);
             hintText.lineSpacing = 1.25f;
@@ -79,17 +79,18 @@ namespace Negiri.Game.Screens
             int left = cash - lockAmount;
             hintText.text =
                 $"今月の予算　{UiFactory.Yen(cash)}\n" +
-                $"ロックした後の財布　{UiFactory.Paint(UiFactory.Yen(left), left < month.essentialsEstimate ? UiFactory.Bad : UiFactory.Warn)}\n" +
+                $"貯金箱に入れた後の財布　{UiFactory.Paint(UiFactory.Yen(left), left < month.essentialsEstimate ? UiFactory.Bad : UiFactory.Warn)}\n" +
                 UiFactory.Paint($"1か月の必需品の目安：約{UiFactory.Yen(month.essentialsEstimate)}（通常価格）", UiFactory.Quiet) + "\n" +
                 UiFactory.Paint($"買い物：{TitleScreen.IntervalLabel(m.Rule.shopIntervalDays)}　食料は{m.Rule.foodCap}日分まで", UiFactory.Quiet) + "\n" +
-                UiFactory.Paint("ロックは後から家計簿で追加できます。解除はできません。", UiFactory.Quiet);
+                UiFactory.Paint($"満足度は月末に{m.Life.satisfaction.passLine}以上が目標。在庫が切れると下がります", UiFactory.Quiet) + "\n" +
+                UiFactory.Paint("貯金箱には後から家計簿で追加できます。取り出せません。", UiFactory.Quiet);
 
             confirmText.text = confirming
-                ? $"{UiFactory.Yen(lockAmount)}をロックします。解除できません。よければもう一度スペース"
+                ? $"{UiFactory.Yen(lockAmount)}を貯金箱に入れます。取り出せません。よければもう一度スペース"
                 : "";
             Message.text = confirming
                 ? "スペース：確定　Esc：やめる"
-                : $"←→：ロック額（{UiFactory.Yen(Step)}ずつ）　スペース：決定して1日目へ　Esc：タイトル";
+                : $"←→：貯金箱に入れる額（{UiFactory.Yen(Step)}ずつ）　スペース：決定して1日目へ　Esc：タイトル";
         }
     }
 }

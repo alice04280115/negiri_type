@@ -217,7 +217,7 @@ namespace Negiri.Game
                     var readingHelp = Def.Reading == ReadingMode.Always
                         ? ""
                         : $"　読みがな：{(readingOn[difficulty] ? "あり" : "なし")}（Rで切り替え）";
-                    messageText.text = $"スペースキーで開始　（難易度：{Def.Label}　1〜4で切り替え）{readingHelp}　Esc：タイトルへ";
+                    messageText.text = $"スペースキーで開始　（難易度：{Def.Label}　1～4で切り替え）{readingHelp}　Esc：タイトルへ";
                     messageText.color = UiFactory.Quiet;
                     resultText.text = "";
                     break;

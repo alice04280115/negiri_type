@@ -16,6 +16,8 @@ namespace Negiri.Game.Screens
 
         readonly Text stockText, shopText, saleText, goalText, menuText, noticeText;
         int cursor;
+        bool choosingDays;
+        int nights;
         string notice = "";
         float noticeTime;
 
@@ -30,9 +32,9 @@ namespace Negiri.Game.Screens
             stockText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(476, -58), new Vector2(450, 96), TextAnchor.UpperLeft);
             stockText.lineSpacing = 1.25f;
             shopText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(476, -160), new Vector2(450, 26), TextAnchor.UpperLeft);
-            saleText = UiFactory.MakeText(Root, "", 16, UiFactory.Ink, new Vector2(0, 1), new Vector2(476, -192), new Vector2(450, 70), TextAnchor.UpperLeft);
-            saleText.lineSpacing = 1.15f;
-            goalText = UiFactory.MakeText(Root, "", 16, UiFactory.Ink, new Vector2(0, 1), new Vector2(476, -290), new Vector2(450, 48), TextAnchor.UpperLeft);
+            saleText = UiFactory.MakeText(Root, "", 16, UiFactory.Ink, new Vector2(0, 1), new Vector2(476, -190), new Vector2(450, 96), TextAnchor.UpperLeft);
+            saleText.lineSpacing = 1.1f;
+            goalText = UiFactory.MakeText(Root, "", 16, UiFactory.Ink, new Vector2(0, 1), new Vector2(476, -294), new Vector2(450, 48), TextAnchor.UpperLeft);
             goalText.lineSpacing = 1.15f;
 
             // 下：コマンド
@@ -46,12 +48,34 @@ namespace Negiri.Game.Screens
         {
             var m = Flow.Month;
             cursor = m != null && m.CanShop ? 0 : 1;
+            choosingDays = false;
             notice = "";
+        }
+
+        /// <summary>「数日進める」の日数を選ぶ。←→で日数、スペースで進める、Escでやめる。</summary>
+        void TickChoosingDays(Keyboard kb)
+        {
+            var m = Flow.Month;
+            if (Pressed(kb.escapeKey))
+            {
+                choosingDays = false;
+                return;
+            }
+            if (Pressed(kb.rightArrowKey) || Pressed(kb.upArrowKey)) nights = Mathf.Min(m.NightsLeft, nights + 1);
+            if (Pressed(kb.leftArrowKey) || Pressed(kb.downArrowKey)) nights = Mathf.Max(1, nights - 1);
+            if (!Decide(kb)) return;
+            choosingDays = false;
+            Flow.AdvanceDays(nights);
         }
 
         public override void Tick(Keyboard kb, float deltaTime)
         {
             noticeTime = Mathf.Max(0f, noticeTime - deltaTime);
+            if (choosingDays)
+            {
+                TickChoosingDays(kb);
+                return;
+            }
             cursor = MoveCursor(kb, cursor, Commands.Length);
             int chosen = -1;
             if (Pressed(kb.digit1Key)) chosen = 0;
@@ -71,7 +95,10 @@ namespace Negiri.Game.Screens
                     else ShowNotice(m.ShoppedToday ? "今日はもう買い物に行きました" : $"買い物に行けるのは{ShopDayLabel(m)}です");
                     break;
                 case 1: Flow.EndDay(); break;
-                case 2: Flow.AdvanceDays(); break;
+                case 2:
+                    nights = m.SuggestedNights;
+                    choosingDays = true;
+                    break;
                 case 3: Flow.OpenLedger(); break;
                 default: Flow.Quit(); break;
             }
@@ -126,15 +153,26 @@ namespace Negiri.Game.Screens
             int have = m.Wallet.Locked + m.Wallet.Cash;
             int rest = Mathf.Max(0, month.targetPrice - m.Wallet.Locked);
             goalText.text = $"目標：{month.targetName} {UiFactory.Yen(month.targetPrice)}\n" +
-                            $"ロック済み {UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}　あと {UiFactory.Yen(rest)}" +
+                            $"貯金箱 {UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}　あと {UiFactory.Yen(rest)}" +
                             UiFactory.Paint($"（財布と合わせて {UiFactory.Yen(have)}）", UiFactory.Quiet);
 
             var disabled = new bool[Commands.Length];
             disabled[0] = !m.CanShop;
-            menuText.text = UiFactory.Menu(Commands, cursor, disabled);
+            if (choosingDays)
+            {
+                int until = m.Day + nights;
+                string untilLabel = until > m.Days ? "月末まで" : $"{Calendar.DateLabel(until, life.month)}の朝まで";
+                menuText.text = "何日進めますか？\n" +
+                                $"◀ <b>{nights}日</b> ▶　{untilLabel}\n" +
+                                UiFactory.Paint("途中で在庫が切れたら、その朝で止まります", UiFactory.Quiet);
+                Message.text = "←→：日数　スペース：進める　Esc：やめる";
+            }
+            else
+            {
+                menuText.text = UiFactory.Menu(Commands, cursor, disabled);
+                Message.text = "↑↓／1～5：選ぶ　スペース：決定";
+            }
             noticeText.text = noticeTime > 0f ? notice : "";
-
-            Message.text = "↑↓／1〜5：選ぶ　スペース：決定";
         }
 
         /// <summary>「■■■□□□□ 3日分」。今夜使い切るなら赤、もう0なら「在庫切れ」（今夜から満足度が下がる）。</summary>
@@ -146,25 +184,23 @@ namespace Negiri.Game.Screens
             return UiFactory.Paint(meter, UiFactory.Good) + $" {value}日分";
         }
 
-        /// <summary>1週間の特売の予定（例：火 卵・キャベツ／金 豚肉・チョコ）。</summary>
+        /// <summary>1週間の特売の予定。曜日ごとに1行（例：「　火曜　卵・キャベツ」）。</summary>
         string WeekSales(MonthState m)
         {
-            var sb = new StringBuilder("特売の曜日：");
-            bool any = false;
+            var sb = new StringBuilder();
             for (int w = 0; w < 7; w++)
             {
                 var list = Flow.Db.Store.SalesOn(w);
                 if (list.Count == 0) continue;
-                if (any) sb.Append("／");
-                sb.Append(Calendar.WeekdayNames[w]).Append(' ');
+                sb.Append(sb.Length == 0 ? "特売の曜日　" : "\n　　　　　　");
+                sb.Append(Calendar.WeekdayNames[w]).Append("曜　");
                 for (int i = 0; i < list.Count; i++)
                 {
                     if (i > 0) sb.Append('・');
                     sb.Append(Flow.Db.ItemById.TryGetValue(list[i].itemId, out var item) ? item.name : list[i].itemId);
                 }
-                any = true;
             }
-            return any ? sb.ToString() : "";
+            return sb.ToString();
         }
     }
 }

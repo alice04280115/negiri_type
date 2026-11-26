@@ -19,20 +19,22 @@ namespace Negiri.Game.Screens
 
         public LedgerScreen(ShoppingFlow flow, RectTransform parent) : base(flow, parent, "Ledger")
         {
-            UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0, 1), new Vector2(24, -48), new Vector2(560, 400));
-            titleText = UiFactory.MakeText(Root, "", 20, UiFactory.Ink, new Vector2(0, 1), new Vector2(40, -54), new Vector2(520, 28), TextAnchor.MiddleLeft);
-            list = new RowList(Root, new Vector2(30, -88), 548, 26, VisibleRows, 16,
+            UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0, 1), new Vector2(24, -48), new Vector2(520, 400));
+            titleText = UiFactory.MakeText(Root, "", 20, UiFactory.Ink, new Vector2(0, 1), new Vector2(40, -54), new Vector2(480, 28), TextAnchor.MiddleLeft);
+            list = new RowList(Root, new Vector2(30, -88), 508, 26, VisibleRows, 16,
                 new Column(10, 120),
-                new Column(130, 200),
-                new Column(330, 110),
-                new Column(440, 96, TextAnchor.MiddleRight));
-            scrollText = UiFactory.MakeText(Root, "", 13, UiFactory.Quiet, new Vector2(0, 1), new Vector2(24, -420), new Vector2(560, 20), TextAnchor.MiddleCenter);
+                new Column(130, 170),
+                new Column(300, 100),
+                new Column(400, 96, TextAnchor.MiddleRight));
+            scrollText = UiFactory.MakeText(Root, "", 13, UiFactory.Quiet, new Vector2(0, 1), new Vector2(24, -420), new Vector2(520, 20), TextAnchor.MiddleCenter);
 
-            UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0, 1), new Vector2(600, -48), new Vector2(336, 400));
-            totalsText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(616, -60), new Vector2(310, 170), TextAnchor.UpperLeft);
+            UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0, 1), new Vector2(560, -48), new Vector2(376, 400));
+            totalsText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(576, -60), new Vector2(350, 170), TextAnchor.UpperLeft);
             totalsText.lineSpacing = 1.3f;
-            lockText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(616, -250), new Vector2(310, 180), TextAnchor.UpperLeft);
+            lockText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(576, -250), new Vector2(350, 180), TextAnchor.UpperLeft);
             lockText.lineSpacing = 1.3f;
+            lockText.horizontalOverflow = HorizontalWrapMode.Wrap;
+            totalsText.horizontalOverflow = HorizontalWrapMode.Wrap;
         }
 
         public override void Enter()
@@ -98,15 +100,15 @@ namespace Negiri.Game.Screens
                 $"財布　{UiFactory.Paint(UiFactory.Yen(m.Wallet.Cash), UiFactory.Warn)}";
 
             lockText.text =
-                $"ロック貯金　{UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}\n" +
+                $"貯金箱　{UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}\n" +
                 $"追加する額　<b>{UiFactory.Yen(lockAmount)}</b>\n" +
                 (confirming
-                    ? UiFactory.Paint($"{UiFactory.Yen(lockAmount)}をロックします。解除できません。\nよければもう一度スペース", UiFactory.Bad)
-                    : UiFactory.Paint("←→で額を決めてスペース\nロックしたお金は目標商品にしか使えません", UiFactory.Quiet));
+                    ? UiFactory.Paint($"{UiFactory.Yen(lockAmount)}を貯金箱に入れます。\n取り出せません。よければもう一度スペース", UiFactory.Bad)
+                    : UiFactory.Paint("←→で額を決めてスペース\n貯金箱のお金は目標商品にしか\n使えません", UiFactory.Quiet));
 
             Message.text = confirming
-                ? "スペース：ロックする　Esc：やめる"
-                : "↑↓：スクロール　←→：ロックに追加する額　スペース：ロックする　Esc：部屋へ戻る";
+                ? "スペース：貯金箱に入れる　Esc：やめる"
+                : "↑↓：スクロール　←→：貯金箱に入れる額　スペース：入れる　Esc：部屋へ戻る";
         }
     }
 }

@@ -195,7 +195,8 @@ namespace Negiri.Core.Tests
         {
             var m = NewMonth(interval: 3);
             Shop(m, Rank.Great, 1000, new[] { Food("rice", 2480, 10), Daily("soap", 498, 10) });
-            var reports = m.AdvanceDays();
+            Assert.AreEqual(3, m.SuggestedNights);
+            var reports = m.AdvanceDays(m.SuggestedNights);
             Assert.AreEqual(3, reports.Count);
             Assert.AreEqual(4, m.Day);
             Assert.IsTrue(m.CanShop);
@@ -207,7 +208,7 @@ namespace Negiri.Core.Tests
             var m = NewMonth(interval: 7);
             Shop(m, Rank.Great, 1000, new[] { Daily("soap", 498, 10) });
             // 食料3日分：3晩で0になり、4日目の朝で止まる
-            var reports = m.AdvanceDays();
+            var reports = m.AdvanceDays(6);
             Assert.AreEqual(3, reports.Count);
             Assert.AreEqual(4, m.Day);
             Assert.AreEqual(0, m.Stock.Food);
@@ -220,9 +221,33 @@ namespace Negiri.Core.Tests
             var m = NewMonth(interval: 7);
             for (int i = 0; i < 28; i++) m.EndDay();
             Assert.AreEqual(29, m.Day);
-            var reports = m.AdvanceDays();
-            Assert.IsTrue(reports.Count >= 1);
-            Assert.IsTrue(m.IsOver || reports.Count == 1);
+            Assert.AreEqual(2, m.NightsLeft);
+            var reports = m.AdvanceDays(5);
+            Assert.AreEqual(2, reports.Count);
+            Assert.IsTrue(m.IsOver);
+            Assert.AreEqual(0, m.NightsLeft);
+        }
+
+        [Test]
+        public void 毎日買い物できても選んだ日数だけ進む()
+        {
+            var m = NewMonth(interval: 1);
+            Shop(m, Rank.Great, 1000, new[] { Food("rice", 2480, 10), Daily("soap", 498, 10) });
+            Assert.AreEqual(3, m.SuggestedNights);
+            var reports = m.AdvanceDays(4);
+            Assert.AreEqual(4, reports.Count);
+            Assert.AreEqual(5, m.Day);
+        }
+
+        [Test]
+        public void すでに在庫切れなら数日進めるは止まらない()
+        {
+            var m = NewMonth(interval: 7);
+            Assert.AreEqual(3, m.AdvanceDays(10).Count); // 食料3日分で止まる
+            Assert.AreEqual(0, m.Stock.Food);
+            Assert.AreEqual(2, m.AdvanceDays(2).Count);
+            Assert.AreEqual(2, m.Stock.FoodOutDays);
+            Assert.Throws<ArgumentOutOfRangeException>(() => m.AdvanceDays(0));
         }
 
         // ---------------- お金 ----------------
@@ -290,7 +315,7 @@ namespace Negiri.Core.Tests
                         m.EndDay();
                         break;
                     default:
-                        m.AdvanceDays();
+                        if (!m.IsOver) m.AdvanceDays(rnd.Next(1, 8));
                         break;
                 }
                 Assert.IsTrue(m.Wallet.IsBalanced, $"step {step}");
@@ -331,8 +356,8 @@ namespace Negiri.Core.Tests
             Assert.AreEqual(m.Ledger.TotalSaved, r.Ledger.TotalSaved);
 
             // 同じセーブからは同じ展開になる
-            var a = m.AdvanceDays();
-            var b = r.AdvanceDays();
+            var a = m.AdvanceDays(3);
+            var b = r.AdvanceDays(3);
             Assert.AreEqual(a.Count, b.Count);
             Assert.AreEqual(m.Satisfaction.Value, r.Satisfaction.Value);
         }

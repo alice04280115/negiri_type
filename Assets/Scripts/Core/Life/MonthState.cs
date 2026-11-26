@@ -40,7 +40,7 @@ namespace Negiri.Core.Life
         public ShoppingRule Rule { get; }
         public int Difficulty { get; }
 
-        /// <summary>今日（1〜日数）。月が終わった後は最後の日のまま。</summary>
+        /// <summary>今日（1～日数）。月が終わった後は最後の日のまま。</summary>
         public int Day { get; private set; }
         /// <summary>最後の日の夜を越えたら true。</summary>
         public bool IsOver { get; private set; }
@@ -192,18 +192,35 @@ namespace Negiri.Core.Life
             return r;
         }
 
-        /// <summary>
-        /// 「数日進める」：少なくとも1晩進め、買い物できる日・在庫が切れる日（その朝）・月末のどれかで止まる。
-        /// </summary>
-        public List<NightReport> AdvanceDays()
+        /// <summary>今日を含めて残っている夜の数（30日目なら1）。</summary>
+        public int NightsLeft => IsOver ? 0 : Days - Day + 1;
+
+        /// <summary>「数日進める」で最初に出す日数：次の買い物の日まで（2日以上先のとき）。それ以外は3日。</summary>
+        public int SuggestedNights
         {
+            get
+            {
+                if (IsOver) return 0;
+                int next = NextShopDay;
+                int n = next - Day >= 2 && next <= Days ? next - Day : 3;
+                return Math.Max(1, Math.Min(n, NightsLeft));
+            }
+        }
+
+        /// <summary>
+        /// 「数日進める」：選んだ晩数だけ進める。途中で在庫が切れた（その朝）か月末なら、そこで止まる。
+        /// 進める前からすでに切れている在庫では止まらない。
+        /// </summary>
+        public List<NightReport> AdvanceDays(int nights)
+        {
+            if (nights < 1) throw new ArgumentOutOfRangeException(nameof(nights));
+            bool hadFood = Stock.Food > 0, hadDaily = Stock.Daily > 0;
             var reports = new List<NightReport>();
-            do
+            while (reports.Count < nights && !IsOver)
             {
                 reports.Add(EndDay());
-                if (IsOver || CanShop) break;
-                if (Stock.Food <= 0 || Stock.Daily <= 0) break;
-            } while (true);
+                if ((hadFood && Stock.Food <= 0) || (hadDaily && Stock.Daily <= 0)) break;
+            }
             return reports;
         }
 

@@ -123,7 +123,7 @@ namespace Negiri.Core.Shopping
             }
         }
 
-        /// <summary>まだ打っていない商品の支払額の幅（全部PERFECT〜全部MISS）。レジ画面の見込み表示用。</summary>
+        /// <summary>まだ打っていない商品の支払額の幅（全部PERFECT～全部MISS）。レジ画面の見込み表示用。</summary>
         public (int best, int worst) RemainingRange(int perfectBp)
         {
             int best = 0, worst = 0;

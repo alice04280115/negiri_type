@@ -2,7 +2,7 @@ using System;
 
 namespace Negiri.Core.Life
 {
-    /// <summary>1〜30日の日付と曜日。</summary>
+    /// <summary>1～30日の日付と曜日。</summary>
     public static class Calendar
     {
         public static readonly string[] WeekdayNames = { "月", "火", "水", "木", "金", "土", "日" };

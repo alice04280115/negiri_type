@@ -52,7 +52,7 @@ namespace Negiri.Game.Screens
             int target = life.month.targetPrice;
             bool reach = total >= target;
             bodyText.text =
-                $"残金　{UiFactory.Yen(total)}" + UiFactory.Paint($"（財布 {UiFactory.Yen(m.Wallet.Cash)}＋ロック {UiFactory.Yen(m.Wallet.Locked)}）", UiFactory.Quiet) + "\n" +
+                $"残金　{UiFactory.Yen(total)}" + UiFactory.Paint($"（財布 {UiFactory.Yen(m.Wallet.Cash)}＋貯金箱 {UiFactory.Yen(m.Wallet.Locked)}）", UiFactory.Quiet) + "\n" +
                 $"{life.month.targetName}（{UiFactory.Yen(target)}）　" +
                 (reach ? UiFactory.Paint("定価でも買えます", UiFactory.Good) : UiFactory.Paint($"あと{UiFactory.Yen(target - total)}足りません", UiFactory.Bad)) + "\n" +
                 $"在庫切れ　食料 {m.Stock.FoodOutDays}日・日用品 {m.Stock.DailyOutDays}日" + (outDays == 0 ? UiFactory.Paint("　切らさずに過ごせました", UiFactory.Good) : "") + "\n" +

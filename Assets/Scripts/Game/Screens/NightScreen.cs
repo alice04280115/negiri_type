@@ -37,7 +37,7 @@ namespace Negiri.Game.Screens
 
             headText.text = nights.Count == 1
                 ? $"{Calendar.DateLabel(first.Day, month)}の夜"
-                : $"{Calendar.DateLabel(first.Day, month)}〜{Calendar.DateLabel(last.Day, month)}（{nights.Count}晩）";
+                : $"{Calendar.DateLabel(first.Day, month)}～{Calendar.DateLabel(last.Day, month)}（{nights.Count}晩）";
 
             var sb = new StringBuilder();
             if (nights.Count == 1)
@@ -45,7 +45,7 @@ namespace Negiri.Game.Screens
                 sb.Append(Line("食料", first.FoodBefore, first.FoodAfter, first.FoodOut, Flow.Life.stock.foodOutPenalty)).Append('\n');
                 sb.Append(Line("日用品", first.DailyBefore, first.DailyAfter, first.DailyOut, Flow.Life.stock.dailyOutPenalty)).Append('\n');
                 sb.Append($"満足度　{first.SatisfactionBefore} → <b>{first.SatisfactionAfter}</b>");
-                sb.Append(UiFactory.Paint($"（毎晩−{Flow.Life.satisfaction.dailyDecay}）", UiFactory.Quiet));
+                sb.Append(UiFactory.Paint($"（毎晩－{Flow.Life.satisfaction.dailyDecay}）", UiFactory.Quiet));
             }
             else
             {
@@ -76,7 +76,7 @@ namespace Negiri.Game.Screens
 
         static string Line(string label, int before, int after, bool outOfStock, int penalty)
         {
-            if (outOfStock) return UiFactory.Paint($"{label}　在庫切れ！　満足度−{penalty}", UiFactory.Bad);
+            if (outOfStock) return UiFactory.Paint($"{label}　在庫切れ！　満足度－{penalty}", UiFactory.Bad);
             var s = $"{label}　{before}日分 → <b>{after}日分</b>";
             return after <= 0 ? UiFactory.Paint(s + "（明日の夜に切れます）", UiFactory.Warn) : s;
         }

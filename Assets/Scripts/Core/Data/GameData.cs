@@ -55,7 +55,7 @@ namespace Negiri.Core.Data
         /// <summary>特売の曜日（例："火金"）。空なら毎日。</summary>
         public string days = "";
 
-        /// <summary>weekday（0＝月曜 … 6＝日曜）にこの特売があるか。weekday が −1 なら毎日の特売だけを数える。</summary>
+        /// <summary>weekday（0＝月曜 … 6＝日曜）にこの特売があるか。weekday が －1 なら毎日の特売だけを数える。</summary>
         public bool OnWeekday(int weekday)
         {
             if (string.IsNullOrEmpty(days)) return true;
@@ -207,7 +207,7 @@ namespace Negiri.Core.Data
                             break;
                         }
                     }
-                    if (sale.discountBp <= 0 || sale.discountBp >= 10000) errors.Add($"特売の割引は1〜9999にしてください: {store.id} → {sale.itemId}");
+                    if (sale.discountBp <= 0 || sale.discountBp >= 10000) errors.Add($"特売の割引は1～9999にしてください: {store.id} → {sale.itemId}");
                 }
             }
             return errors;
@@ -244,8 +244,8 @@ namespace Negiri.Core.Data
             if (m == null || st == null || sat == null) { errors.Add("life.month / life.stock / life.satisfaction をすべて書いてください"); return errors; }
             if (m.days <= 0) errors.Add("life.month.days は1以上にしてください");
             if (m.budget <= 0) errors.Add("life.month.budget は1以上にしてください");
-            if (m.firstWeekday < 0 || m.firstWeekday > 6) errors.Add("life.month.firstWeekday は0（月）〜6（日）にしてください");
-            if (m.month < 1 || m.month > 12) errors.Add("life.month.month は1〜12にしてください");
+            if (m.firstWeekday < 0 || m.firstWeekday > 6) errors.Add("life.month.firstWeekday は0（月）～6（日）にしてください");
+            if (m.month < 1 || m.month > 12) errors.Add("life.month.month は1～12にしてください");
             if (m.lockStep <= 0) errors.Add("life.month.lockStep は1以上にしてください");
             if (m.targetPrice <= 0) errors.Add("life.month.targetPrice は1以上にしてください");
             if (st.foodStart < 0 || st.dailyStart < 0) errors.Add("在庫の初期値は0以上にしてください");
@@ -253,8 +253,8 @@ namespace Negiri.Core.Data
             if (st.foodOutPenalty < 0 || st.dailyOutPenalty < 0) errors.Add("在庫切れの満足度は0以上にしてください");
             if (st.dailyCap > 0 && st.dailyStart > st.dailyCap) errors.Add("日用品の初期値が上限を超えています");
             if (sat.max <= 0) errors.Add("life.satisfaction.max は1以上にしてください");
-            if (sat.start < 0 || sat.start > sat.max) errors.Add("life.satisfaction.start は0〜max にしてください");
-            if (sat.passLine < 0 || sat.passLine > sat.max) errors.Add("life.satisfaction.passLine は0〜max にしてください");
+            if (sat.start < 0 || sat.start > sat.max) errors.Add("life.satisfaction.start は0～max にしてください");
+            if (sat.passLine < 0 || sat.passLine > sat.max) errors.Add("life.satisfaction.passLine は0～max にしてください");
             if (sat.dailyDecay < 0) errors.Add("life.satisfaction.dailyDecay は0以上にしてください");
             foreach (var d in shopping?.difficulties ?? Array.Empty<ShoppingRule>())
             {
@@ -269,7 +269,7 @@ namespace Negiri.Core.Data
     {
         /// <summary>
         /// itemId の文章のうち level が同じものから選ぶ。なければ level の近いもの（同じ差なら低い方）から選ぶ。
-        /// pick は「候補の数を受け取り、0〜数−1 を返す」関数（画面ではランダム、テストでは固定）。
+        /// pick は「候補の数を受け取り、0～数－1 を返す」関数（画面ではランダム、テストでは固定）。
         /// </summary>
         public static SentenceData Pick(SentenceList sentences, string itemId, int level, Func<int, int> pick)
         {

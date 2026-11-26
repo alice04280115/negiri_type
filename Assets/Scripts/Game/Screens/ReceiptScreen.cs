@@ -93,7 +93,7 @@ namespace Negiri.Game.Screens
             }
             if (r.ReturnCount > 0)
             {
-                sb.Append('\n').Append(UiFactory.Paint($"返品 {r.ReturnCount}品" + (r.SatisfactionLoss > 0 ? $"（満足度 −{r.SatisfactionLoss}）" : ""), UiFactory.Warn));
+                sb.Append('\n').Append(UiFactory.Paint($"返品 {r.ReturnCount}品" + (r.SatisfactionLoss > 0 ? $"（満足度 －{r.SatisfactionLoss}）" : ""), UiFactory.Warn));
             }
             returnText.text = sb.ToString();
 
