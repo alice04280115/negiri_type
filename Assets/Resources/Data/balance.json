@@ -27,5 +27,34 @@
         "discountBp": 1000
       }
     ]
+  },
+  "shopping": {
+    "startingCash": 3000,
+    "difficulties": [
+      {
+        "label": "初級",
+        "maxItems": 4,
+        "shortage": "ChooseReturn",
+        "satisfactionPerReturn": 0
+      },
+      {
+        "label": "中級",
+        "maxItems": 7,
+        "shortage": "ChooseReturn",
+        "satisfactionPerReturn": 3
+      },
+      {
+        "label": "上級",
+        "maxItems": 12,
+        "shortage": "AutoReturnHighestFirst",
+        "satisfactionPerReturn": 3
+      },
+      {
+        "label": "達人",
+        "maxItems": 12,
+        "shortage": "AutoReturnLowestFirst",
+        "satisfactionPerReturn": 3
+      }
+    ]
   }
 }

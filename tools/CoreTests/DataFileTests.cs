@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text.Json;
 using Negiri.Core.Data;
+using Negiri.Core.Shopping;
 using Negiri.Core.Typing;
 using NUnit.Framework;
 
@@ -54,6 +55,40 @@ namespace Negiri.Core.Tests
             Assert.AreEqual(2.5f, b.typing.keysPerSecond, 1e-6f);
             Assert.AreEqual(3, b.typing.ranks.Count);
             Assert.AreEqual(Rank.Perfect, b.typing.ranks[0].RankValue);
+        }
+
+        [Test]
+        public void 買い物の設定を読めて不備がない()
+        {
+            var b = Load<BalanceData>("balance.json");
+            var errors = DataValidator.ValidateShopping(b.shopping, 4);
+            Assert.IsEmpty(errors, string.Join("\n", errors));
+            Assert.AreEqual(3000, b.shopping.startingCash);
+            Assert.AreEqual(ShortageRule.AutoReturnHighestFirst, b.shopping.difficulties[2].ShortageValue);
+            Assert.AreEqual(ShortageRule.AutoReturnLowestFirst, b.shopping.difficulties[3].ShortageValue);
+        }
+
+        [Test]
+        public void 店舗と特売のデータに不備がない()
+        {
+            var errors = DataValidator.ValidateStores(Load<StoreList>("stores.json"), Load<ItemList>("items.json"));
+            Assert.IsEmpty(errors, string.Join("\n", errors));
+        }
+
+        [Test]
+        public void すべての商品に効果と各難易度の文章がある()
+        {
+            var items = Load<ItemList>("items.json");
+            var sentences = Load<SentenceList>("sentences.json");
+            foreach (var item in items.items)
+            {
+                Assert.IsNotEmpty(item.effects, item.id);
+                for (int level = 1; level <= 4; level++)
+                {
+                    var s = SentenceCatalog.Pick(sentences, item.id, level, n => 0);
+                    Assert.IsNotNull(s, $"{item.id} level {level}");
+                }
+            }
         }
     }
 }

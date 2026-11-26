@@ -1,0 +1,22 @@
+{
+  "stores": [
+    {
+      "id": "negiri_mart",
+      "name": "ネギリマート",
+      "sales": [
+        {
+          "itemId": "egg",
+          "discountBp": 2000
+        },
+        {
+          "itemId": "cabbage",
+          "discountBp": 1000
+        },
+        {
+          "itemId": "chocolate",
+          "discountBp": 1500
+        }
+      ]
+    }
+  ]
+}
