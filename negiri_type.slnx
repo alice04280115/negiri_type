@@ -1,5 +1,5 @@
 ﻿<Solution>
+  <Project Path="Negiri.Game.csproj" />
   <Project Path="Negiri.Core.csproj" />
   <Project Path="Negiri.Core.Tests.csproj" />
-  <Project Path="Negiri.Game.csproj" />
 </Solution>
