@@ -7,7 +7,13 @@
       "kind": "essential",
       "basePrice": 238,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "food",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "egg",
@@ -16,7 +22,13 @@
       "kind": "essential",
       "basePrice": 248,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "food",
+          "amount": 2
+        }
+      ]
     },
     {
       "id": "bread",
@@ -25,7 +37,13 @@
       "kind": "essential",
       "basePrice": 158,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "food",
+          "amount": 2
+        }
+      ]
     },
     {
       "id": "rice",
@@ -34,7 +52,13 @@
       "kind": "essential",
       "basePrice": 2480,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "food",
+          "amount": 10
+        }
+      ]
     },
     {
       "id": "pork",
@@ -43,7 +67,13 @@
       "kind": "essential",
       "basePrice": 398,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "food",
+          "amount": 2
+        }
+      ]
     },
     {
       "id": "cabbage",
@@ -52,7 +82,13 @@
       "kind": "essential",
       "basePrice": 198,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "food",
+          "amount": 2
+        }
+      ]
     },
     {
       "id": "natto",
@@ -61,7 +97,13 @@
       "kind": "essential",
       "basePrice": 98,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "food",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "tea",
@@ -70,7 +112,13 @@
       "kind": "essential",
       "basePrice": 158,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "food",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "detergent",
@@ -79,7 +127,13 @@
       "kind": "essential",
       "basePrice": 328,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "daily",
+          "amount": 7
+        }
+      ]
     },
     {
       "id": "toilet_paper",
@@ -88,7 +142,13 @@
       "kind": "essential",
       "basePrice": 398,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "daily",
+          "amount": 10
+        }
+      ]
     },
     {
       "id": "shampoo",
@@ -97,7 +157,13 @@
       "kind": "essential",
       "basePrice": 498,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "daily",
+          "amount": 10
+        }
+      ]
     },
     {
       "id": "chips",
@@ -106,7 +172,13 @@
       "kind": "free",
       "basePrice": 148,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "satisfaction",
+          "amount": 3
+        }
+      ]
     },
     {
       "id": "chocolate",
@@ -115,7 +187,13 @@
       "kind": "free",
       "basePrice": 198,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "satisfaction",
+          "amount": 3
+        }
+      ]
     },
     {
       "id": "ice",
@@ -124,7 +202,13 @@
       "kind": "free",
       "basePrice": 128,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "satisfaction",
+          "amount": 2
+        }
+      ]
     },
     {
       "id": "magazine",
@@ -133,7 +217,13 @@
       "kind": "free",
       "basePrice": 690,
       "maxDiscountBp": 5000,
-      "typingLevel": 1
+      "typingLevel": 1,
+      "effects": [
+        {
+          "stat": "satisfaction",
+          "amount": 8
+        }
+      ]
     }
   ]
 }
