@@ -311,6 +311,64 @@ namespace Negiri.Core.Tests
             Assert.AreEqual(1, c.ScannedCount);
         }
 
+        // ---------------- レシート ----------------
+
+        [Test]
+        public void レシートは特売後の価格とタイピング値引を分けて書く()
+        {
+            var cart = new Cart(12);
+            cart.Add(Item("rice", 2480), 0);
+            cart.Add(Item("egg", 248), 2000);
+            cart.Add(Item("toilet_paper", 398), 0);
+            cart.Add(Item("cabbage", 198), 1000);
+            var c = new Checkout(cart.Lines, Rule(ShortageRule.AutoReturnHighestFirst));
+            c.Record(0, Rank.Miss, 0);
+            c.Record(1, Rank.Miss, 0);      // 特売だけ：198
+            c.Record(2, Rank.Great, 1000);  // 398 → 358
+            c.Record(3, Rank.Great, 1000);  // 特売10%＋GREAT10%：198 → 178（特売後 178.2 → 178、合算 20% → 158）
+            var w = new Wallet(3000);
+            c.ApplyAutoReturn(w.Cash);
+            var receipt = c.Pay(w);
+
+            var rows = ReceiptLines.Build(receipt);
+            var items = rows.FindAll(r => r.Kind == ReceiptRowKind.Item);
+            Assert.AreEqual(3, items.Count);
+            Assert.AreEqual("egg", items[0].Left);
+            Assert.AreEqual("特", items[0].Mark);
+            Assert.AreEqual("¥198", items[0].Right);
+            Assert.AreEqual("", items[1].Mark);
+            Assert.AreEqual("¥398", items[1].Right);
+            Assert.AreEqual("¥178", items[2].Right);
+
+            var discounts = rows.FindAll(r => r.Kind == ReceiptRowKind.Discount);
+            Assert.AreEqual(2, discounts.Count);
+            Assert.AreEqual("-¥40", discounts[0].Right);
+            Assert.AreEqual("-¥20", discounts[1].Right);
+            Assert.AreEqual(1, rows.FindAll(r => r.Kind == ReceiptRowKind.Note).Count, "MISS は値引きなしの行");
+
+            var total = rows.Find(r => r.Kind == ReceiptRowKind.Total);
+            Assert.AreEqual(ReceiptLines.Yen(receipt.Paid), total.Right);
+            Assert.AreEqual(198 + 358 + 158, receipt.Paid);
+
+            var returned = rows.FindAll(r => r.Kind == ReceiptRowKind.Returned);
+            Assert.AreEqual(1, returned.Count);
+            Assert.AreEqual("rice", returned[0].Left);
+        }
+
+        [Test]
+        public void レシートの小計からタイピング値引を引くと合計になる()
+        {
+            var cart = new Cart(12);
+            cart.Add(Item("a", 1000), 4000); // 上限で止まる：特売40%＋PERFECT20% → 50%
+            cart.Add(Item("b", 333), 0);
+            var c = ScanAll(cart, Rule(ShortageRule.ChooseReturn), Rank.Perfect, PerfectBp);
+            var receipt = c.Pay(new Wallet(3000));
+            int sum = 0;
+            foreach (var l in receipt.Lines) sum += ReceiptLines.ShelfPrice(l) - ReceiptLines.TypingDiscount(l);
+            Assert.AreEqual(receipt.Paid, sum);
+            Assert.AreEqual(100, ReceiptLines.TypingDiscount(receipt.Lines[0]), "上限で止まった分は値引に入らない");
+        }
+
         // ---------------- 決まりとデータ ----------------
 
         [Test]

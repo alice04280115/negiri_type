@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Negiri.Core.Shopping;
 using Negiri.Game.Ui;
 using UnityEngine;
@@ -6,42 +7,63 @@ using UnityEngine.UI;
 
 namespace Negiri.Game.Screens
 {
-    /// <summary>会計結果。レシート風の表と、今回の節約額、財布の残高の変化。</summary>
+    /// <summary>
+    /// 会計結果。左に本物のような紙のレシート（特売は「特」と特売後の価格、その下にタイピング値引）、
+    /// 右に今回の節約額と財布の残高の変化、次にすることのメニュー。
+    /// </summary>
     public sealed class ReceiptScreen : ScreenBase
     {
-        readonly Text titleText, summaryText, menuText;
-        int cursor;
-        readonly RowList header, list;
+        const int VisibleRows = 19;
 
-        static readonly Column[] Columns =
-        {
-            new Column(16, 220),
-            new Column(236, 100, TextAnchor.MiddleRight),
-            new Column(350, 110, TextAnchor.MiddleCenter),
-            new Column(460, 70, TextAnchor.MiddleRight),
-            new Column(540, 100, TextAnchor.MiddleRight),
-        };
+        static readonly Color PaperColor = new Color32(0xf7, 0xf5, 0xef, 0xff);
+        static readonly Color PaperInk = new Color32(0x2a, 0x2a, 0x30, 0xff);
+        static readonly Color PaperQuiet = new Color32(0x8a, 0x8a, 0x94, 0xff);
+        static readonly Color PaperRed = new Color32(0xc2, 0x3b, 0x3b, 0xff);
+
+        readonly Text storeText, scrollText, savedText, walletText, returnText, menuText;
+        readonly RowList paper;
+        List<ReceiptRow> rows = new List<ReceiptRow>();
+        int scroll;
+        int cursor;
 
         public ReceiptScreen(ShoppingFlow flow, RectTransform parent) : base(flow, parent, "Receipt")
         {
-            UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0.5f, 1), new Vector2(0, -44), new Vector2(680, 340));
-            titleText = UiFactory.MakeText(Root, "", 22, UiFactory.Ink, new Vector2(0.5f, 1), new Vector2(0, -50), new Vector2(660, 30), TextAnchor.MiddleCenter);
-            header = new RowList(Root, new Vector2(140, -84), 680, 22, 1, 15, Columns);
-            list = new RowList(Root, new Vector2(140, -108), 680, 22, 12, 16, Columns);
-            summaryText = UiFactory.MakeText(Root, "", 18, UiFactory.Ink, new Vector2(0.5f, 0), new Vector2(0, 84), new Vector2(900, 50), TextAnchor.LowerCenter);
-            summaryText.lineSpacing = 1.1f;
-            menuText = UiFactory.MakeText(Root, "", 18, UiFactory.Ink, new Vector2(0.5f, 0), new Vector2(0, 52), new Vector2(900, 26), TextAnchor.MiddleCenter);
+            // 左：紙のレシート
+            UiFactory.MakeBox(Root, PaperColor, new Vector2(0, 1), new Vector2(110, -40), new Vector2(360, 452));
+            storeText = UiFactory.MakeText(Root, "", 20, PaperInk, new Vector2(0, 1), new Vector2(110, -50), new Vector2(360, 26), TextAnchor.MiddleCenter);
+            UiFactory.MakeText(Root, "＜領 収 書＞", 16, PaperInk, new Vector2(0, 1), new Vector2(110, -78), new Vector2(360, 22), TextAnchor.MiddleCenter);
+            paper = new RowList(Root, new Vector2(110, -104), 360, 19, VisibleRows, 15,
+                new Column(16, 240),
+                new Column(250, 24, TextAnchor.MiddleCenter),
+                new Column(270, 76, TextAnchor.MiddleRight));
+            scrollText = UiFactory.MakeText(Root, "", 13, PaperQuiet, new Vector2(0, 1), new Vector2(110, -470), new Vector2(360, 18), TextAnchor.MiddleCenter);
+
+            // 右：まとめとメニュー
+            UiFactory.MakeText(Root, "今回の節約額", 18, UiFactory.Quiet, new Vector2(0, 1), new Vector2(520, -90), new Vector2(380, 26), TextAnchor.MiddleLeft);
+            savedText = UiFactory.MakeText(Root, "", 44, UiFactory.Good, new Vector2(0, 1), new Vector2(520, -122), new Vector2(380, 56), TextAnchor.MiddleLeft);
+            walletText = UiFactory.MakeText(Root, "", 20, UiFactory.Ink, new Vector2(0, 1), new Vector2(520, -200), new Vector2(380, 56), TextAnchor.UpperLeft);
+            walletText.lineSpacing = 1.2f;
+            returnText = UiFactory.MakeText(Root, "", 16, UiFactory.Warn, new Vector2(0, 1), new Vector2(520, -270), new Vector2(380, 48), TextAnchor.UpperLeft);
+            returnText.lineSpacing = 1.2f;
+            menuText = UiFactory.MakeText(Root, "", 20, UiFactory.Ink, new Vector2(0, 1), new Vector2(520, -360), new Vector2(400, 70), TextAnchor.UpperLeft);
+            menuText.lineSpacing = 1.4f;
         }
 
         public override void Enter()
         {
             cursor = 0;
+            scroll = 0;
+            rows = Flow.Receipt != null ? ReceiptLines.Build(Flow.Receipt) : new List<ReceiptRow>();
         }
+
+        int MaxScroll => Mathf.Max(0, rows.Count - VisibleRows);
 
         public override void Tick(Keyboard kb, float deltaTime)
         {
-            if (Pressed(kb.leftArrowKey) || Pressed(kb.upArrowKey)) cursor = 0;
-            if (Pressed(kb.rightArrowKey) || Pressed(kb.downArrowKey)) cursor = 1;
+            if (Pressed(kb.upArrowKey)) scroll = Mathf.Max(0, scroll - 1);
+            if (Pressed(kb.downArrowKey)) scroll = Mathf.Min(MaxScroll, scroll + 1);
+            if (Pressed(kb.leftArrowKey)) cursor = 0;
+            if (Pressed(kb.rightArrowKey)) cursor = 1;
             if (!Decide(kb)) return;
             if (cursor == 0) Flow.StartShopping();
             else Flow.ShowTitle();
@@ -51,40 +73,57 @@ namespace Negiri.Game.Screens
         {
             var r = Flow.Receipt;
             if (r == null) return;
-            titleText.text = $"レシート　{Flow.Db.Store.name}";
+            storeText.text = $"<b>{Flow.Db.Store.name}</b>";
 
-            header.SetCount(1);
-            header.Set(0, UiFactory.Quiet, false, "品名", "通常価格", "評価", "割引", "支払額");
+            int shown = Mathf.Min(VisibleRows, rows.Count - scroll);
+            paper.SetCount(shown);
+            for (int i = 0; i < shown; i++) SetRow(i, rows[scroll + i]);
+            scrollText.text = MaxScroll > 0
+                ? (scroll < MaxScroll ? "▼ ↑↓でスクロール" : "▲ ↑↓でスクロール")
+                : "";
 
-            int shown = Mathf.Min(r.Lines.Count, list.Capacity);
-            list.SetCount(shown);
-            for (int i = 0; i < shown; i++)
-            {
-                var l = r.Lines[i];
-                if (l.Returned)
-                {
-                    list.Set(i, UiFactory.Quiet, false, l.Cart.Item.name, UiFactory.Yen(l.BasePrice), "返品", "", "—");
-                    continue;
-                }
-                var rank = UiFactory.Paint(UiFactory.RankLabel(l.Rank), UiFactory.RankColor(l.Rank));
-                var discount = l.DiscountBp > 0 ? $"-{l.DiscountBp / 100.0:0.#}%" : "";
-                list.Set(i, UiFactory.Ink, false, l.Cart.Item.name, UiFactory.Yen(l.BasePrice), rank, discount, UiFactory.Yen(l.Price));
-            }
-
-            var summary = $"合計 <b>{UiFactory.Yen(r.Paid)}</b>（通常価格 {UiFactory.Yen(r.BaseTotal)}）　今回の節約額 " + UiFactory.Paint(UiFactory.Yen(r.Saved), UiFactory.Good);
-            summary += $"\n財布 {UiFactory.Yen(r.CashBefore)} → {UiFactory.Yen(r.CashAfter)}";
+            savedText.text = UiFactory.Yen(r.Saved);
+            walletText.text = $"財布 {UiFactory.Yen(r.CashBefore)} → <b>{UiFactory.Yen(r.CashAfter)}</b>\n" +
+                              UiFactory.Paint($"支払い {UiFactory.Yen(r.Paid)}（通常価格なら {UiFactory.Yen(r.BaseTotal)}）", UiFactory.Quiet);
             if (r.ReturnCount > 0)
             {
-                summary += $"　返品 {r.ReturnCount}品";
-                if (r.SatisfactionLoss > 0) summary += $"（満足度 −{r.SatisfactionLoss}　※段階2では記録のみ）";
+                returnText.text = $"返品 {r.ReturnCount}品" +
+                    (r.SatisfactionLoss > 0 ? $"　満足度 −{r.SatisfactionLoss}\n" + UiFactory.Paint("※段階2では満足度は記録のみ", UiFactory.Quiet) : "");
             }
-            summaryText.text = summary;
+            else
+            {
+                returnText.text = "";
+            }
 
             var again = $"もう一度買い物（財布は{UiFactory.Yen(Flow.Db.Balance.shopping.startingCash)}に戻ります）";
             menuText.text = (cursor == 0 ? UiFactory.Paint("▶ " + again, UiFactory.Warn) : UiFactory.Paint("　" + again, UiFactory.Quiet))
-                + "　　" + (cursor == 1 ? UiFactory.Paint("▶ タイトルへ", UiFactory.Warn) : UiFactory.Paint("　タイトルへ", UiFactory.Quiet));
-            Message.text = "←→：選ぶ　スペース：決定";
+                + "\n" + (cursor == 1 ? UiFactory.Paint("▶ タイトルへ", UiFactory.Warn) : UiFactory.Paint("　タイトルへ", UiFactory.Quiet));
+
+            Message.text = MaxScroll > 0 ? "↑↓：レシートをスクロール　←→：選ぶ　スペース：決定" : "←→：選ぶ　スペース：決定";
             Message.color = UiFactory.Ink;
+        }
+
+        void SetRow(int i, ReceiptRow row)
+        {
+            switch (row.Kind)
+            {
+                case ReceiptRowKind.Separator:
+                    paper.Set(i, PaperQuiet, false, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+                    break;
+                case ReceiptRowKind.Discount:
+                    paper.Set(i, PaperRed, false, row.Left, row.Mark, row.Right);
+                    break;
+                case ReceiptRowKind.Note:
+                case ReceiptRowKind.Returned:
+                    paper.Set(i, PaperQuiet, false, row.Left, row.Mark, row.Right);
+                    break;
+                case ReceiptRowKind.Total:
+                    paper.Set(i, PaperInk, false, $"<b><size=18>{row.Left}</size></b>", row.Mark, $"<b><size=18>{row.Right}</size></b>");
+                    break;
+                default:
+                    paper.Set(i, PaperInk, false, row.Left, row.Mark, row.Right);
+                    break;
+            }
         }
     }
 }
