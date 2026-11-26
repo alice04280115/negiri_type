@@ -51,6 +51,8 @@ namespace Negiri.Core.Life
         public Stock Stock { get; }
         public Satisfaction Satisfaction { get; }
         public Ledger Ledger { get; } = new Ledger();
+        /// <summary>今日、家計簿から貯金箱に入れた額。夜が明けると0に戻る。</summary>
+        public int LockedToday { get; private set; }
 
         MonthState(LifeBalance life, ShoppingRule rule, int difficulty, int day, bool isOver, int lastShopDay, Wallet wallet, Stock stock, Satisfaction satisfaction)
         {
@@ -86,11 +88,40 @@ namespace Negiri.Core.Life
         /// <summary>次に買い物できる日が月の外なら、今月はもう行けない。</summary>
         public bool NoMoreShopping => IsOver || NextShopDay > Days;
 
-        /// <summary>財布からロック貯金へ移す（解除はできない）。</summary>
-        public void Lock(int amount)
+        /// <summary>貯金箱の合計の上限まで、あといくら入るか。上限なしなら int.MaxValue。</summary>
+        int RoomInBox => Life.month.lockTotalMax > 0 ? Math.Max(0, Life.month.lockTotalMax - Wallet.Locked) : int.MaxValue;
+
+        /// <summary>単位（lockStep）で切り捨て、財布と合計の上限も考えた、入れられる最大額。</summary>
+        int Fit(int limit)
+        {
+            int step = Math.Max(1, Life.month.lockStep);
+            int n = Math.Min(Math.Min(limit, Wallet.Cash), RoomInBox);
+            return Math.Max(0, n - n % step);
+        }
+
+        /// <summary>月初に貯金箱へ入れられる最大額。</summary>
+        public int MaxStartLock => IsOver ? 0 : Fit(Life.month.lockStartMax);
+
+        /// <summary>今日、家計簿から貯金箱へ入れられる最大額。</summary>
+        public int MaxLockToday => IsOver ? 0 : Fit(Life.month.lockDailyMax - LockedToday);
+
+        /// <summary>月初に財布から貯金箱へ移す（取り出せない）。上限は lockStartMax。</summary>
+        public void LockAtStart(int amount)
+        {
+            if (amount > MaxStartLock) throw new ArgumentException("月初に貯金箱へ入れられる額を超えています");
+            Lock(amount, false);
+        }
+
+        /// <summary>家計簿から財布の一部を貯金箱へ移す（取り出せない）。上限は1日 lockDailyMax。</summary>
+        public void Lock(int amount) => Lock(amount, true);
+
+        void Lock(int amount, bool daily)
         {
             if (IsOver) throw new InvalidOperationException("月が終わっています");
+            if (amount < 0) throw new ArgumentException("貯金箱に入れる額は0以上にしてください");
+            if (daily && amount > MaxLockToday) throw new ArgumentException("今日貯金箱へ入れられる額を超えています");
             Wallet.Lock(amount);
+            if (daily) LockedToday += amount;
         }
 
         /// <summary>このカートを全部買ったら在庫と満足度がどうなるか（店内の表示用）。</summary>
@@ -186,6 +217,7 @@ namespace Negiri.Core.Life
             r.DailyAfter = Stock.Daily;
             r.SatisfactionAfter = Satisfaction.Value;
 
+            LockedToday = 0;
             if (Day >= Days) IsOver = true;
             else Day++;
             r.MonthOver = IsOver;
@@ -239,6 +271,7 @@ namespace Negiri.Core.Life
                 totalSpent = Wallet.TotalSpent,
                 cash = Wallet.Cash,
                 locked = Wallet.Locked,
+                lockedToday = LockedToday,
                 food = Stock.Food,
                 daily = Stock.Daily,
                 foodOutDays = Stock.FoodOutDays,
@@ -259,6 +292,7 @@ namespace Negiri.Core.Life
                 new Stock(save.food, save.daily, rule.foodCap, life.stock.dailyCap, save.foodOutDays, save.dailyOutDays),
                 new Satisfaction(save.satisfaction, life.satisfaction.max));
             foreach (var e in save.ledger ?? Array.Empty<LedgerEntry>()) s.Ledger.Add(e);
+            s.LockedToday = Math.Max(0, save.lockedToday);
             return s;
         }
     }

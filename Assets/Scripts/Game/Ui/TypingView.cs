@@ -18,7 +18,8 @@ namespace Negiri.Game.Ui
         public TypingView(RectTransform root)
         {
             sentenceText = UiFactory.MakeText(root, "", 40, UiFactory.Ink, new Vector2(0.5f, 0.5f), new Vector2(0, 100), new Vector2(900, 52), TextAnchor.MiddleCenter);
-            ruleText = UiFactory.MakeText(root, "", 15, UiFactory.Quiet, new Vector2(0.5f, 0.5f), new Vector2(0, 142), new Vector2(900, 20), TextAnchor.MiddleCenter);
+            // 画面下の操作案内（「スペースキーで開始」など）のすぐ上に出す
+            ruleText = UiFactory.MakeText(root, "", 16, UiFactory.Warn, new Vector2(0.5f, 0), new Vector2(0, 74), new Vector2(900, 22), TextAnchor.MiddleCenter);
             readingText = UiFactory.MakeText(root, "", 20, UiFactory.Quiet, new Vector2(0.5f, 0.5f), new Vector2(0, 60), new Vector2(900, 28), TextAnchor.MiddleCenter);
             guideText = UiFactory.MakeText(root, "", 28, UiFactory.Ink, new Vector2(0.5f, 0.5f), new Vector2(0, 22), new Vector2(900, 40), TextAnchor.MiddleCenter);
 

@@ -151,10 +151,11 @@ namespace Negiri.Game.Screens
 
             var month = life.month;
             int have = m.Wallet.Locked + m.Wallet.Cash;
-            int rest = Mathf.Max(0, month.targetPrice - m.Wallet.Locked);
+            string box = month.lockTotalMax > 0
+                ? $"貯金箱 {UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}／{UiFactory.Yen(month.lockTotalMax)}"
+                : $"貯金箱 {UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}";
             goalText.text = $"目標：{month.targetName} {UiFactory.Yen(month.targetPrice)}\n" +
-                            $"貯金箱 {UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}　あと {UiFactory.Yen(rest)}" +
-                            UiFactory.Paint($"（財布と合わせて {UiFactory.Yen(have)}）", UiFactory.Quiet);
+                            $"{box}　" + UiFactory.Paint($"財布と合わせて {UiFactory.Yen(have)}", UiFactory.Quiet);
 
             var disabled = new bool[Commands.Length];
             disabled[0] = !m.CanShop;

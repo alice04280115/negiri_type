@@ -73,6 +73,9 @@
       "firstWeekday": 0,
       "month": 4,
       "lockStep": 1000,
+      "lockStartMax": 6000,
+      "lockDailyMax": 6000,
+      "lockTotalMax": 6000,
       "essentialsEstimate": 7000,
       "targetName": "あこがれのバッグ",
       "targetPrice": 12000

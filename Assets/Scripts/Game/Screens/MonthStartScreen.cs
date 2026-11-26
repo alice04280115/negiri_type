@@ -45,7 +45,7 @@ namespace Negiri.Game.Screens
 
         public override void Tick(Keyboard kb, float deltaTime)
         {
-            int cash = Flow.Wallet.Cash;
+            int max = Flow.Month.MaxStartLock;
             if (Pressed(kb.escapeKey))
             {
                 if (confirming) confirming = false;
@@ -54,7 +54,7 @@ namespace Negiri.Game.Screens
             }
             if (!confirming)
             {
-                if (Pressed(kb.rightArrowKey) || Pressed(kb.upArrowKey)) lockAmount = Mathf.Min(cash - cash % Step, lockAmount + Step);
+                if (Pressed(kb.rightArrowKey) || Pressed(kb.upArrowKey)) lockAmount = Mathf.Min(max, lockAmount + Step);
                 if (Pressed(kb.leftArrowKey) || Pressed(kb.downArrowKey)) lockAmount = Mathf.Max(0, lockAmount - Step);
             }
             if (!Decide(kb)) return;
@@ -79,11 +79,13 @@ namespace Negiri.Game.Screens
             int left = cash - lockAmount;
             hintText.text =
                 $"今月の予算　{UiFactory.Yen(cash)}\n" +
+                BoxLimitLine(month) + "\n" +
                 $"貯金箱に入れた後の財布　{UiFactory.Paint(UiFactory.Yen(left), left < month.essentialsEstimate ? UiFactory.Bad : UiFactory.Warn)}\n" +
                 UiFactory.Paint($"1か月の必需品の目安：約{UiFactory.Yen(month.essentialsEstimate)}（通常価格）", UiFactory.Quiet) + "\n" +
                 UiFactory.Paint($"買い物：{TitleScreen.IntervalLabel(m.Rule.shopIntervalDays)}　食料は{m.Rule.foodCap}日分まで", UiFactory.Quiet) + "\n" +
                 UiFactory.Paint($"満足度は月末に{m.Life.satisfaction.passLine}以上が目標。在庫が切れると下がります", UiFactory.Quiet) + "\n" +
                 UiFactory.Paint("貯金箱には後から家計簿で追加できます。取り出せません。", UiFactory.Quiet);
+            if (lockAmount >= m.MaxStartLock && m.MaxStartLock > 0) lockText.text += UiFactory.Paint("（上限）", UiFactory.Quiet);
 
             confirmText.text = confirming
                 ? $"{UiFactory.Yen(lockAmount)}を貯金箱に入れます。取り出せません。よければもう一度スペース"
@@ -91,6 +93,15 @@ namespace Negiri.Game.Screens
             Message.text = confirming
                 ? "スペース：確定　Esc：やめる"
                 : $"←→：貯金箱に入れる額（{UiFactory.Yen(Step)}ずつ）　スペース：決定して1日目へ　Esc：タイトル";
+        }
+    
+        /// <summary>「貯金箱の上限 6,000円（残り6,000円は月末の財布から）」。</summary>
+        public static string BoxLimitLine(Negiri.Core.Life.MonthBalance month)
+        {
+            if (month.lockTotalMax <= 0) return "";
+            int rest = Mathf.Max(0, month.targetPrice - month.lockTotalMax);
+            return $"貯金箱の上限　{UiFactory.Yen(month.lockTotalMax)}" +
+                   (rest > 0 ? UiFactory.Paint($"（残り{UiFactory.Yen(rest)}は月末の財布から）", UiFactory.Quiet) : "");
         }
     }
 }

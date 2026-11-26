@@ -14,8 +14,14 @@ namespace Negiri.Core.Life
         public int firstWeekday = 0;
         /// <summary>レシートに書く月（ゲーム内の月）。</summary>
         public int month = 4;
-        /// <summary>ロック貯金を増やす単位。</summary>
+        /// <summary>貯金箱（ロック貯金）に入れる単位。</summary>
         public int lockStep = 1000;
+        /// <summary>月初に貯金箱へ入れられる上限。0なら月初は入れられない。</summary>
+        public int lockStartMax = 6000;
+        /// <summary>2日目以降（家計簿から）1日に入れられる上限。0なら追加できない。</summary>
+        public int lockDailyMax = 6000;
+        /// <summary>貯金箱の合計の上限。0なら上限なし。</summary>
+        public int lockTotalMax = 6000;
         /// <summary>月初の画面に出す「1か月の必需品の目安」。</summary>
         public int essentialsEstimate = 7000;
         /// <summary>月末に買いたい目標商品（段階4の決戦で買う。段階3では表示だけ）。</summary>

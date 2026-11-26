@@ -57,10 +57,10 @@ namespace Negiri.Game.Screens
             }
             if (Pressed(kb.upArrowKey)) scroll = Mathf.Max(0, scroll - 1);
             if (Pressed(kb.downArrowKey)) scroll = Mathf.Min(MaxScroll, scroll + 1);
-            int cash = Flow.Wallet.Cash;
+            int max = Flow.Month.MaxLockToday;
             if (!confirming)
             {
-                if (Pressed(kb.rightArrowKey)) lockAmount = Mathf.Min(cash - cash % Step, lockAmount + Step);
+                if (Pressed(kb.rightArrowKey)) lockAmount = Mathf.Min(max, lockAmount + Step);
                 if (Pressed(kb.leftArrowKey)) lockAmount = Mathf.Max(0, lockAmount - Step);
             }
             if (!Decide(kb) || lockAmount <= 0) return;
@@ -101,7 +101,9 @@ namespace Negiri.Game.Screens
 
             lockText.text =
                 $"貯金箱　{UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}\n" +
-                $"追加する額　<b>{UiFactory.Yen(lockAmount)}</b>\n" +
+                (m.MaxLockToday > 0
+                    ? $"追加する額　<b>{UiFactory.Yen(lockAmount)}</b>" + UiFactory.Paint($"（あと{UiFactory.Yen(m.MaxLockToday)}まで）", UiFactory.Quiet) + "\n"
+                    : UiFactory.Paint(m.Life.month.lockTotalMax > 0 && m.Wallet.Locked >= m.Life.month.lockTotalMax ? "貯金箱はいっぱいです" : "今日はもう入れられません", UiFactory.Quiet) + "\n") +
                 (confirming
                     ? UiFactory.Paint($"{UiFactory.Yen(lockAmount)}を貯金箱に入れます。\n取り出せません。よければもう一度スペース", UiFactory.Bad)
                     : UiFactory.Paint("←→で額を決めてスペース\n貯金箱のお金は目標商品にしか\n使えません", UiFactory.Quiet));

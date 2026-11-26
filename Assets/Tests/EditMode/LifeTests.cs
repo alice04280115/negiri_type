@@ -257,11 +257,56 @@ namespace Negiri.Core.Tests
         {
             var m = NewMonth(budget: 19000);
             Assert.AreEqual(19000, m.Wallet.Cash);
-            m.Lock(5000);
+            Assert.AreEqual(6000, m.MaxStartLock); // いまの設定：合計6000円まで
+            m.LockAtStart(5000);
             Assert.AreEqual(14000, m.Wallet.Cash);
             Assert.AreEqual(5000, m.Wallet.Locked);
             Assert.IsTrue(m.Wallet.IsBalanced);
             Assert.Throws<ArgumentException>(() => m.Lock(20000));
+        }
+
+        [Test]
+        public void 貯金箱は月初の上限と1日の上限を守る()
+        {
+            var life = new LifeBalance();
+            life.month.lockStartMax = 5000;
+            life.month.lockDailyMax = 1000;
+            life.month.lockTotalMax = 0;
+            var m = MonthState.Start(life, Rule(1, 7, ShortageRule.ChooseReturn), 0);
+            Assert.AreEqual(5000, m.MaxStartLock);
+            Assert.Throws<ArgumentException>(() => m.LockAtStart(6000));
+            m.LockAtStart(5000);
+            // 月初の分とは別に、家計簿からその日1000円まで
+            Assert.AreEqual(1000, m.MaxLockToday);
+            m.Lock(1000);
+            Assert.AreEqual(0, m.MaxLockToday);
+            Assert.Throws<ArgumentException>(() => m.Lock(1000));
+            m.EndDay();
+            Assert.AreEqual(1000, m.MaxLockToday);
+            m.Lock(1000);
+            Assert.AreEqual(7000, m.Wallet.Locked);
+            Assert.IsTrue(m.Wallet.IsBalanced);
+        }
+
+        [Test]
+        public void 貯金箱の合計の上限と単位と財布の残りを守る()
+        {
+            var life = new LifeBalance();
+            life.month.budget = 3500;
+            life.month.lockStartMax = 5000;
+            life.month.lockDailyMax = 1000;
+            life.month.lockTotalMax = 6000;
+            var m = MonthState.Start(life, Rule(1, 7, ShortageRule.ChooseReturn), 0);
+            Assert.AreEqual(3000, m.MaxStartLock); // 財布3500円 → 1000円単位で3000円
+            life.month.budget = 19000;
+            m = MonthState.Start(life, Rule(1, 7, ShortageRule.ChooseReturn), 0);
+            m.LockAtStart(5000);
+            Assert.AreEqual(1000, m.MaxLockToday);
+            m.Lock(1000);
+            m.EndDay();
+            Assert.AreEqual(0, m.MaxLockToday); // 合計6000円で満杯
+            life.month.lockStartMax = 0;
+            Assert.AreEqual(0, MonthState.Start(life, Rule(1, 7, ShortageRule.ChooseReturn), 0).MaxStartLock);
         }
 
         [Test]
@@ -282,7 +327,7 @@ namespace Negiri.Core.Tests
                 switch (rnd.Next(4))
                 {
                     case 0:
-                        if (m.Wallet.Cash > 0) m.Lock(rnd.Next(m.Wallet.Cash + 1) / 4);
+                        if (m.MaxLockToday > 0) m.Lock(rnd.Next(m.MaxLockToday + 1));
                         break;
                     case 1:
                         if (!m.CanShop) break;
@@ -319,6 +364,7 @@ namespace Negiri.Core.Tests
                         break;
                 }
                 Assert.IsTrue(m.Wallet.IsBalanced, $"step {step}");
+                Assert.IsTrue(m.Wallet.Locked <= m.Life.month.lockTotalMax, $"step {step}: 貯金箱が上限を超えた");
                 Assert.AreEqual(m.Wallet.TotalSpent, m.Ledger.TotalPaid, $"step {step}: 家計簿の合計と支出合計が合わない");
                 Assert.IsTrue(m.Satisfaction.Value >= 0 && m.Satisfaction.Value <= 100);
                 Assert.IsTrue(m.Stock.Food >= 0 && m.Stock.Food <= m.Rule.foodCap);
@@ -337,9 +383,11 @@ namespace Negiri.Core.Tests
             m.EndDay();
             m.EndDay();
             for (int i = 0; i < 4; i++) m.EndDay();
+            m.Lock(1000);
 
             var save = m.ToSave();
             var r = MonthState.FromSave(save, m.Life, m.Rule);
+            Assert.AreEqual(1000, r.LockedToday);
             Assert.AreEqual(m.Day, r.Day);
             Assert.AreEqual(m.IsOver, r.IsOver);
             Assert.AreEqual(m.LastShopDay, r.LastShopDay);

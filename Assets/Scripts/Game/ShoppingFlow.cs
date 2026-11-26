@@ -158,7 +158,7 @@ namespace Negiri.Game
         /// <summary>月初のロック額を決めて、1日目の朝へ。</summary>
         public void ConfirmMonthStart(int lockAmount)
         {
-            if (lockAmount > 0) Month.Lock(lockAmount);
+            if (lockAmount > 0) Month.LockAtStart(lockAmount);
             Save();
             Switch(myRoom);
         }

@@ -255,6 +255,7 @@ namespace Negiri.Core.Data
             if (m.firstWeekday < 0 || m.firstWeekday > 6) errors.Add("life.month.firstWeekday は0（月）～6（日）にしてください");
             if (m.month < 1 || m.month > 12) errors.Add("life.month.month は1～12にしてください");
             if (m.lockStep <= 0) errors.Add("life.month.lockStep は1以上にしてください");
+            if (m.lockStartMax < 0 || m.lockDailyMax < 0 || m.lockTotalMax < 0) errors.Add("life.month の貯金箱の上限（lockStartMax / lockDailyMax / lockTotalMax）は0以上にしてください");
             if (m.targetPrice <= 0) errors.Add("life.month.targetPrice は1以上にしてください");
             if (st.foodStart < 0 || st.dailyStart < 0) errors.Add("在庫の初期値は0以上にしてください");
             if (st.foodPerDay < 0 || st.dailyPerDay < 0) errors.Add("在庫の1日の消費は0以上にしてください");
