@@ -86,7 +86,7 @@ namespace Negiri.Game.Screens
             int before = 0;
             foreach (var l in checkout.Lines) before += l.Price;
             titleText.text = $"財布が{UiFactory.Yen(System.Math.Max(0, before - cash))}足りません";
-            ruleText.text = $"{rule.label}のルール：{TitleScreen.ShortageDescription(rule)}" + (rule.satisfactionPerReturn > 0 ? "　※段階2では満足度は記録のみ" : "");
+            ruleText.text = $"{rule.label}のルール：{TitleScreen.ShortageDescription(rule)}";
 
             int shown = Mathf.Min(checkout.Lines.Count, list.Capacity);
             list.SetCount(shown);

@@ -11,7 +11,7 @@ namespace Negiri.Game
         public SentenceList Sentences { get; }
         public BalanceData Balance { get; }
         public StoreList Stores { get; }
-        /// <summary>段階2では店舗は1つだけ。データがなければ特売なしの仮の店舗。</summary>
+        /// <summary>段階3でも店舗は1つだけ。データがなければ特売なしの仮の店舗。</summary>
         public StoreData Store => Stores?.stores != null && Stores.stores.Length > 0 ? Stores.stores[0] : new StoreData { id = "none", name = "お店" };
         public IReadOnlyDictionary<string, ItemData> ItemById => itemById;
         /// <summary>データの不備（画面の左下に出す）。なければ空文字。</summary>
@@ -31,6 +31,7 @@ namespace Negiri.Game
             errors.AddRange(DataValidator.Validate(Items, Sentences));
             errors.AddRange(DataValidator.ValidateStores(Stores, Items));
             errors.AddRange(DataValidator.ValidateShopping(Balance.shopping, Difficulties.All.Length));
+            errors.AddRange(DataValidator.ValidateLife(Balance.life, Balance.shopping));
             foreach (var e in errors) Debug.LogError("[データ] " + e);
             Errors = string.Join("\n", errors);
         }

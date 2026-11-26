@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Negiri.Core.Life;
 using Negiri.Core.Shopping;
 using Negiri.Core.Typing;
 
@@ -51,6 +52,16 @@ namespace Negiri.Core.Data
         public string itemId;
         /// <summary>特売の割引（ベーシスポイント。1000 = 10%）。</summary>
         public int discountBp;
+        /// <summary>特売の曜日（例："火金"）。空なら毎日。</summary>
+        public string days = "";
+
+        /// <summary>weekday（0＝月曜 … 6＝日曜）にこの特売があるか。weekday が −1 なら毎日の特売だけを数える。</summary>
+        public bool OnWeekday(int weekday)
+        {
+            if (string.IsNullOrEmpty(days)) return true;
+            if (weekday < 0 || weekday >= Calendar.WeekdayNames.Length) return false;
+            return days.Contains(Calendar.WeekdayNames[weekday]);
+        }
     }
 
     [Serializable]
@@ -60,14 +71,28 @@ namespace Negiri.Core.Data
         public string name;
         public SaleData[] sales = Array.Empty<SaleData>();
 
-        /// <summary>その商品の特売割引。特売でなければ 0。</summary>
-        public int SaleBp(string itemId)
+        /// <summary>その商品の特売割引（毎日の特売だけ）。特売でなければ 0。</summary>
+        public int SaleBp(string itemId) => SaleBp(itemId, -1);
+
+        /// <summary>その曜日（0＝月曜 … 6＝日曜）の、その商品の特売割引。特売でなければ 0。</summary>
+        public int SaleBp(string itemId, int weekday)
         {
             foreach (var s in sales ?? Array.Empty<SaleData>())
             {
-                if (s.itemId == itemId) return s.discountBp;
+                if (s.itemId == itemId && s.OnWeekday(weekday)) return s.discountBp;
             }
             return 0;
+        }
+
+        /// <summary>その曜日に特売になる商品。</summary>
+        public List<SaleData> SalesOn(int weekday)
+        {
+            var list = new List<SaleData>();
+            foreach (var s in sales ?? Array.Empty<SaleData>())
+            {
+                if (s.OnWeekday(weekday)) list.Add(s);
+            }
+            return list;
         }
     }
 
@@ -104,6 +129,7 @@ namespace Negiri.Core.Data
     {
         public TypingBalance typing = new TypingBalance();
         public ShoppingBalance shopping = new ShoppingBalance();
+        public LifeBalance life = new LifeBalance();
     }
 
     /// <summary>データの不備を起動時に見つけるためのチェック。</summary>
@@ -165,11 +191,22 @@ namespace Negiri.Core.Data
             {
                 if (string.IsNullOrEmpty(store.id)) { errors.Add($"店舗IDが空です: {store.name}"); continue; }
                 if (!storeIds.Add(store.id)) errors.Add($"店舗IDが重複しています: {store.id}");
-                var saleIds = new HashSet<string>();
+                var saleDays = new HashSet<string>();
                 foreach (var sale in store.sales ?? Array.Empty<SaleData>())
                 {
                     if (!itemIds.Contains(sale.itemId)) errors.Add($"特売に存在しない商品IDがあります: {store.id} → {sale.itemId}");
-                    if (!saleIds.Add(sale.itemId)) errors.Add($"特売の商品が重複しています: {store.id} → {sale.itemId}");
+                    foreach (var ch in sale.days ?? "")
+                    {
+                        if (Array.IndexOf(Calendar.WeekdayNames, ch.ToString()) < 0) errors.Add($"特売の曜日が不明です: {store.id} → {sale.itemId}（{ch}）");
+                    }
+                    for (int w = 0; w < 7; w++)
+                    {
+                        if (sale.OnWeekday(w) && !saleDays.Add(sale.itemId + "/" + w))
+                        {
+                            errors.Add($"特売の商品が同じ曜日に重複しています: {store.id} → {sale.itemId}（{Calendar.WeekdayNames[w]}）");
+                            break;
+                        }
+                    }
                     if (sale.discountBp <= 0 || sale.discountBp >= 10000) errors.Add($"特売の割引は1〜9999にしてください: {store.id} → {sale.itemId}");
                 }
             }
@@ -190,6 +227,38 @@ namespace Negiri.Core.Data
                 if (d.maxItems <= 0) errors.Add($"maxItems は1以上にしてください: {d.label}");
                 if (d.satisfactionPerReturn < 0) errors.Add($"satisfactionPerReturn は0以上にしてください: {d.label}");
                 if (!Enum.TryParse<ShortageRule>(d.shortage, true, out _)) errors.Add($"shortage が不明です: {d.label} → {d.shortage}");
+                if (d.shopIntervalDays <= 0) errors.Add($"shopIntervalDays は1以上にしてください: {d.label}");
+                if (d.foodCap < 0) errors.Add($"foodCap は0以上にしてください: {d.label}");
+            }
+            return errors;
+        }
+
+        /// <summary>1か月・在庫・満足度の数値のチェック。</summary>
+        public static List<string> ValidateLife(LifeBalance life, ShoppingBalance shopping)
+        {
+            var errors = new List<string>();
+            if (life == null) { errors.Add("life の設定がありません"); return errors; }
+            var m = life.month;
+            var st = life.stock;
+            var sat = life.satisfaction;
+            if (m == null || st == null || sat == null) { errors.Add("life.month / life.stock / life.satisfaction をすべて書いてください"); return errors; }
+            if (m.days <= 0) errors.Add("life.month.days は1以上にしてください");
+            if (m.budget <= 0) errors.Add("life.month.budget は1以上にしてください");
+            if (m.firstWeekday < 0 || m.firstWeekday > 6) errors.Add("life.month.firstWeekday は0（月）〜6（日）にしてください");
+            if (m.month < 1 || m.month > 12) errors.Add("life.month.month は1〜12にしてください");
+            if (m.lockStep <= 0) errors.Add("life.month.lockStep は1以上にしてください");
+            if (m.targetPrice <= 0) errors.Add("life.month.targetPrice は1以上にしてください");
+            if (st.foodStart < 0 || st.dailyStart < 0) errors.Add("在庫の初期値は0以上にしてください");
+            if (st.foodPerDay < 0 || st.dailyPerDay < 0) errors.Add("在庫の1日の消費は0以上にしてください");
+            if (st.foodOutPenalty < 0 || st.dailyOutPenalty < 0) errors.Add("在庫切れの満足度は0以上にしてください");
+            if (st.dailyCap > 0 && st.dailyStart > st.dailyCap) errors.Add("日用品の初期値が上限を超えています");
+            if (sat.max <= 0) errors.Add("life.satisfaction.max は1以上にしてください");
+            if (sat.start < 0 || sat.start > sat.max) errors.Add("life.satisfaction.start は0〜max にしてください");
+            if (sat.passLine < 0 || sat.passLine > sat.max) errors.Add("life.satisfaction.passLine は0〜max にしてください");
+            if (sat.dailyDecay < 0) errors.Add("life.satisfaction.dailyDecay は0以上にしてください");
+            foreach (var d in shopping?.difficulties ?? Array.Empty<ShoppingRule>())
+            {
+                if (d.foodCap > 0 && st.foodStart > d.foodCap) errors.Add($"食料の初期値が上限を超えています: {d.label}");
             }
             return errors;
         }

@@ -1,6 +1,8 @@
 using System.IO;
 using System.Text.Json;
 using Negiri.Core.Data;
+using Negiri.Core.Life;
+using Negiri.Core.Save;
 using Negiri.Core.Shopping;
 using Negiri.Core.Typing;
 using NUnit.Framework;
@@ -67,6 +69,45 @@ namespace Negiri.Core.Tests
             Assert.AreEqual(5f, b.shopping.resultSeconds, 1e-6f);
             Assert.AreEqual(ShortageRule.AutoReturnHighestFirst, b.shopping.difficulties[2].ShortageValue);
             Assert.AreEqual(ShortageRule.AutoReturnLowestFirst, b.shopping.difficulties[3].ShortageValue);
+            Assert.AreEqual(new[] { 1, 3, 7, 7 }, System.Array.ConvertAll(b.shopping.difficulties, d => d.shopIntervalDays));
+            Assert.AreEqual(new[] { 7, 7, 10, 10 }, System.Array.ConvertAll(b.shopping.difficulties, d => d.foodCap));
+        }
+
+        [Test]
+        public void 一か月の設定を読めて不備がない()
+        {
+            var b = Load<BalanceData>("balance.json");
+            var errors = DataValidator.ValidateLife(b.life, b.shopping);
+            Assert.IsEmpty(errors, string.Join("\n", errors));
+            Assert.AreEqual(19000, b.life.month.budget);
+            Assert.AreEqual(30, b.life.month.days);
+            Assert.AreEqual(60, b.life.satisfaction.start);
+        }
+
+        [Test]
+        public void 曜日の特売がある()
+        {
+            var store = Load<StoreList>("stores.json").stores[0];
+            int days = 0;
+            for (int w = 0; w < 7; w++) if (store.SalesOn(w).Count > 0) days++;
+            Assert.IsTrue(days >= 2, "特売の曜日が2日以上ある");
+            Assert.IsTrue(store.SalesOn(0).Count < store.sales.Length, "毎日すべてが特売ではない");
+        }
+
+        [Test]
+        public void セーブをJSONにして戻せる()
+        {
+            var b = Load<BalanceData>("balance.json");
+            var rule = b.shopping.difficulties[1];
+            var m = MonthState.Start(b.life, rule, 1);
+            m.Lock(2000);
+            m.EndDay();
+            var json = JsonSerializer.Serialize(m.ToSave(), Options);
+            var back = MonthState.FromSave(JsonSerializer.Deserialize<SaveData>(json, Options), b.life, rule);
+            Assert.AreEqual(m.Day, back.Day);
+            Assert.AreEqual(m.Wallet.Cash, back.Wallet.Cash);
+            Assert.AreEqual(m.Wallet.Locked, back.Wallet.Locked);
+            Assert.AreEqual(m.Satisfaction.Value, back.Satisfaction.Value);
         }
 
         [Test]

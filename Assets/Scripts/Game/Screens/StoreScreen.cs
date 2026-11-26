@@ -12,7 +12,8 @@ namespace Negiri.Game.Screens
     /// <summary>
     /// 店内。左に商品棚（カテゴリのタブ）、右にカートと「レジへ進む」ボタン。
     /// ←→で 食料 → 日用品 → お菓子・趣味 → カート と移り、↑↓で選び、スペースで決定する。
-    /// カートの合計は財布で制限しない。品数だけ難易度で制限する。
+    /// カートの合計は財布で制限しない。品数だけ難易度で制限する。特売は今日の曜日のもの。
+    /// 下に、このカートを買ったら在庫と満足度がどう変わるかを出す。
     /// </summary>
     public sealed class StoreScreen : ScreenBase
     {
@@ -25,7 +26,7 @@ namespace Negiri.Game.Screens
 
         const int CartRows = 12;
 
-        readonly Text storeNameText, tabsText, cartTitleText, totalsText, noticeText, checkoutText;
+        readonly Text storeNameText, tabsText, cartTitleText, totalsText, noticeText, checkoutText, lifeText;
         readonly Image checkoutBox;
         readonly RowList shelf, cartList;
         readonly List<ItemData>[] shelfItems = new List<ItemData>[Tabs.Length];
@@ -69,6 +70,9 @@ namespace Negiri.Game.Screens
             totalsText = UiFactory.MakeText(Root, "", 16, UiFactory.Ink, new Vector2(1, 0), new Vector2(-36, 100), new Vector2(350, 64), TextAnchor.LowerRight);
             totalsText.lineSpacing = 1.1f;
 
+            // パネルの下：このカートで在庫と満足度がどう変わるか
+            lifeText = UiFactory.MakeText(Root, "", 16, UiFactory.Ink, new Vector2(0, 0), new Vector2(36, 50), new Vector2(900, 26), TextAnchor.MiddleLeft);
+
             for (int t = 0; t < Tabs.Length; t++) shelfItems[t] = new List<ItemData>();
         }
 
@@ -95,7 +99,7 @@ namespace Negiri.Game.Screens
 
             if (Pressed(kb.escapeKey))
             {
-                Flow.ShowTitle();
+                Flow.LeaveStore();
                 return;
             }
 
@@ -116,7 +120,7 @@ namespace Negiri.Game.Screens
             if (Decide(kb))
             {
                 var item = items[shelfCursor];
-                if (Flow.Cart.Add(item, Flow.Db.Store.SaleBp(item.id))) ShowNotice($"{item.name}をカートに入れました");
+                if (Flow.Cart.Add(item, Flow.SaleBp(item.id))) ShowNotice($"{item.name}をカートに入れました");
                 else ShowNotice($"これ以上入りません（{Flow.Def.Label}は{Flow.Cart.MaxItems}品まで）");
             }
         }
@@ -149,7 +153,7 @@ namespace Negiri.Game.Screens
         public override void Refresh()
         {
             var store = Flow.Db.Store;
-            storeNameText.text = store.name;
+            storeNameText.text = store.name + UiFactory.Paint($"　{Flow.Month.DateLabel}", UiFactory.Quiet);
 
             var tabs = new StringBuilder();
             for (int t = 0; t < Tabs.Length; t++)
@@ -166,7 +170,7 @@ namespace Negiri.Game.Screens
             for (int i = 0; i < shown; i++)
             {
                 var item = items[i];
-                int saleBp = store.SaleBp(item.id);
+                int saleBp = Flow.SaleBp(item.id);
                 var tags = new StringBuilder();
                 if (item.kind == "essential") tags.Append("必須 ");
                 if (saleBp > 0) tags.Append(UiFactory.Paint($"特売-{saleBp / 100}%", UiFactory.Warn));
@@ -208,10 +212,26 @@ namespace Negiri.Game.Screens
             totalsText.text = totals.ToString();
 
             noticeText.text = noticeTime > 0f ? notice : "";
+            lifeText.text = LifePreview();
 
             Message.text = CartFocus
-                ? "↑↓：選ぶ　スペース：棚に戻す／レジへ進む　←：売り場へ　Esc：タイトル"
-                : "←→：売り場とカート　↑↓：商品　スペース：カートに入れる　Esc：タイトル";
+                ? "↑↓：選ぶ　スペース：棚に戻す／レジへ進む　←：売り場へ　Esc：買わずに家へ帰る"
+                : "←→：売り場とカート　↑↓：商品　スペース：カートに入れる　Esc：買わずに家へ帰る";
+        }
+
+        /// <summary>「全部買うと　食料 3→7日分（上限7・2日分ムダ）　日用品 7→7日分　満足度 60→63」。</summary>
+        string LifePreview()
+        {
+            var items = new List<ItemData>();
+            foreach (var l in Flow.Cart.Lines) items.Add(l.Item);
+            var c = Flow.Month.Preview(items);
+            var sb = new StringBuilder("全部買うと　");
+            sb.Append($"食料 {c.FoodBefore}→{c.FoodAfter}日分");
+            if (c.FoodWasted > 0) sb.Append(UiFactory.Paint($"（上限{Flow.Month.Stock.FoodCap}・{c.FoodWasted}日分ムダ）", UiFactory.Bad));
+            sb.Append($"　日用品 {c.DailyBefore}→{c.DailyAfter}日分");
+            if (c.DailyWasted > 0) sb.Append(UiFactory.Paint($"（{c.DailyWasted}日分ムダ）", UiFactory.Bad));
+            sb.Append($"　満足度 {c.SatisfactionBefore}→{c.SatisfactionAfter}");
+            return sb.ToString();
         }
     }
 }

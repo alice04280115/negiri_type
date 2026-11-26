@@ -20,6 +20,15 @@ namespace Negiri.Core.Economy
             else if (initialCash < 0) throw new ArgumentException("最初の金額は0以上にしてください");
         }
 
+        /// <summary>セーブから戻す。お金の式が成り立たない値なら例外にする。</summary>
+        public static Wallet Restore(int totalIncome, int totalSpent, int cash, int locked)
+        {
+            if (totalIncome < 0 || totalSpent < 0 || cash < 0 || locked < 0) throw new ArgumentException("お金の値は0以上にしてください");
+            var w = new Wallet { TotalIncome = totalIncome, TotalSpent = totalSpent, Cash = cash, Locked = locked };
+            if (!w.IsBalanced) throw new ArgumentException("セーブのお金の値が合いません（収入合計 ＝ 支出合計 ＋ 財布 ＋ ロック貯金）");
+            return w;
+        }
+
         /// <summary>お金の式が成り立っているか（テストと開発中のチェック用）。</summary>
         public bool IsBalanced => TotalIncome == TotalSpent + Cash + Locked;
 
