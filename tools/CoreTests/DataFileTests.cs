@@ -64,6 +64,7 @@ namespace Negiri.Core.Tests
             var errors = DataValidator.ValidateShopping(b.shopping, 4);
             Assert.IsEmpty(errors, string.Join("\n", errors));
             Assert.AreEqual(3000, b.shopping.startingCash);
+            Assert.AreEqual(5f, b.shopping.resultSeconds, 1e-6f);
             Assert.AreEqual(ShortageRule.AutoReturnHighestFirst, b.shopping.difficulties[2].ShortageValue);
             Assert.AreEqual(ShortageRule.AutoReturnLowestFirst, b.shopping.difficulties[3].ShortageValue);
         }

@@ -70,16 +70,17 @@ namespace Negiri.Game
         void BuildUi()
         {
             canvas = UiFactory.CreateCanvas("ShoppingCanvas");
-            headerText = UiFactory.MakeText(canvas, "", 16, UiFactory.Quiet, new Vector2(0, 1), new Vector2(24, -16), new Vector2(600, 24), TextAnchor.UpperLeft);
-            walletText = UiFactory.MakeText(canvas, "", 18, UiFactory.Warn, new Vector2(1, 1), new Vector2(-24, -14), new Vector2(400, 24), TextAnchor.UpperRight);
+            var stage = UiFactory.CreateStage(canvas);
+            headerText = UiFactory.MakeText(stage, "", 16, UiFactory.Quiet, new Vector2(0, 1), new Vector2(24, -16), new Vector2(600, 24), TextAnchor.UpperLeft);
+            walletText = UiFactory.MakeText(stage, "", 18, UiFactory.Warn, new Vector2(1, 1), new Vector2(-24, -14), new Vector2(400, 24), TextAnchor.UpperRight);
 
-            title = new TitleScreen(this, canvas);
-            store = new StoreScreen(this, canvas);
-            register = new RegisterScreen(this, canvas);
-            returns = new ReturnScreen(this, canvas);
-            receipt = new ReceiptScreen(this, canvas);
+            title = new TitleScreen(this, stage);
+            store = new StoreScreen(this, stage);
+            register = new RegisterScreen(this, stage);
+            returns = new ReturnScreen(this, stage);
+            receipt = new ReceiptScreen(this, stage);
 
-            errorText = UiFactory.MakeText(canvas, Db.Errors, 14, UiFactory.Bad, new Vector2(0, 0), new Vector2(24, 80), new Vector2(600, 200), TextAnchor.LowerLeft);
+            errorText = UiFactory.MakeText(stage, Db.Errors, 14, UiFactory.Bad, new Vector2(0, 0), new Vector2(24, 80), new Vector2(600, 200), TextAnchor.LowerLeft);
         }
 
         // ---------------- 進行 ----------------

@@ -55,8 +55,19 @@ namespace Negiri.Game.Ui
             var scaler = canvasGo.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(960, 540);
-            scaler.matchWidthOrHeight = 0.5f;
+            // 画面の縦横比が 16:9 でなくても 960×540 が必ず収まるように広げる（はみ出して見切れるのを防ぐ）
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             return canvasGo.GetComponent<RectTransform>();
+        }
+
+        /// <summary>画面の中央に置く 960×540 の舞台。画面の部品はすべてこの中に置く。</summary>
+        public static RectTransform CreateStage(RectTransform canvas)
+        {
+            var stage = NewRect("Stage", canvas);
+            stage.anchorMin = stage.anchorMax = stage.pivot = new Vector2(0.5f, 0.5f);
+            stage.anchoredPosition = Vector2.zero;
+            stage.sizeDelta = new Vector2(960, 540);
+            return stage;
         }
 
         /// <summary>親いっぱいに広がる空の入れ物（画面1枚分など）。</summary>

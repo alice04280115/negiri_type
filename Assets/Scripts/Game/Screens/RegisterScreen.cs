@@ -11,6 +11,7 @@ namespace Negiri.Game.Screens
     /// <summary>
     /// レジ。カートの商品を1品ずつ打つ（段階1のタイピング画面と同じ表示）。
     /// 上に「○／○品目」と支払いの見込みを出す。判定は全品を打ち終えてから。
+    /// 最初の1品だけスペースで始め、あとは結果を数秒出したら自動で次の商品が始まる。
     /// </summary>
     public sealed class RegisterScreen : ScreenBase
     {
@@ -24,6 +25,7 @@ namespace Negiri.Game.Screens
         SentenceData sentence;
         TypingSession session;
         float missFlash;
+        float resultTimer;
 
         public RegisterScreen(ShoppingFlow flow, RectTransform parent) : base(flow, parent, "Register")
         {
@@ -40,10 +42,11 @@ namespace Negiri.Game.Screens
 
         public override void Enter()
         {
-            NextItem();
+            NextItem(false);
         }
 
-        void NextItem()
+        /// <summary>次の商品へ。autoStart なら時間をすぐ動かす（2品目から）。</summary>
+        void NextItem(bool autoStart)
         {
             index = Flow.Checkout.NextToScan;
             if (index < 0)
@@ -55,8 +58,16 @@ namespace Negiri.Game.Screens
             // 打つ商品名は、レジに着いた時点で難易度に合う名前から選ぶ
             sentence = Flow.Db.PickSentence(item.id, Flow.Def.Level) ?? new SentenceData { id = item.id, itemIds = new[] { item.id }, text = item.name, reading = item.name, level = 1 };
             session = new TypingSession(sentence.reading, Flow.TypingBalance);
-            phase = Phase.Ready;
             missFlash = 0f;
+            if (autoStart)
+            {
+                session.Start();
+                phase = Phase.Running;
+            }
+            else
+            {
+                phase = Phase.Ready;
+            }
         }
 
         public override void Tick(Keyboard kb, float deltaTime)
@@ -82,7 +93,12 @@ namespace Negiri.Game.Screens
                     break;
 
                 case Phase.Result:
-                    if (EnterPressed(kb)) NextItem();
+                    if (Pressed(kb.rKey) && Flow.Def.Reading != ReadingMode.Always)
+                    {
+                        Flow.ReadingOn[Flow.Difficulty] = !Flow.ReadingOn[Flow.Difficulty];
+                    }
+                    resultTimer -= deltaTime;
+                    if (resultTimer <= 0f || Decide(kb)) NextItem(true);
                     break;
 
                 case Phase.ImeWarning:
@@ -114,6 +130,7 @@ namespace Negiri.Game.Screens
         {
             if (phase == Phase.Result) return;
             Flow.Checkout.Record(index, session.Result.Value);
+            resultTimer = Flow.Db.Balance.shopping.resultSeconds;
             phase = Phase.Result;
         }
 
@@ -162,7 +179,10 @@ namespace Negiri.Game.Screens
                     if (line.Price == line.BasePrice) after = "定価でお買い上げ";
                     else after = $"{UiFactory.Yen(line.BasePrice)} → <b>{UiFactory.Yen(line.Price)}</b>（{UiFactory.Yen(line.BasePrice - line.Price)}おトク" + (line.Cart.SaleBp > 0 ? "・特売込み" : "") + "）";
                     resultText.text = UiFactory.Paint($"<size=44>{UiFactory.RankLabel(r.Rank)}</size>", color) + $"\n{after}\n<size=16>正確率 {r.Accuracy * 100:0}%　ミス {r.MissKeys}（-{r.MissKeys * Flow.TypingBalance.missPenaltySeconds:0.0}秒）　残り時間 {r.RemainingRatio * 100:0}%</size>" + TypingView.MissedHint(r, Flow.TypingBalance);
-                    Message.text = checkout.AllScanned ? "Enterで会計へ" : "Enterで次の商品";
+                    int seconds = Mathf.CeilToInt(Mathf.Max(0f, resultTimer));
+                    var next = checkout.AllScanned ? "会計へ" : "次の商品へ";
+                    var readingKey = Flow.Def.Reading == ReadingMode.Always ? "" : $"　R：読みがな{(Flow.ReadingOn[Flow.Difficulty] ? "あり" : "なし")}";
+                    Message.text = $"{seconds}秒後に{next}（スペースですぐ{next}）{readingKey}";
                     Message.color = UiFactory.Ink;
                     break;
                 case Phase.ImeWarning:

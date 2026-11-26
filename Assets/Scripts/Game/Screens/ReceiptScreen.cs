@@ -9,7 +9,8 @@ namespace Negiri.Game.Screens
     /// <summary>会計結果。レシート風の表と、今回の節約額、財布の残高の変化。</summary>
     public sealed class ReceiptScreen : ScreenBase
     {
-        readonly Text titleText, summaryText;
+        readonly Text titleText, summaryText, menuText;
+        int cursor;
         readonly RowList header, list;
 
         static readonly Column[] Columns =
@@ -23,18 +24,27 @@ namespace Negiri.Game.Screens
 
         public ReceiptScreen(ShoppingFlow flow, RectTransform parent) : base(flow, parent, "Receipt")
         {
-            UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0.5f, 1), new Vector2(0, -44), new Vector2(680, 378));
+            UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0.5f, 1), new Vector2(0, -44), new Vector2(680, 340));
             titleText = UiFactory.MakeText(Root, "", 22, UiFactory.Ink, new Vector2(0.5f, 1), new Vector2(0, -50), new Vector2(660, 30), TextAnchor.MiddleCenter);
             header = new RowList(Root, new Vector2(140, -84), 680, 22, 1, 15, Columns);
             list = new RowList(Root, new Vector2(140, -108), 680, 22, 12, 16, Columns);
-            summaryText = UiFactory.MakeText(Root, "", 18, UiFactory.Ink, new Vector2(0.5f, 0), new Vector2(0, 52), new Vector2(900, 64), TextAnchor.LowerCenter);
+            summaryText = UiFactory.MakeText(Root, "", 18, UiFactory.Ink, new Vector2(0.5f, 0), new Vector2(0, 84), new Vector2(900, 50), TextAnchor.LowerCenter);
             summaryText.lineSpacing = 1.1f;
+            menuText = UiFactory.MakeText(Root, "", 18, UiFactory.Ink, new Vector2(0.5f, 0), new Vector2(0, 52), new Vector2(900, 26), TextAnchor.MiddleCenter);
+        }
+
+        public override void Enter()
+        {
+            cursor = 0;
         }
 
         public override void Tick(Keyboard kb, float deltaTime)
         {
-            if (EnterPressed(kb)) Flow.StartShopping();
-            else if (Pressed(kb.tabKey) || Pressed(kb.escapeKey)) Flow.ShowTitle();
+            if (Pressed(kb.leftArrowKey) || Pressed(kb.upArrowKey)) cursor = 0;
+            if (Pressed(kb.rightArrowKey) || Pressed(kb.downArrowKey)) cursor = 1;
+            if (!Decide(kb)) return;
+            if (cursor == 0) Flow.StartShopping();
+            else Flow.ShowTitle();
         }
 
         public override void Refresh()
@@ -70,7 +80,10 @@ namespace Negiri.Game.Screens
             }
             summaryText.text = summary;
 
-            Message.text = $"Enter：もう一度買い物（財布は{UiFactory.Yen(Flow.Db.Balance.shopping.startingCash)}に戻ります）　Tab：タイトルへ";
+            var again = $"もう一度買い物（財布は{UiFactory.Yen(Flow.Db.Balance.shopping.startingCash)}に戻ります）";
+            menuText.text = (cursor == 0 ? UiFactory.Paint("▶ " + again, UiFactory.Warn) : UiFactory.Paint("　" + again, UiFactory.Quiet))
+                + "　　" + (cursor == 1 ? UiFactory.Paint("▶ タイトルへ", UiFactory.Warn) : UiFactory.Paint("　タイトルへ", UiFactory.Quiet));
+            Message.text = "←→：選ぶ　スペース：決定";
             Message.color = UiFactory.Ink;
         }
     }

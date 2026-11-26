@@ -12,7 +12,7 @@ namespace Negiri.Game
 {
     /// <summary>
     /// タイピング練習（段階1のプロトタイプ）：商品の文章を打ち、評価と値引き後の価格を見るだけの1画面。
-    /// 段階2からはタイトルの「T：タイピング練習」で開き、Tab でタイトルに戻る。
+    /// 段階2からはタイトルの「タイピング練習」で開き、開始前か結果表示中に Esc でタイトルに戻る。
     /// 表示の部品は TypingView / UiFactory に切り出し、レジ画面と共通にしている。
     /// </summary>
     public sealed class TypingPrototype : MonoBehaviour
@@ -108,7 +108,7 @@ namespace Negiri.Game
             switch (phase)
             {
                 case Phase.Ready:
-                    if (kb.tabKey.wasPressedThisFrame)
+                    if (kb.escapeKey.wasPressedThisFrame)
                     {
                         onExit?.Invoke();
                         return;
@@ -140,12 +140,12 @@ namespace Negiri.Game
                     break;
 
                 case Phase.Result:
-                    if (kb.tabKey.wasPressedThisFrame)
+                    if (kb.escapeKey.wasPressedThisFrame)
                     {
                         onExit?.Invoke();
                         return;
                     }
-                    if (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame) NextSentence();
+                    if (kb.spaceKey.wasPressedThisFrame) NextSentence();
                     break;
 
                 case Phase.ImeWarning:
@@ -217,7 +217,7 @@ namespace Negiri.Game
                     var readingHelp = Def.Reading == ReadingMode.Always
                         ? ""
                         : $"　読みがな：{(readingOn[difficulty] ? "あり" : "なし")}（Rで切り替え）";
-                    messageText.text = $"スペースキーで開始　（難易度：{Def.Label}　1〜4で切り替え）{readingHelp}　Tab：タイトルへ";
+                    messageText.text = $"スペースキーで開始　（難易度：{Def.Label}　1〜4で切り替え）{readingHelp}　Esc：タイトルへ";
                     messageText.color = UiFactory.Quiet;
                     resultText.text = "";
                     break;
@@ -233,7 +233,7 @@ namespace Negiri.Game
                         ? "定価でお買い上げ"
                         : $"{item.basePrice:N0}円 → <b>{lastPrice:N0}円</b>（{Pricing.Saved(item.basePrice, lastPrice):N0}円おトク）";
                     resultText.text = UiFactory.Paint($"<size=44>{UiFactory.RankLabel(r.Rank)}</size>", color) + $"\n{after}\n<size=16>正確率 {r.Accuracy * 100:0}%　ミス {r.MissKeys}（-{r.MissKeys * balance.missPenaltySeconds:0.0}秒）　残り時間 {r.RemainingRatio * 100:0}%</size>" + TypingView.MissedHint(r, balance);
-                    messageText.text = "Enterで次の商品　Tab：タイトルへ";
+                    messageText.text = "スペースで次の商品　Esc：タイトルへ";
                     messageText.color = UiFactory.Ink;
                     break;
                 case Phase.ImeWarning:
@@ -253,7 +253,7 @@ namespace Negiri.Game
         void BuildUi()
         {
             canvas = UiFactory.CreateCanvas("PracticeCanvas");
-            var root = canvas;
+            var root = UiFactory.CreateStage(canvas);
 
             UiFactory.MakeText(root, "ネギリタイプ　タイピング練習", 16, UiFactory.Quiet, new Vector2(0, 1), new Vector2(24, -16), new Vector2(600, 24), TextAnchor.UpperLeft);
             statsText = UiFactory.MakeText(root, "", 16, UiFactory.Quiet, new Vector2(1, 1), new Vector2(-24, -16), new Vector2(600, 24), TextAnchor.UpperRight);

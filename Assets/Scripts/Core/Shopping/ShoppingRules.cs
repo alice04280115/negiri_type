@@ -36,6 +36,9 @@ namespace Negiri.Core.Shopping
         /// <summary>試作用に、買い物のはじめに財布へ入れる金額。</summary>
         public int startingCash = 3000;
 
+        /// <summary>レジで1品打ち終えたあと、結果を出しておく秒数。過ぎたら自動で次の商品へ進む。</summary>
+        public float resultSeconds = 5f;
+
         /// <summary>初級・中級・上級・達人の順。</summary>
         public ShoppingRule[] difficulties = DefaultRules();
 

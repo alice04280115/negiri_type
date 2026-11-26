@@ -25,7 +25,12 @@ namespace Negiri.Game.Screens
             Root.gameObject.SetActive(false);
         }
 
-        public void SetVisible(bool visible) => Root.gameObject.SetActive(visible);
+        public void SetVisible(bool visible)
+        {
+            Root.gameObject.SetActive(visible);
+            // 操作の案内はパネルより手前に出す（パネルの裏に隠れないように）
+            if (visible) Message.rectTransform.SetAsLastSibling();
+        }
 
         /// <summary>この画面に切り替わったとき。</summary>
         public virtual void Enter() { }
@@ -40,6 +45,16 @@ namespace Negiri.Game.Screens
 
         protected static bool Pressed(KeyControl key) => key != null && key.wasPressedThisFrame;
 
-        protected static bool EnterPressed(Keyboard kb) => Pressed(kb.enterKey) || Pressed(kb.numpadEnterKey);
+        /// <summary>決定はスペースキーに統一する。</summary>
+        protected static bool Decide(Keyboard kb) => Pressed(kb.spaceKey);
+
+        /// <summary>上下の選択を動かす（端から端へ回る）。</summary>
+        protected static int MoveCursor(Keyboard kb, int cursor, int count)
+        {
+            if (count <= 0) return 0;
+            if (Pressed(kb.upArrowKey)) cursor = (cursor + count - 1) % count;
+            if (Pressed(kb.downArrowKey)) cursor = (cursor + 1) % count;
+            return Mathf.Clamp(cursor, 0, count - 1);
+        }
     }
 }

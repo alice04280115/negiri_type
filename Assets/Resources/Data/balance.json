@@ -30,6 +30,7 @@
   },
   "shopping": {
     "startingCash": 3000,
+    "resultSeconds": 5.0,
     "difficulties": [
       {
         "label": "初級",

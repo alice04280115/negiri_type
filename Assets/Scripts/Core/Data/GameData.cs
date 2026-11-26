@@ -182,6 +182,7 @@ namespace Negiri.Core.Data
             var errors = new List<string>();
             if (shopping == null) { errors.Add("shopping の設定がありません"); return errors; }
             if (shopping.startingCash <= 0) errors.Add("startingCash は1以上にしてください");
+            if (shopping.resultSeconds < 0f) errors.Add("resultSeconds は0以上にしてください");
             var list = shopping.difficulties ?? Array.Empty<ShoppingRule>();
             if (list.Length != difficultyCount) errors.Add($"shopping.difficulties は難易度の数（{difficultyCount}）だけ並べてください");
             foreach (var d in list)

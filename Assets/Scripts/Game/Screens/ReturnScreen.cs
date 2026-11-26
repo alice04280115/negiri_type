@@ -13,7 +13,8 @@ namespace Negiri.Game.Screens
     /// </summary>
     public sealed class ReturnScreen : ScreenBase
     {
-        readonly Text titleText, ruleText, summaryText;
+        readonly Text titleText, ruleText, summaryText, payText;
+        readonly Image payBox;
         readonly RowList list;
         int cursor;
         List<int> plan = new List<int>();
@@ -28,7 +29,10 @@ namespace Negiri.Game.Screens
                 new Column(276, 110),
                 new Column(386, 100, TextAnchor.MiddleRight),
                 new Column(500, 110));
-            summaryText = UiFactory.MakeText(Root, "", 18, UiFactory.Ink, new Vector2(0.5f, 0), new Vector2(0, 56), new Vector2(900, 72), TextAnchor.LowerCenter);
+            // 会計ボタン（初級・中級は一覧の最後の行、上級・達人はこれだけを選ぶ）
+            payBox = UiFactory.MakeBox(Root, UiFactory.Bg, new Vector2(0.5f, 1), new Vector2(0, -402), new Vector2(300, 30));
+            payText = UiFactory.MakeText(Root, "", 18, UiFactory.Ink, new Vector2(0.5f, 1), new Vector2(0, -402), new Vector2(300, 30), TextAnchor.MiddleCenter);
+            summaryText = UiFactory.MakeText(Root, "", 18, UiFactory.Ink, new Vector2(0.5f, 0), new Vector2(0, 52), new Vector2(900, 52), TextAnchor.LowerCenter);
             summaryText.lineSpacing = 1.1f;
         }
 
@@ -45,7 +49,7 @@ namespace Negiri.Game.Screens
             var checkout = Flow.Checkout;
             if (Auto)
             {
-                if (EnterPressed(kb))
+                if (Decide(kb))
                 {
                     checkout.ApplyAutoReturn(Flow.Wallet.Cash);
                     Flow.Pay();
@@ -53,11 +57,12 @@ namespace Negiri.Game.Screens
                 return;
             }
 
+            // 商品の行 ＋ 最後に「会計する」ボタン
             int count = checkout.Lines.Count;
-            if (Pressed(kb.upArrowKey)) cursor = (cursor + count - 1) % count;
-            if (Pressed(kb.downArrowKey)) cursor = (cursor + 1) % count;
-            if (EnterPressed(kb)) checkout.ToggleReturn(cursor);
-            if (Pressed(kb.spaceKey) && checkout.Shortage(Flow.Wallet.Cash) == 0) Flow.Pay();
+            cursor = MoveCursor(kb, cursor, count + 1);
+            if (!Decide(kb)) return;
+            if (cursor < count) checkout.ToggleReturn(cursor);
+            else if (checkout.Shortage(Flow.Wallet.Cash) == 0) Flow.Pay();
         }
 
         public override void Refresh()
@@ -96,22 +101,21 @@ namespace Negiri.Game.Screens
             }
 
             var summary = $"返品 {returnCount}品（{UiFactory.Yen(returnedAmount)}）　お支払い {UiFactory.Yen(total)}　財布 {UiFactory.Yen(cash)}";
-            if (rule.satisfactionPerReturn > 0) summary += $"\n満足度 −{returnCount * rule.satisfactionPerReturn}";
+            if (rule.satisfactionPerReturn > 0) summary += $"　満足度 −{returnCount * rule.satisfactionPerReturn}";
             summary += "\n" + (shortage > 0
                 ? UiFactory.Paint($"あと{UiFactory.Yen(shortage)}分の返品が必要です", UiFactory.Bad)
                 : UiFactory.Paint("財布で払えます", UiFactory.Good));
             summaryText.text = summary;
 
-            if (Auto)
-            {
-                Message.text = "Enter：この内容で返品して会計";
-            }
-            else
-            {
-                Message.text = shortage > 0
-                    ? "↑↓：選ぶ　Enter：返品する／取り消す"
-                    : "↑↓：選ぶ　Enter：返品する／取り消す　Space：会計";
-            }
+            bool paySelected = Auto || cursor == checkout.Lines.Count;
+            bool canPay = Auto || shortage == 0;
+            payBox.color = paySelected && canPay ? UiFactory.Warn : UiFactory.Bg;
+            payText.text = Auto ? "▶ この内容で返品して会計" : (canPay ? "▶ 会計する" : "会計する（まだ足りません）");
+            payText.color = paySelected && canPay ? UiFactory.Bg : (canPay ? UiFactory.Ink : UiFactory.Quiet);
+
+            Message.text = Auto
+                ? "スペース：この内容で返品して会計"
+                : "↑↓：選ぶ　スペース：返品する／取り消す、会計する";
             Message.color = UiFactory.Ink;
         }
 
