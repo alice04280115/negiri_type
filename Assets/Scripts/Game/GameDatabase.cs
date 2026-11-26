@@ -41,19 +41,19 @@ namespace Negiri.Game
             return JsonUtility.FromJson<T>(Resources.Load<TextAsset>(path).text);
         }
 
-        const int RecentLimit = 24;
-        readonly List<string> recentSentences = new List<string>();
+        /// <summary>商品ごとに、出した文章のID。全部出し切るまで同じ文章は出さない（出し切ったら空にしてもう一周）。</summary>
+        readonly Dictionary<string, List<string>> usedByItem = new Dictionary<string, List<string>>();
 
-        /// <summary>その商品の、難易度に合う文章（打つ商品名）を選ぶ。最近出した文章はなるべく避ける。</summary>
+        /// <summary>その商品の、難易度に合う文章（打つ商品名）を選ぶ。候補を一通り出し切るまで同じ文章は出さない。</summary>
         public SentenceData PickSentence(string itemId, int level)
         {
-            var s = SentenceCatalog.Pick(Sentences, itemId, level, n => Random.Range(0, n), recentSentences);
-            if (s != null)
-            {
-                recentSentences.Remove(s.id);
-                recentSentences.Add(s.id);
-                if (recentSentences.Count > RecentLimit) recentSentences.RemoveAt(0);
-            }
+            var key = itemId + "#" + level;
+            if (!usedByItem.TryGetValue(key, out var used)) usedByItem[key] = used = new List<string>();
+            var s = SentenceCatalog.Pick(Sentences, itemId, level, n => Random.Range(0, n), used);
+            if (s == null) return null;
+            // 出し切っていたら（選ばれたものがもう使用済みなら）一周したので、記録をやり直す
+            if (used.Contains(s.id)) used.Clear();
+            used.Add(s.id);
             return s;
         }
     }
