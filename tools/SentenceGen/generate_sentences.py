@@ -1,112 +1,266 @@
 # 商品名（sentences.json）の自動生成分（id に _g が付くもの）を作り直す。
-# 手で書いた商品名はそのまま残す。語の組み合わせ（品質・商品・量・産地など）を商品ごとに下の V に書く。
+# 手で書いた商品名（_g の付かないもの）はそのまま残し、足りない分だけを vocab.py の語から作る。
+#
+# 方針（商品名データ 見直し・拡張計画）
+#   ・組み合わせは vocab.py に書いた「組み合わせてよい語」だけ（種類ごとの許可リスト）
+#   ・難易度ごとに読みの文字数の目安を守る（初級2～8・中級6～13・上級10～20・達人18～35）
+#   ・中級は「種類＋特徴・産地・量のどれか一つ」、上級は「二つまで」
+#   ・達人は「英字＋名前＋～副題～」を半分まで、残りは長い説明形の商品名
+#   ・量や個数だけが違う名前は、各難易度で2割まで。同じ名前の量違いは1つまで
+#   ・同じ種類や同じ語ばかりにならないよう、なるべく均等に使う
+#
 # 使い方：python3 tools/SentenceGen/generate_sentences.py（同じ内容なら毎回同じ結果になる）
-import json,random,collections
+import collections
+import json
+import math
 import os
-P=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','..','Assets','Resources','Data','sentences.json')
-raw=open(P,encoding='utf-8-sig').read(); bom=raw.startswith('﻿')
-data=json.loads(raw.lstrip('﻿')); S=[s for s in data['sentences'] if '_g' not in s['id']]
-def W(s): return [tuple(x.split('/')) for x in s.split()]
-def R(s): return [(t+'産',r+'さん') for t,r in W(s)]
-SUBF=W("～朝の食卓に～/あさのしょくたくに ～毎日のごほうび～/まいにちのごほうび ～家族の笑顔～/かぞくのえがお ～店長のおすすめ～/てんちょうのおすすめ ～特売日の主役～/とくばいびのしゅやく ～ひとり暮らしの味方～/ひとりぐらしのみかた ～節約上手の一品～/せつやくじょうずのいっぴん ～台所の名脇役～/だいどころのめいわきやく ～ちょっと贅沢～/ちょっとぜいたく ～産地直送～/さんちちょくそう ～売り切れ御免～/うりきれごめん")
-SUBD=W("～店長のおすすめ～/てんちょうのおすすめ ～特売日の主役～/とくばいびのしゅやく ～ひとり暮らしの味方～/ひとりぐらしのみかた ～節約上手の一品～/せつやくじょうずのいっぴん ～売り切れ御免～/うりきれごめん ～家族みんなで～/かぞくみんなで ～毎日の必需品～/まいにちのひつじゅひん ～まとめ買いに～/まとめがいに")
-SUBT=W("～毎日のごほうび～/まいにちのごほうび ～店長のおすすめ～/てんちょうのおすすめ ～週末のお楽しみ～/しゅうまつのおたのしみ ～ちょっと贅沢～/ちょっとぜいたく ～季節限定～/きせつげんてい ～売り切れ御免～/うりきれごめん ～夜ふかしのお供～/よふかしのおとも ～自分へのごほうび～/じぶんへのごほうび")
-ENF="Premium Fresh Organic Select Natural Farm Daily Golden Pure Rich Simple Local".split()
-END="Smart Simple Daily Pure Fresh Eco Soft Basic Value Family".split()
-ENT="Happy Special Sweet Royal Classic Deluxe Golden Party Rich Craft".split()
-V={
-'milk':dict(pre=W("低温殺菌/ていおんさっきん 朝しぼり/あさしぼり 放牧/ほうぼく 特選/とくせん 新鮮/しんせん"),core=W("牛乳/ぎゅうにゅう 低脂肪牛乳/ていしぼうぎゅうにゅう ジャージー牛乳/じゃーじーぎゅうにゅう 成分無調整牛乳/せいぶんむちょうせいぎゅうにゅう 特濃牛乳/とくのうぎゅうにゅう"),
-  post=W("一リットル/いちりっとる 五百ミリ/ごひゃくみり 二本パック/にほんぱっく"),org=R("北海道/ほっかいどう 岩手県/いわてけん 栃木県/とちぎけん 千葉県/ちばけん 群馬県/ぐんまけん 熊本県/くまもとけん 鳥取県/とっとりけん 長野県/ながのけん"),en=ENF,sub=SUBF),
-'egg':dict(pre=W("朝採り/あさどり 平飼い/ひらがい 放し飼い/はなしがい 新鮮/しんせん 特選/とくせん"),core=W("卵/たまご 赤玉卵/あかだまたまご 白玉卵/しろだまたまご 有精卵/ゆうせいらん 地鶏の卵/じどりのたまご 烏骨鶏の卵/うこっけいのたまご"),
-  post=W("六個入り/ろっこいり 十個入り/じゅっこいり 二パック/にぱっく"),org=R("青森県/あおもりけん 茨城県/いばらきけん 千葉県/ちばけん 愛知県/あいちけん 岡山県/おかやまけん 鹿児島県/かごしまけん 岐阜県/ぎふけん 広島県/ひろしまけん"),en=ENF,sub=SUBF),
-'bread':dict(pre=W("焼きたて/やきたて もっちり/もっちり ふんわり/ふんわり 天然酵母/てんねんこうぼ 全粒粉/ぜんりゅうふん 国産小麦/こくさんこむぎ"),core=W("食パン/しょくぱん 山型食パン/やまがたしょくぱん 角食パン/かくしょくぱん 胚芽食パン/はいがしょくぱん レーズン食パン/れーずんしょくぱん"),
-  post=W("六枚切り/ろくまいぎり 八枚切り/はちまいぎり 四枚切り/よんまいぎり 一斤/いっきん"),org=[],en=ENF,sub=SUBF),
-'rice':dict(pre=W("新米/しんまい 無洗米/むせんまい 特別栽培/とくべつさいばい 減農薬/げんのうやく 精米したて/せいまいしたて"),core=W("コシヒカリ/こしひかり ひとめぼれ/ひとめぼれ あきたこまち/あきたこまち ななつぼし/ななつぼし はえぬき/はえぬき 白米/はくまい 玄米/げんまい"),
-  post=W("五キロ/ごきろ 二キロ/にきろ 十キロ/じゅっきろ"),org=R("新潟県/にいがたけん 秋田県/あきたけん 山形県/やまがたけん 宮城県/みやぎけん 北海道/ほっかいどう 富山県/とやまけん 福井県/ふくいけん 岩手県/いわてけん"),en=ENF,sub=SUBF),
-'pork':dict(pre=W("国産/こくさん 銘柄/めいがら 熟成/じゅくせい やわらか/やわらか 特選/とくせん"),core=W("豚バラ/ぶたばら 豚ロース/ぶたろーす 豚もも/ぶたもも 豚肩ロース/ぶたかたろーす 豚ヒレ/ぶたひれ 豚こま/ぶたこま"),
-  post=W("薄切り/うすぎり 厚切り/あつぎり 切り落とし/きりおとし しゃぶしゃぶ用/しゃぶしゃぶよう 焼肉用/やきにくよう ブロック/ぶろっく 大容量パック/だいようりょうぱっく"),org=R("鹿児島県/かごしまけん 宮崎県/みやざきけん 群馬県/ぐんまけん 千葉県/ちばけん 岩手県/いわてけん 茨城県/いばらきけん 北海道/ほっかいどう 沖縄県/おきなわけん"),en=ENF,sub=SUBF),
-'cabbage':dict(pre=W("朝採れ/あさどれ 高原/こうげん 新鮮/しんせん 有機栽培/ゆうきさいばい 甘い/あまい 大きな/おおきな"),core=W("キャベツ/きゃべつ 春キャベツ/はるきゃべつ 冬キャベツ/ふゆきゃべつ 寒玉キャベツ/かんだまきゃべつ グリーンボール/ぐりーんぼーる"),
-  post=W("一玉/ひとたま 半玉/はんたま 四分の一カット/よんぶんのいちかっと"),org=R("群馬県/ぐんまけん 愛知県/あいちけん 千葉県/ちばけん 神奈川県/かながわけん 長野県/ながのけん 茨城県/いばらきけん 熊本県/くまもとけん 鹿児島県/かごしまけん"),en=ENF,sub=SUBF),
-'natto':dict(pre=W("国産大豆/こくさんだいず 有機大豆/ゆうきだいず 昔ながらの/むかしながらの 粘り強い/ねばりづよい 香りのよい/かおりのよい"),core=W("納豆/なっとう 小粒納豆/こつぶなっとう 大粒納豆/おおつぶなっとう ひきわり納豆/ひきわりなっとう 黒豆納豆/くろまめなっとう 極小粒納豆/ごくしょうつぶなっとう"),
-  post=W("三個組/さんこぐみ 四個組/よんこぐみ たれ付き/たれつき からし付き/からしつき 二個組/にこぐみ"),org=R("茨城県/いばらきけん 北海道/ほっかいどう 秋田県/あきたけん 宮城県/みやぎけん 栃木県/とちぎけん 熊本県/くまもとけん"),en=ENF,sub=SUBF),
-'tea':dict(pre=W("香ばしい/こうばしい すっきり/すっきり 深い味わいの/ふかいあじわいの 冷たい/つめたい 一番摘み/いちばんづみ"),core=W("緑茶/りょくちゃ 煎茶/せんちゃ ほうじ茶/ほうじちゃ 玄米茶/げんまいちゃ 番茶/ばんちゃ 麦茶/むぎちゃ"),
-  post=W("ペットボトル/ぺっとぼとる 二リットル/にりっとる ティーバッグ/てぃーばっぐ 茶葉百グラム/ちゃばひゃくぐらむ 六本パック/ろっぽんぱっく"),org=R("静岡県/しずおかけん 鹿児島県/かごしまけん 京都府/きょうとふ 三重県/みえけん 宮崎県/みやざきけん 埼玉県/さいたまけん 福岡県/ふくおかけん 奈良県/ならけん"),en=ENF,sub=SUBF),
-'detergent':dict(pre=W("部屋干し用/へやぼしよう 消臭/しょうしゅう 抗菌/こうきん 濃縮/のうしゅく 無香料/むこうりょう 植物由来/しょくぶつゆらい 肌にやさしい/はだにやさしい"),core=W("洗剤/せんざい 液体洗剤/えきたいせんざい 粉末洗剤/ふんまつせんざい 洗濯洗剤/せんたくせんざい 柔軟剤/じゅうなんざい"),
-  post=W("詰め替え用/つめかえよう 本体/ほんたい 大容量/だいようりょう 特大サイズ/とくだいさいず 二個パック/にこぱっく"),org=[],en=END,sub=SUBD),
-'toilet_paper':dict(pre=W("再生紙/さいせいし 香り付き/かおりつき 無香料/むこうりょう 厚手/あつで やわらか/やわらか 長持ち/ながもち"),core=W("トイレットペーパー/といれっとぺーぱー ダブルロール/だぶるろーる シングルロール/しんぐるろーる トイレロール/といれろーる"),
-  post=W("十二ロール/じゅうにろーる 八ロール/はちろーる 四ロール/よんろーる 二倍巻き/にばいまき 三倍巻き/さんばいまき 十八ロール/じゅうはちろーる"),org=[],en=END,sub=SUBD),
-'shampoo':dict(pre=W("ノンシリコン/のんしりこん アミノ酸系/あみのさんけい 薬用/やくよう 子ども用/こどもよう 炭酸泡/たんさんあわ 無添加/むてんか しっとり/しっとり さらさら/さらさら ダメージ補修/だめーじほしゅう"),core=W("シャンプー/しゃんぷー リンスインシャンプー/りんすいんしゃんぷー コンディショナー/こんでぃしょなー トリートメント/とりーとめんと"),
-  post=W("詰め替え用/つめかえよう ポンプ/ぽんぷ 大容量/だいようりょう お試しサイズ/おためしさいず"),org=[],en=END,sub=SUBD),
-'chips':dict(pre=W("厚切り/あつぎり 波型/なみがた 堅焼き/かたやき 薄切り/うすぎり 大袋/おおぶくろ 期間限定/きかんげんてい"),core=W("ポテトチップス/ぽてとちっぷす ポテチ/ぽてち じゃがいもチップス/じゃがいもちっぷす"),
-  post=W("うすしお味/うすしおあじ のり塩味/のりしおあじ コンソメ味/こんそめあじ しょうゆ味/しょうゆあじ わさび味/わさびあじ 梅味/うめあじ バター味/ばたーあじ 激辛味/げきからあじ 黒こしょう味/くろこしょうあじ"),org=[],en=ENT,sub=SUBT),
-'chocolate':dict(pre=W("濃厚/のうこう 期間限定/きかんげんてい 大袋/おおぶくろ 冬季限定/とうきげんてい 口どけ/くちどけ"),core=W("ミルクチョコ/みるくちょこ ビターチョコ/びたーちょこ ホワイトチョコ/ほわいとちょこ 抹茶チョコ/まっちゃちょこ いちごチョコ/いちごちょこ アーモンドチョコ/あーもんどちょこ 生チョコ/なまちょこ"),
-  post=W("十二粒入り/じゅうにつぶいり 小袋/こぶくろ 詰め合わせ/つめあわせ"),org=[],en=ENT,sub=SUBT),
-'ice':dict(pre=W("濃厚/のうこう 期間限定/きかんげんてい ひんやり/ひんやり なめらか/なめらか 果肉入り/かにくいり"),core=W("バニラアイス/ばにらあいす チョコアイス/ちょこあいす 抹茶アイス/まっちゃあいす いちごアイス/いちごあいす マンゴーシャーベット/まんごーしゃーべっと レモンシャーベット/れもんしゃーべっと ミルクジェラート/みるくじぇらーと"),
-  post=W("カップ/かっぷ バー/ばー マルチパック/まるちぱっく 大容量/だいようりょう"),org=[],en=ENT,sub=SUBT),
-'magazine':dict(pre=W("月刊/げっかん 週刊/しゅうかん 季刊/きかん 隔週刊/かくしゅうかん"),core=W("ゲーム雑誌/げーむざっし 料理雑誌/りょうりざっし 旅行雑誌/りょこうざっし 映画雑誌/えいがざっし 音楽雑誌/おんがくざっし パズル雑誌/ぱずるざっし 漫画雑誌/まんがざっし アウトドア雑誌/あうとどあざっし"),
-  post=W("最新号/さいしんごう 特大号/とくだいごう 増刊号/ぞうかんごう 付録つき/ふろくつき 新年号/しんねんごう"),org=[],en="Special Best Super Happy Classic Fresh Hobby Smart".split(),sub=W("～年末超大型特集～/ねんまつちょうおおがたとくしゅう ～新連載スタート～/しんれんさいすたーと ～豪華付録つき～/ごうかふろくつき ～保存版～/ほぞんばん ～読者アンケート号～/どくしゃあんけーとごう ～夏の特別号～/なつのとくべつごう")),
-}
+import random
+import sys
 
-# 明らかに不自然な組み合わせ（商品名にこの2語が両方入るものは作らない）
-BAD={
- 'milk':[('特選','特濃'),('新鮮','特濃')],
- 'egg':[('新鮮','朝採り')],
- 'rice':[('精米したて','玄米'),('無洗米','玄米'),('精米したて','無洗米'),('新米','精米したて')],
- 'pork':[('豚こま','切り落とし'),('豚こま','ブロック'),('豚こま','厚切り'),('豚こま','しゃぶしゃぶ用'),('豚こま','焼肉用'),('豚ヒレ','焼肉用'),('豚ヒレ','切り落とし'),('豚バラ','とんかつ用'),('Organic',''),('Farm',''),('県産','国産')],
- 'cabbage':[('大きな','半玉'),('大きな','四分の一'),('グリーンボール','四分の一'),('春キャベツ','寒玉'),('冬キャベツ','春'),('朝採れ','寒玉'),('県産','高原')],
- 'natto':[('粘り強い','ひきわり'),('香りのよい','からし'),('黒豆納豆','極小粒')],
- 'tea':[('冷たい','ティーバッグ'),('冷たい','茶葉'),('一番摘み','麦茶'),('一番摘み','玄米茶'),('一番摘み','番茶'),('一番摘み','ほうじ茶'),('香ばしい','緑茶'),('香ばしい','煎茶'),('冷たい','ペットボトル'),('すっきり','ほうじ茶')],
- 'detergent':[('柔軟剤','粉末'),('部屋干し用','柔軟剤'),('濃縮','柔軟剤'),('肌にやさしい','消臭')],
- 'shampoo':[('炭酸泡','コンディショナー'),('炭酸泡','トリートメント'),('さらさら','しっとり'),('子ども用','ダメージ補修'),('リンスイン','コンディショナー')],
- 'chips':[('薄切り','厚切り'),('堅焼き','薄切り'),('ポテチ','大袋'),('Royal',''),('Deluxe','')],
- 'chocolate':[('生チョコ','板'),('生チョコ','小袋'),('生チョコ','大袋'),('板',''),('口どけ','アーモンド'),('大袋','小袋'),('大袋','十二粒')],
- 'ice':[('果肉入り','バニラ'),('果肉入り','チョコ'),('果肉入り','抹茶'),('果肉入り','ミルク'),('ひんやり','ジェラート'),('シャーベット','カップ')],
- 'magazine':[('季刊','新年号'),('週刊','増刊号'),('隔週刊','季刊')],
- 'toilet_paper':[('香り付き','無香料')],
-}
-def bad(item,text):
-    for a,b in BAD.get(item,[]):
-        if a in text and (b=='' and text.startswith(a) or b and b in text): return True
+sys.dont_write_bytecode = True
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from vocab import V  # noqa: E402
+
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
+P = os.path.join(ROOT, 'Assets', 'Resources', 'Data', 'sentences.json')
+BAND = {1: (2, 8), 2: (6, 13), 3: (10, 20), 4: (18, 35)}
+TARGET = {1: 25, 2: 35, 3: 40, 4: 33}
+QTY_SHARE = 0.2
+
+raw = open(P, encoding='utf-8-sig').read()
+bom = raw.startswith('﻿')
+data = json.loads(raw.lstrip('﻿'))
+HAND = [s for s in data['sentences'] if '_g' not in s['id']]
+used_text = {s['text'] for s in HAND}
+
+
+def norm(t):
+    """言い換えで同じになる名前を同じものとみなす（ミルク＝牛乳、北海道産大豆＝北海道大豆 など）"""
+    for a, b in (('ミルク', '牛乳'), ('たまご', '卵'), ('の', ''), ('産', ''), (' ', '')):
+        t = t.replace(a, b)
+    return t
+
+
+used_norm = {norm(t) for t in used_text}
+
+
+def overlap(*texts):
+    """2つの部品に同じ語（ひらがなだけではない2文字）が入っていれば True（例：宇治抹茶アイス ～宇治の…～）"""
+    def grams(t):
+        return {t[i:i + 2] for i in range(len(t) - 1)
+                if not all('\u3041' <= ch <= '\u309f' for ch in t[i:i + 2]) and ' ' not in t[i:i + 2]}
+    seen = set()
+    for t in texts:
+        g = grams(t)
+        if seen & g:
+            return True
+        seen |= g
     return False
-rng=random.Random(20261126)
-existing={(s['itemIds'][0],s['text']) for s in S}
-def j(*ps): return (''.join(p[0] for p in ps), ''.join(p[1] for p in ps))
-new=[]
-for item,v in V.items():
-    pre,core,post,org=v['pre'],v['core'],v['post'],v['org']
-    # 漢字や数字の後置（六枚切り など）は「の」でつながず直接つなぐ
-    pc=[j(p,c) for p in pre for c in core]
-    cp=[j(c,q) for c in core for q in post]
-    oc=[j(o,c) for o in org for c in core]
-    pcp=[j(p,c,q) for p in pre for c in core for q in post]
-    opc=[j(o,p,c) for o in org for p in pre for c in core]
-    ocp=[j(o,c,q) for o in org for c in core for q in post]
-    L1=[x for x in core+pc+cp if len(x[1])<=12]
-    L2=[x for x in pc+cp+oc if 7<=len(x[1])<=15]
-    L3=[x for x in pcp+opc+ocp if 12<=len(x[1])<=24]
-    L4=[]
-    for e in v['en']:
-        for body in pc+cp+pcp:
-            for s in v['sub']:
-                L4.append((f"{e} {body[0]} {s[0]}", e.lower()+body[1]+s[1]))
-    res=[]
-    for lv,pool,n in ((1,L1,14),(2,L2,24),(3,L3,24),(4,L4,16)):
-        pool=list(dict.fromkeys(pool)); rng.shuffle(pool); c=0; usedEn=collections.Counter(); usedBody=collections.Counter()
-        for t,r in pool:
-            if c>=n: break
-            if (item,t) in existing or bad(item,t): continue
-            if lv==4:
-                body=t.split(' ')[1]
-                if usedBody[body]>=1: continue
-                usedBody[body]+=1
-            existing.add((item,t)); c+=1; new.append((item,lv,t,r))
-        res.append(c)
-    print(item,res)
-cnt=collections.Counter()
-for item,lv,t,r in new:
-    cnt[item]+=1
-    S.append({"id":f"s_{item}_g{cnt[item]:03d}","itemIds":[item],"text":t,"reading":r,"level":lv})
-data['sentences']=S
-open(P,'w',encoding='utf-8').write(('﻿' if bom else '')+json.dumps(data,ensure_ascii=False,indent=2)+'\n')
-c=collections.Counter((s['itemIds'][0],s['level']) for s in S)
-print(len(S),'min',min(c.values()))
+
+
+def double_origin(*texts):
+    """産地が二つ入る（宮崎県産国産豚もも など）"""
+    return sum(1 for t in texts if '産' in t) >= 2
+
+
+def cond_ok(cond, body, kind):
+    """副題・英字の条件。k=使ってよい種類, n=名前に入っていてほしい語, x=入っていてはいけない語（; で並べる）"""
+    for c in filter(None, cond.split(';')):
+        key, vals = c.split('=')
+        vals = vals.split(',')
+        if key == 'k' and kind not in vals:
+            return False
+        if key == 'n' and not any(v in body for v in vals):
+            return False
+        if key == 'x' and any(v in body for v in vals):
+            return False
+    return True
+
+
+PLACES = ('北海道', '山', '牧場', '農場', 'やんばる', '棚田', '高原', '産', '畑', '宇治', 'イタリア', '十勝', '温泉', '全国', '雪室', 'はさ掛け')
+
+
+def fits(level, reading):
+    a, b = BAND[level]
+    return a <= len(reading) <= b
+
+
+def C(parts, kind, tags, qty=None):
+    """parts: (表記, よみ) の並び。tags: 均等に使いたい語。qty: 量の語（量違いの判定に使う）"""
+    texts = [p[0] for p in parts]
+    if len(parts) > 1 and (overlap(*texts) or double_origin(*texts)):
+        return None
+    t = ''.join(p[0] for p in parts)
+    r = ''.join(p[1] for p in parts)
+    base = ''.join(p[0] for p in parts if p is not qty) if qty else t
+    return dict(t=t, r=r, kind=kind, tags=tags, qty=qty is not None, base=base)
+
+
+def one_attr(k):
+    out = [C([(k['t'], k['r'])], k['t'], [])]
+    for m in k['mods']:
+        out.append(C([m, (k['t'], k['r'])], k['t'], ['m:' + m[0]]))
+    for o in k['org']:
+        out.append(C([o, (k['t'], k['r'])], k['t'], ['o:' + o[0]]))
+    for u in k['use']:
+        out.append(C([(k['t'], k['r']), u], k['t'], ['u:' + u[0]]))
+    for q in k['qty']:
+        out.append(C([(k['t'], k['r']), q], k['t'], ['q:' + q[0]], qty=q))
+    return [c for c in out if c]
+
+
+def two_attr(k):
+    kt = (k['t'], k['r'])
+    out = []
+    for o in k['org']:
+        for m in k['mods']:
+            out.append(C([o, m, kt], k['t'], ['o:' + o[0], 'm:' + m[0]]))
+        for u in k['use']:
+            out.append(C([o, kt, u], k['t'], ['o:' + o[0], 'u:' + u[0]]))
+        for q in k['qty']:
+            out.append(C([o, kt, q], k['t'], ['o:' + o[0], 'q:' + q[0]], qty=q))
+    for m in k['mods']:
+        for u in (k['use'] if k['mu'] else []):
+            out.append(C([m, kt, u], k['t'], ['m:' + m[0], 'u:' + u[0]]))
+        for q in k['qty']:
+            out.append(C([m, kt, q], k['t'], ['m:' + m[0], 'q:' + q[0]], qty=q))
+    for u in k['use']:
+        for q in k['qty']:
+            if u[0].endswith('入り') and q[0].endswith('入り'):
+                continue
+            out.append(C([kt, u, q], k['t'], ['u:' + u[0], 'q:' + q[0]], qty=q))
+    return [c for c in out if c]
+
+
+def pick(rng, pool, n, level, kind_cap, tag_cap, qty_bases, extra_ok=None, max_relax=2):
+    """候補から n 個選ぶ。種類と語の使用回数の上限を少しずつ緩めながら選び、なるべく均等にする。"""
+    pool = [c for c in pool if fits(level, c['r'])]
+    rng.shuffle(pool)
+    chosen = []
+    kinds = collections.Counter()
+    tags = collections.Counter()
+    qty_max = math.floor(n * QTY_SHARE)
+    qn = 0
+    for relax in range(0, max_relax + 1):
+        for c in pool:
+            if len(chosen) >= n:
+                return chosen
+            if c['t'] in used_text or norm(c['t']) in used_norm:
+                continue
+            if kinds[c['kind']] >= kind_cap + relax:
+                continue
+            if any(tags[g] >= tag_cap + relax for g in c['tags']):
+                continue
+            if not c['qty'] and c['t'] in qty_bases:
+                continue
+            if c['qty']:
+                if qn >= qty_max or c['base'] in qty_bases:
+                    continue
+                if any(t != c['t'] and t.startswith(c['base']) for t in used_text):
+                    continue
+            if extra_ok and not extra_ok(c):
+                continue
+            chosen.append(c)
+            used_text.add(c['t'])
+            used_norm.add(norm(c['t']))
+            kinds[c['kind']] += 1
+            for g in c['tags']:
+                tags[g] += 1
+            if c['qty']:
+                qn += 1
+                qty_bases.add(c['base'])
+    return chosen
+
+
+def main():
+    rng = random.Random(20261127)
+    new = []
+    report = []
+    for item, v in V.items():
+        hand = collections.Counter(s['level'] for s in HAND if s['itemIds'][0] == item)
+        kinds = v['kinds']
+        qty_bases = set()
+        got = {}
+
+        # 初級：手で選んだ短い名前と、種類そのものの名前（短いもの）
+        l1pool = [C([w], w[0], []) for w in v['l1']] + [C([(k['t'], k['r'])], k['t'], []) for k in kinds]
+        need1 = max(0, TARGET[1] - hand[1])
+        got[1] = pick(rng, l1pool, need1, 1, 99, 99, qty_bases, max_relax=0)
+        short = need1 - len(got[1])
+        target = dict(TARGET)
+        target[3] += short // 2
+        target[4] += short - short // 2
+
+        # 中級：種類＋一つ
+        p2 = [c for k in kinds for c in one_attr(k)]
+        need = max(0, target[2] - hand[2])
+        got[2] = pick(rng, p2, need, 2, math.ceil(need / len(kinds)) + 1, 2, qty_bases)
+
+        # 上級：種類＋二つまで（一つで長いものも可）
+        p3 = [c for k in kinds for c in two_attr(k)] + p2
+        need = max(0, target[3] - hand[3])
+        got[3] = pick(rng, p3, need, 3, math.ceil(need / len(kinds)) + 1, 3, qty_bases)
+
+        # 達人：説明形（残り）と英字＋副題（半分まで）
+        need = max(0, target[4] - hand[4])
+        # 説明形を先に選び（目安は残りの半分強）、英字＋副題で残りを埋める
+        n_long = need - (need - hand[4]) // 2 + hand[4] // 2
+        kmap = {k['t']: k for k in kinds}
+        plong = []
+        for ph in v['long']:
+            for kn in ph['kinds']:
+                k = kmap[kn]
+                kt = (k['t'], k['r'])
+                pt = (ph['t'], ph['r'])
+                # 説明形には特徴の語を重ねない（意味の重なりや食い違いを避ける）。産地は説明に場所がないときだけ
+                plong.append(C([pt, kt], kn, ['p:' + ph['t']]))
+                if not any(w in ph['t'] for w in PLACES):
+                    for o in k['org']:
+                        plong.append(C([pt, o, kt], kn, ['p:' + ph['t'], 'o:' + o[0]]))
+        plong = [c for c in plong if c]
+        got_long = pick(rng, plong, n_long, 4, 3, 3, qty_bases, max_relax=0)
+        pen = []
+        bodies = [c for c in p2 if not c['qty']]
+        for e in v['en']:
+            for b in bodies:
+                if not cond_ok(e[1], b['t'], b['kind']):
+                    continue
+                for s in v['sub']:
+                    if not cond_ok(s[2] if len(s) > 2 else '', b['t'], b['kind']) or overlap(b['t'], s[0]):
+                        continue
+                    pen.append(dict(t=f"{e[0]} {b['t']} {s[0]}", r=e[0].lower() + b['r'] + s[1], kind=b['kind'],
+                                    tags=['e:' + e[0], 's:' + s[0]] + b['tags'], qty=False, base='', body=b['t']))
+        # 英字＋副題は達人の半分まで（手書きの達人4件もこの形なので数に入れる）
+        n_en = max(0, min(need - len(got_long), len(got_long) - hand[4]))
+        bodies_used = set()
+
+        def body_once(c):
+            if c['body'] in bodies_used:
+                return False
+            bodies_used.add(c['body'])
+            return True
+        got_en = pick(rng, pen, n_en, 4, 2, 2, qty_bases, extra_ok=body_once, max_relax=1)
+        got[4] = got_long + got_en
+
+        for lv in (1, 2, 3, 4):
+            for c in got[lv]:
+                new.append((item, lv, c['t'], c['r']))
+        report.append((item, [hand[lv] + len(got[lv]) for lv in (1, 2, 3, 4)], len(got_long), len(got_en)))
+
+    cnt = collections.Counter()
+    S = list(HAND)
+    for item, lv, t, r in new:
+        cnt[item] += 1
+        S.append({"id": f"s_{item}_g{cnt[item]:03d}", "itemIds": [item], "text": t, "reading": r, "level": lv})
+    data['sentences'] = S
+    open(P, 'w', encoding='utf-8').write(('﻿' if bom else '') + json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+
+    tot = collections.Counter()
+    for item, c, nl, ne in report:
+        print(f'{item:13s} 初級{c[0]:3d} 中級{c[1]:3d} 上級{c[2]:3d} 達人{c[3]:3d}（説明形{nl}・英字{ne}）')
+        for i in range(4):
+            tot[i] += c[i]
+    print('合計', len(S), '（初級', tot[0], '中級', tot[1], '上級', tot[2], '達人', tot[3], '）')
+
+
+main()

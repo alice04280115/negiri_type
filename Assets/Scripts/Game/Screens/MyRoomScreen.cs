@@ -185,7 +185,7 @@ namespace Negiri.Game.Screens
             return UiFactory.Paint(meter, UiFactory.Good) + $" {value}日分";
         }
 
-        /// <summary>1週間の特売の予定。曜日ごとに1行（例：「　火曜　卵・キャベツ」）。</summary>
+        /// <summary>1週間の特売の予定。曜日ごとに1行（例：「　火曜　卵・葉物野菜」）。</summary>
         string WeekSales(MonthState m)
         {
             var sb = new StringBuilder();

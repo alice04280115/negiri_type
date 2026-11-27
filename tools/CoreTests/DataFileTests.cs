@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Negiri.Core.Data;
@@ -131,6 +132,96 @@ namespace Negiri.Core.Tests
                     Assert.IsNotNull(s, $"{item.id} level {level}");
                 }
             }
+        }
+
+        // 読みがなの文字数の目安（商品名データ 見直し・拡張計画）。初級2～8・中級6～13・上級10～20・達人18～35
+        static readonly int[] MinReading = { 0, 2, 6, 10, 18 };
+        static readonly int[] MaxReading = { 0, 8, 13, 20, 35 };
+
+        [Test]
+        public void 商品名の読みの長さが難易度ごとの目安に収まる()
+        {
+            var bad = new List<string>();
+            foreach (var s in Load<SentenceList>("sentences.json").sentences)
+            {
+                int n = s.reading.Length;
+                if (n < MinReading[s.level] || n > MaxReading[s.level]) bad.Add($"{s.id} {s.text}（level {s.level}・{n}文字）");
+            }
+            Assert.IsEmpty(bad, string.Join("\n", bad));
+        }
+
+        [Test]
+        public void 同じ商品名が二つない()
+        {
+            var seen = new HashSet<string>();
+            var dup = new List<string>();
+            foreach (var s in Load<SentenceList>("sentences.json").sentences)
+            {
+                if (!seen.Add(s.text)) dup.Add($"{s.id} {s.text}");
+            }
+            Assert.IsEmpty(dup, string.Join("\n", dup));
+        }
+
+        [Test]
+        public void 商品と商品名の文字がすべてフォントにある()
+        {
+            var dir = Path.GetDirectoryName(Path.GetDirectoryName(DataDir()));
+            var glyphs = FontCharacters(Path.Combine(dir, "Resources", "Fonts", "main.ttf"));
+            var missing = new SortedSet<string>();
+            void Check(string id, string text)
+            {
+                foreach (var ch in text)
+                {
+                    if (!glyphs.Contains(ch)) missing.Add($"「{ch}」（{id} {text}）");
+                }
+            }
+            foreach (var item in Load<ItemList>("items.json").items) Check(item.id, item.name);
+            foreach (var s in Load<SentenceList>("sentences.json").sentences) Check(s.id, s.text);
+            Assert.IsEmpty(missing, string.Join("\n", missing));
+        }
+
+        /// <summary>TrueType フォントの cmap（Windows Unicode BMP・format 4）から、字形のある文字を集める。</summary>
+        static HashSet<char> FontCharacters(string path)
+        {
+            var b = File.ReadAllBytes(path);
+            int U16(int o) => (b[o] << 8) | b[o + 1];
+            uint U32(int o) => (uint)((b[o] << 24) | (b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3]);
+            int numTables = U16(4);
+            int cmap = -1;
+            for (int i = 0; i < numTables; i++)
+            {
+                int rec = 12 + 16 * i;
+                if (b[rec] == 'c' && b[rec + 1] == 'm' && b[rec + 2] == 'a' && b[rec + 3] == 'p') cmap = (int)U32(rec + 8);
+            }
+            Assert.AreNotEqual(-1, cmap, "フォントに cmap がありません");
+            int sub = -1;
+            for (int i = 0; i < U16(cmap + 2); i++)
+            {
+                int rec = cmap + 4 + 8 * i;
+                if (U16(rec) == 3 && U16(rec + 2) == 1) sub = cmap + (int)U32(rec + 4);
+            }
+            Assert.AreNotEqual(-1, sub, "フォントに Unicode の cmap がありません");
+            Assert.AreEqual(4, U16(sub), "cmap が format 4 ではありません");
+            int segX2 = U16(sub + 6);
+            int ends = sub + 14, starts = ends + segX2 + 2, deltas = starts + segX2, offsets = deltas + segX2;
+            var set = new HashSet<char>();
+            for (int i = 0; i < segX2 / 2; i++)
+            {
+                int end = U16(ends + 2 * i), start = U16(starts + 2 * i);
+                int delta = U16(deltas + 2 * i), rangeOffset = U16(offsets + 2 * i);
+                for (int c = start; c <= end && c != 0xFFFF; c++)
+                {
+                    int glyph;
+                    if (rangeOffset == 0) glyph = (c + delta) & 0xFFFF;
+                    else
+                    {
+                        int g = U16(offsets + 2 * i + rangeOffset + 2 * (c - start));
+                        glyph = g == 0 ? 0 : (g + delta) & 0xFFFF;
+                    }
+                    if (glyph != 0) set.Add((char)c);
+                }
+            }
+            return set;
         }
     }
 }
