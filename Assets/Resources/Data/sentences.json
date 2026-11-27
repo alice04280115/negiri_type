@@ -1963,15 +1963,6 @@
       "level": 1
     },
     {
-      "id": "s_shampoo_08",
-      "itemIds": [
-        "shampoo"
-      ],
-      "text": "洗髪料",
-      "reading": "せんぱつりょう",
-      "level": 1
-    },
-    {
       "id": "s_shampoo_09",
       "itemIds": [
         "shampoo"
@@ -12625,6 +12616,15 @@
       ],
       "text": "Style ソフトヘアワックス ～朝のセットに～",
       "reading": "styleそふとへあわっくすあさのせっとに",
+      "level": 4
+    },
+    {
+      "id": "s_shampoo_g102",
+      "itemIds": [
+        "shampoo"
+      ],
+      "text": "Scalp ミント頭皮クレンジング ～森林浴の香り～",
+      "reading": "scalpみんととうひくれんじんぐしんりんよくのかおり",
       "level": 4
     },
     {
