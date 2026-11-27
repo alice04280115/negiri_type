@@ -69,7 +69,7 @@ def norm(t):
     return SYN_RE.sub(lambda m: SYN_TO[m.group(0)], plain(t))
 
 
-# 読みが同じ名前（温泉卵とおんせんたまご など）と「の」「産」の有無だけの違いは、難易度が違っても作らない（手書きの卵・たまごはそのまま）。言い換えは同じ商品・同じ難易度の中だけ避ける
+# 読みが同じ名前と「の」「産」の有無だけの違いは、難易度が違っても作らない。言い換えは同じ商品・同じ難易度の中だけ避ける
 used_read = {s['reading'] for s in HAND}
 used_plain = {plain(s['text']) for s in HAND}
 used_norm = {(s['itemIds'][0], s['level'], norm(s['text'])) for s in HAND}
