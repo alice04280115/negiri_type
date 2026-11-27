@@ -38,7 +38,8 @@
         "shortage": "ChooseReturn",
         "satisfactionPerReturn": 0,
         "shopIntervalDays": 1,
-        "foodCap": 7
+        "foodCap": 7,
+        "borrowFrom": ""
       },
       {
         "label": "中級",
@@ -46,7 +47,8 @@
         "shortage": "ChooseReturn",
         "satisfactionPerReturn": 3,
         "shopIntervalDays": 3,
-        "foodCap": 7
+        "foodCap": 7,
+        "borrowFrom": ""
       },
       {
         "label": "上級",
@@ -54,7 +56,8 @@
         "shortage": "AutoReturnHighestFirst",
         "satisfactionPerReturn": 3,
         "shopIntervalDays": 7,
-        "foodCap": 10
+        "foodCap": 10,
+        "borrowFrom": "card"
       },
       {
         "label": "達人",
@@ -62,7 +65,8 @@
         "shortage": "AutoReturnLowestFirst",
         "satisfactionPerReturn": 3,
         "shopIntervalDays": 7,
-        "foodCap": 10
+        "foodCap": 10,
+        "borrowFrom": "card"
       }
     ]
   },
@@ -94,6 +98,17 @@
       "max": 100,
       "passLine": 50,
       "dailyDecay": 1
+    },
+    "debt": {
+      "repayStep": 1000,
+      "lenders": [
+        {
+          "id": "card",
+          "name": "カードローン",
+          "limit": 10000,
+          "interestBp": 150
+        }
+      ]
     }
   }
 }

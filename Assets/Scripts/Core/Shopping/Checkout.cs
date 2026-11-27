@@ -47,9 +47,19 @@ namespace Negiri.Core.Shopping
         public int Saved { get; }
         public int ReturnCount { get; }
         public int SatisfactionLoss { get; }
+        /// <summary>この会計で借りた額（0なら借りていない）。支払い Paid のうち、現金は Paid － Borrowed。</summary>
+        public int Borrowed { get; }
+        /// <summary>借りた借入先の名前（レシートに書く）。</summary>
+        public string LenderName { get; }
+        /// <summary>会計の後の、その借入先の借金残高。</summary>
+        public int DebtAfter { get; }
 
-        internal Receipt(IReadOnlyList<CheckoutLine> lines, int cashBefore, int cashAfter, int paid, int baseTotal, int saved, int returnCount, int satisfactionLoss)
+        internal Receipt(IReadOnlyList<CheckoutLine> lines, int cashBefore, int cashAfter, int paid, int baseTotal, int saved, int returnCount, int satisfactionLoss,
+            int borrowed = 0, string lenderName = "", int debtAfter = 0)
         {
+            Borrowed = borrowed;
+            LenderName = lenderName ?? "";
+            DebtAfter = debtAfter;
             Lines = lines;
             CashBefore = cashBefore;
             CashAfter = cashAfter;
@@ -64,6 +74,7 @@ namespace Negiri.Core.Shopping
     /// <summary>
     /// レジから会計まで。全品を打ち終えてから、財布が足りるかを判定する。
     /// 足りなければ、難易度の決まりに従って返品する（自分で選ぶ／高い順／安い順）。
+    /// 借りられる難易度（上級・達人）では、返品の代わりに不足分ちょうどを借りて払える（PayWithLoan）。
     /// </summary>
     public sealed class Checkout
     {
@@ -203,6 +214,58 @@ namespace Negiri.Core.Shopping
             return plan;
         }
 
+        /// <summary>
+        /// 借りて払うときに、限度額に収めるため先に返品される商品の番号（返品する順）。
+        /// 返品の順番は自動返品と同じ（自分で選ぶ難易度では高い順）。限度額に収まっていれば空。
+        /// </summary>
+        public List<int> PlanReturnForLoan(int cash, int room)
+        {
+            if (Rule.IsAutoReturn) return PlanAutoReturn(cash + room);
+            var order = new List<int>();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (lines[i].Scanned && !lines[i].Returned) order.Add(i);
+            }
+            order.Sort((a, b) =>
+            {
+                int byPrice = lines[b].Price.CompareTo(lines[a].Price);
+                return byPrice != 0 ? byPrice : lines[b].Cart.Order.CompareTo(lines[a].Cart.Order);
+            });
+            var plan = new List<int>();
+            int total = Total;
+            foreach (var i in order)
+            {
+                if (total <= cash + room) break;
+                plan.Add(i);
+                total -= lines[i].Price;
+            }
+            return plan;
+        }
+
+        /// <summary>
+        /// 借りて払う。限度額に収まらない分を先に返品し（PlanReturnForLoan の順）、不足分ちょうどを借りて財布に入れてから払う。
+        /// 不足がなければ借りずにそのまま払う。この難易度で借りられなければ例外にする。
+        /// </summary>
+        public Receipt PayWithLoan(Wallet wallet, Debt debt, int day)
+        {
+            if (wallet == null) throw new ArgumentNullException(nameof(wallet));
+            if (debt == null) throw new ArgumentNullException(nameof(debt));
+            if (!Rule.CanBorrow) throw new InvalidOperationException("この難易度では買い物で借りられません");
+            if (IsPaid) throw new InvalidOperationException("会計は終わっています");
+            if (!AllScanned) throw new InvalidOperationException("まだ打っていない商品があります");
+
+            string lender = Rule.borrowFrom;
+            foreach (var i in PlanReturnForLoan(wallet.Cash, debt.Room(lender))) lines[i].Returned = true;
+            int before = wallet.Cash;
+            int borrow = Shortage(wallet.Cash);
+            if (borrow > 0)
+            {
+                debt.Borrow(lender, borrow, day);
+                wallet.Borrow(borrow);
+            }
+            return Settle(wallet, before, borrow, debt.LenderName(lender), debt.BalanceOf(lender));
+        }
+
         /// <summary>支払う。全品を打ち終え、合計が財布以内でなければ払えない。</summary>
         public Receipt Pay(Wallet wallet)
         {
@@ -211,8 +274,12 @@ namespace Negiri.Core.Shopping
             if (!AllScanned) throw new InvalidOperationException("まだ打っていない商品があります");
             int total = Total;
             if (!wallet.CanPay(total)) throw new InvalidOperationException($"財布が{total - wallet.Cash}円足りません。返品してください");
+            return Settle(wallet, wallet.Cash, 0, "", 0);
+        }
 
-            int before = wallet.Cash;
+        Receipt Settle(Wallet wallet, int before, int borrowed, string lenderName, int debtAfter)
+        {
+            int total = Total;
             wallet.Pay(total);
             IsPaid = true;
 
@@ -223,7 +290,7 @@ namespace Negiri.Core.Shopping
                 baseTotal += l.BasePrice;
                 saved += l.Saved;
             }
-            return new Receipt(lines, before, wallet.Cash, total, baseTotal, saved, ReturnCount, SatisfactionLoss);
+            return new Receipt(lines, before, wallet.Cash, total, baseTotal, saved, ReturnCount, SatisfactionLoss, borrowed, lenderName, debtAfter);
         }
     }
 }

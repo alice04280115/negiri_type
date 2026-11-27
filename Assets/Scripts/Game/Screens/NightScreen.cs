@@ -62,6 +62,11 @@ namespace Negiri.Game.Screens
                 sb.Append($"\n満足度　{first.SatisfactionBefore} → <b>{last.SatisfactionAfter}</b>");
             }
 
+            if (last.Interest > 0 && Flow.Month != null)
+            {
+                sb.Append("\n\n").Append(UiFactory.Paint($"月末なので借金に利息 {UiFactory.Yen(last.Interest)} がつきました（借金 {UiFactory.Yen(last.DebtAfter)}）", UiFactory.Bad));
+            }
+
             var m = Flow.Month;
             if (!last.MonthOver && m != null)
             {

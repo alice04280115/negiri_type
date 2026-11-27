@@ -1,4 +1,5 @@
 using System;
+using Negiri.Core.Economy;
 
 namespace Negiri.Core.Life
 {
@@ -63,5 +64,6 @@ namespace Negiri.Core.Life
         public MonthBalance month = new MonthBalance();
         public StockBalance stock = new StockBalance();
         public SatisfactionBalance satisfaction = new SatisfactionBalance();
+        public DebtBalance debt = new DebtBalance();
     }
 }

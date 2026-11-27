@@ -20,6 +20,8 @@ namespace Negiri.Core.Shopping
         Section,
         /// <summary>返品した商品。</summary>
         Returned,
+        /// <summary>借りて払った分（例：カードローン ¥480）。</summary>
+        Loan,
     }
 
     /// <summary>レシートの1行。左（品名など）、印（特）、右（金額）。</summary>
@@ -46,6 +48,7 @@ namespace Negiri.Core.Shopping
     /// 本物のレシートのような行を作る。
     /// 特売の商品は「特」と特売後の価格を書き、その下にタイピングの値引きを別の行で書く。
     /// 1品ごとに「特売後の価格 － タイピング値引 ＝ 支払額」となり、合計は支払額の合計と一致する。
+    /// 借りて払ったときは、支払いを「現金」と借入先（カードローン）の2行に分ける。
     /// </summary>
     public static class ReceiptLines
     {
@@ -82,7 +85,16 @@ namespace Negiri.Core.Shopping
             rows.Add(new ReceiptRow(ReceiptRowKind.Subtotal, "小計", $"{count}点", Yen(subtotal)));
             rows.Add(new ReceiptRow(ReceiptRowKind.Subtotal, "タイピング値引", "", Yen(-typingTotal)));
             rows.Add(new ReceiptRow(ReceiptRowKind.Total, "合計", "", Yen(subtotal - typingTotal)));
-            rows.Add(new ReceiptRow(ReceiptRowKind.Subtotal, "お預り（財布）", "", Yen(receipt.CashBefore)));
+            if (receipt.Borrowed > 0)
+            {
+                // 借りたときは支払いを「現金」と借入先の2行に分ける
+                rows.Add(new ReceiptRow(ReceiptRowKind.Subtotal, "現金", "", Yen(receipt.Paid - receipt.Borrowed)));
+                rows.Add(new ReceiptRow(ReceiptRowKind.Loan, receipt.LenderName, "", Yen(receipt.Borrowed)));
+            }
+            else
+            {
+                rows.Add(new ReceiptRow(ReceiptRowKind.Subtotal, "お預り（財布）", "", Yen(receipt.CashBefore)));
+            }
             rows.Add(new ReceiptRow(ReceiptRowKind.Subtotal, "財布の残り", "", Yen(receipt.CashAfter)));
 
             if (receipt.ReturnCount > 0)

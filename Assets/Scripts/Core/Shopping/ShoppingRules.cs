@@ -7,9 +7,9 @@ namespace Negiri.Core.Shopping
     {
         /// <summary>返品する商品を自分で選ぶ（初級・中級）。</summary>
         ChooseReturn,
-        /// <summary>支払額の高い順に自動で返品する（上級。借金ができるまでの代用）。</summary>
+        /// <summary>支払額の高い順に自動で返品する（上級）。</summary>
         AutoReturnHighestFirst,
-        /// <summary>支払額の安い順に自動で返品する（達人。借金ができるまでの代用）。</summary>
+        /// <summary>支払額の安い順に自動で返品する（達人）。</summary>
         AutoReturnLowestFirst,
     }
 
@@ -28,7 +28,10 @@ namespace Negiri.Core.Shopping
         public int shopIntervalDays = 1;
         /// <summary>食料の在庫の上限（日分）。</summary>
         public int foodCap = 7;
+        /// <summary>財布が足りないときに借りられる借入先（life.debt.lenders の id）。空なら買い物では借りられない。</summary>
+        public string borrowFrom = "";
 
+        public bool CanBorrow => !string.IsNullOrEmpty(borrowFrom);
         public ShortageRule ShortageValue => (ShortageRule)Enum.Parse(typeof(ShortageRule), shortage, true);
         public bool IsAutoReturn => ShortageValue != ShortageRule.ChooseReturn;
     }
@@ -52,8 +55,8 @@ namespace Negiri.Core.Shopping
             {
                 new ShoppingRule { label = "初級", maxItems = 4, shortage = nameof(ShortageRule.ChooseReturn), satisfactionPerReturn = 0, shopIntervalDays = 1, foodCap = 7 },
                 new ShoppingRule { label = "中級", maxItems = 7, shortage = nameof(ShortageRule.ChooseReturn), satisfactionPerReturn = 3, shopIntervalDays = 3, foodCap = 7 },
-                new ShoppingRule { label = "上級", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnHighestFirst), satisfactionPerReturn = 3, shopIntervalDays = 7, foodCap = 10 },
-                new ShoppingRule { label = "達人", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnLowestFirst), satisfactionPerReturn = 3, shopIntervalDays = 7, foodCap = 10 },
+                new ShoppingRule { label = "上級", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnHighestFirst), satisfactionPerReturn = 3, shopIntervalDays = 7, foodCap = 10, borrowFrom = "card" },
+                new ShoppingRule { label = "達人", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnLowestFirst), satisfactionPerReturn = 3, shopIntervalDays = 7, foodCap = 10, borrowFrom = "card" },
             };
         }
     }

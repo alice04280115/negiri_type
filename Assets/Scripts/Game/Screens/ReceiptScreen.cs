@@ -9,7 +9,7 @@ namespace Negiri.Game.Screens
 {
     /// <summary>
     /// 会計結果。左に本物のような紙のレシート（特売は「特」と特売後の価格、その下にタイピング値引）、
-    /// 右に今回の節約額と財布の残高の変化、在庫と満足度の変化。スペースで夜へ進む。
+    /// 右に今回の節約額と財布の残高の変化（借りたときは借りた額と借金）、在庫と満足度の変化。スペースで夜へ進む。
     /// </summary>
     public sealed class ReceiptScreen : ScreenBase
     {
@@ -40,9 +40,9 @@ namespace Negiri.Game.Screens
             // 右：まとめとメニュー
             UiFactory.MakeText(Root, "今回の節約額", 18, UiFactory.Quiet, new Vector2(0, 1), new Vector2(520, -90), new Vector2(380, 26), TextAnchor.MiddleLeft);
             savedText = UiFactory.MakeText(Root, "", 44, UiFactory.Good, new Vector2(0, 1), new Vector2(520, -122), new Vector2(380, 56), TextAnchor.MiddleLeft);
-            walletText = UiFactory.MakeText(Root, "", 20, UiFactory.Ink, new Vector2(0, 1), new Vector2(520, -200), new Vector2(380, 56), TextAnchor.UpperLeft);
+            walletText = UiFactory.MakeText(Root, "", 20, UiFactory.Ink, new Vector2(0, 1), new Vector2(520, -192), new Vector2(380, 80), TextAnchor.UpperLeft);
             walletText.lineSpacing = 1.2f;
-            returnText = UiFactory.MakeText(Root, "", 16, UiFactory.Ink, new Vector2(0, 1), new Vector2(520, -262), new Vector2(400, 100), TextAnchor.UpperLeft);
+            returnText = UiFactory.MakeText(Root, "", 16, UiFactory.Ink, new Vector2(0, 1), new Vector2(520, -278), new Vector2(400, 100), TextAnchor.UpperLeft);
             returnText.lineSpacing = 1.25f;
             menuText = UiFactory.MakeText(Root, "", 20, UiFactory.Ink, new Vector2(0, 1), new Vector2(520, -400), new Vector2(400, 40), TextAnchor.UpperLeft);
             menuText.lineSpacing = 1.4f;
@@ -81,6 +81,8 @@ namespace Negiri.Game.Screens
             savedText.text = UiFactory.Yen(r.Saved);
             walletText.text = $"財布 {UiFactory.Yen(r.CashBefore)} → <b>{UiFactory.Yen(r.CashAfter)}</b>\n" +
                               UiFactory.Paint($"支払い {UiFactory.Yen(r.Paid)}（通常価格なら {UiFactory.Yen(r.BaseTotal)}）", UiFactory.Quiet);
+            if (r.Borrowed > 0)
+                walletText.text += "\n" + UiFactory.Paint($"{r.LenderName}で {UiFactory.Yen(r.Borrowed)} 借りました（借金 {UiFactory.Yen(r.DebtAfter)}）", UiFactory.Bad);
             var sb = new System.Text.StringBuilder();
             var c = Flow.LastChange;
             if (c != null)
@@ -111,6 +113,7 @@ namespace Negiri.Game.Screens
                     paper.Set(i, PaperQuiet, false, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
                     break;
                 case ReceiptRowKind.Discount:
+                case ReceiptRowKind.Loan:
                     paper.Set(i, PaperRed, false, row.Left, row.Mark, row.Right);
                     break;
                 case ReceiptRowKind.Note:

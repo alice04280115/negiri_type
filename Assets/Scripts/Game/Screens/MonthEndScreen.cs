@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Negiri.Game.Screens
 {
     /// <summary>
-    /// 月末のまとめ（段階3の仮）。残金・在庫切れの日数・満足度・節約額を出す。
+    /// 月末のまとめ（段階3の仮）。残金・在庫切れの日数・満足度・節約額・借金を出す。
     /// 決戦タイピング（目標商品の購入）と採点・ランクは段階4で作る。
     /// </summary>
     public sealed class MonthEndScreen : ScreenBase
@@ -19,7 +19,7 @@ namespace Negiri.Game.Screens
         public MonthEndScreen(ShoppingFlow flow, RectTransform parent) : base(flow, parent, "MonthEnd")
         {
             headText = UiFactory.MakeText(Root, "", 30, UiFactory.Ink, new Vector2(0.5f, 1), new Vector2(0, -56), new Vector2(900, 40), TextAnchor.MiddleCenter);
-            UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0.5f, 1), new Vector2(0, -104), new Vector2(640, 290));
+            UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0.5f, 1), new Vector2(0, -104), new Vector2(640, 300));
             bodyText = UiFactory.MakeText(Root, "", 19, UiFactory.Ink, new Vector2(0.5f, 1), new Vector2(0, -120), new Vector2(580, 270), TextAnchor.UpperLeft);
             bodyText.lineSpacing = 1.3f;
             menuText = UiFactory.MakeText(Root, "", 20, UiFactory.Ink, new Vector2(0.5f, 1), new Vector2(0, -410), new Vector2(580, 60), TextAnchor.UpperLeft);
@@ -58,6 +58,10 @@ namespace Negiri.Game.Screens
                 $"在庫切れ　食料 {m.Stock.FoodOutDays}日・日用品 {m.Stock.DailyOutDays}日" + (outDays == 0 ? UiFactory.Paint("　切らさずに過ごせました", UiFactory.Good) : "") + "\n" +
                 $"満足度　{UiFactory.Paint(sat.ToString(), sat < life.satisfaction.passLine ? UiFactory.Bad : UiFactory.Good)}" + UiFactory.Paint($"（目標 {life.satisfaction.passLine}以上）", UiFactory.Quiet) + "\n" +
                 $"今月の節約額　{UiFactory.Paint(UiFactory.Yen(m.Ledger.TotalSaved), UiFactory.Good)}\n" +
+                (m.Debt.Total > 0
+                    ? $"借金　{UiFactory.Paint(UiFactory.Yen(m.Debt.Total), UiFactory.Bad)}" +
+                      UiFactory.Paint(m.Debt.TotalInterest > 0 ? $"（利息 {UiFactory.Yen(m.Debt.TotalInterest)}を含む）" : "", UiFactory.Quiet) + "\n"
+                    : "") +
                 $"平均の値引き　{m.Ledger.AverageTypingBp / 100f:0.#}%　PERFECT {m.Ledger.PerfectCount}回\n" +
                 UiFactory.Paint("※目標商品の決戦タイピングと採点は、段階4で作ります", UiFactory.Quiet);
 

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Negiri.Core.Economy;
 using Negiri.Core.Life;
 using Negiri.Game.Ui;
 using UnityEngine;
@@ -6,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Negiri.Game.Screens
 {
-    /// <summary>家計簿。今月買った物（新しい順）、支出と節約額の合計、ロック貯金の追加。</summary>
+    /// <summary>家計簿。今月買った物と借りた・返した記録（新しい順）、支出と節約額の合計、借金、ロック貯金の追加。</summary>
     public sealed class LedgerScreen : ScreenBase
     {
         const int VisibleRows = 12;
@@ -45,7 +47,49 @@ namespace Negiri.Game.Screens
         }
 
         int Step => Mathf.Max(1, Flow.Life.month.lockStep);
-        int MaxScroll => Mathf.Max(0, Flow.Month.Ledger.Entries.Count - VisibleRows);
+        int MaxScroll => Mathf.Max(0, rows.Count - VisibleRows);
+
+        /// <summary>一覧の1行（買った物か、借金の記録）。</summary>
+        struct Row
+        {
+            public int Day;
+            public string Name, Note, Amount;
+            public Color Color;
+        }
+
+        List<Row> rows = new List<Row>();
+
+        /// <summary>買った物と借金の記録を日付順に並べる（同じ日は買った物が先）。</summary>
+        void BuildRows()
+        {
+            var m = Flow.Month;
+            var list = new List<Row>();
+            foreach (var e in m.Ledger.Entries)
+                list.Add(new Row { Day = e.day, Name = e.name, Note = e.rank, Amount = UiFactory.Yen(e.paid), Color = UiFactory.Ink });
+            int purchases = list.Count;
+            foreach (var e in m.Debt.Log)
+            {
+                string note;
+                Color color;
+                switch (e.Kind)
+                {
+                    case DebtEventKind.Borrow: note = "借りた"; color = UiFactory.Bad; break;
+                    case DebtEventKind.Repay: note = "返した"; color = UiFactory.Good; break;
+                    default: note = "利息"; color = UiFactory.Bad; break;
+                }
+                list.Add(new Row { Day = e.day, Name = m.Debt.LenderName(e.lender), Note = note, Amount = UiFactory.Yen(e.amount), Color = color });
+            }
+            // 日付順（同じ日は元の順＝買った物が先）
+            var order = new List<int>();
+            for (int i = 0; i < list.Count; i++) order.Add(i);
+            order.Sort((a, b) =>
+            {
+                int byDay = list[a].Day.CompareTo(list[b].Day);
+                return byDay != 0 ? byDay : a.CompareTo(b);
+            });
+            rows = new List<Row>();
+            foreach (var i in order) rows.Add(list[i]);
+        }
 
         public override void Tick(Keyboard kb, float deltaTime)
         {
@@ -79,16 +123,18 @@ namespace Negiri.Game.Screens
             var m = Flow.Month;
             if (m == null) return;
             var ledger = m.Ledger;
+            BuildRows();
+            scroll = Mathf.Min(scroll, MaxScroll);
             titleText.text = $"家計簿　{ledger.Entries.Count}品";
 
             // 新しい順に並べる
-            int count = ledger.Entries.Count;
+            int count = rows.Count;
             int shown = Mathf.Min(VisibleRows, count - scroll);
             list.SetCount(Mathf.Max(0, shown));
             for (int i = 0; i < shown; i++)
             {
-                var e = ledger.Entries[count - 1 - scroll - i];
-                list.Set(i, UiFactory.Ink, false, Calendar.DateLabel(e.day, m.Life.month), e.name, e.rank, UiFactory.Yen(e.paid));
+                var e = rows[count - 1 - scroll - i];
+                list.Set(i, e.Color, false, Calendar.DateLabel(e.Day, m.Life.month), e.Name, e.Note, e.Amount);
             }
             scrollText.text = count == 0 ? "まだ何も買っていません" : (MaxScroll > 0 ? "↑↓でスクロール" : "");
 
@@ -97,7 +143,12 @@ namespace Negiri.Game.Screens
                 $"今日の支出　{UiFactory.Yen(ledger.PaidOn(m.Day))}\n" +
                 $"今月の節約額　{UiFactory.Paint(UiFactory.Yen(ledger.TotalSaved), UiFactory.Good)}\n" +
                 $"平均の値引き　{ledger.AverageTypingBp / 100f:0.#}%　PERFECT {ledger.PerfectCount}回\n" +
-                $"財布　{UiFactory.Paint(UiFactory.Yen(m.Wallet.Cash), UiFactory.Warn)}";
+                $"財布　{UiFactory.Paint(UiFactory.Yen(m.Wallet.Cash), UiFactory.Warn)}" +
+                (m.Debt.Total > 0 || m.Debt.Log.Count > 0
+                    ? $"\n借金　{UiFactory.Paint(UiFactory.Yen(m.Debt.Total), UiFactory.Bad)}" +
+                      UiFactory.Paint($"（借りた {UiFactory.Yen(m.Debt.TotalBorrowed)}・返した {UiFactory.Yen(m.Debt.TotalRepaid)}" +
+                                      (m.Debt.TotalInterest > 0 ? $"・利息 {UiFactory.Yen(m.Debt.TotalInterest)}" : "") + "）", UiFactory.Quiet)
+                    : "");
 
             lockText.text =
                 $"貯金箱　{UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}\n" +

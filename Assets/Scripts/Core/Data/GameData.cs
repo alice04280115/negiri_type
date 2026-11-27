@@ -241,7 +241,7 @@ namespace Negiri.Core.Data
             return errors;
         }
 
-        /// <summary>1か月・在庫・満足度の数値のチェック。</summary>
+        /// <summary>1か月・在庫・満足度・借金の数値のチェック。</summary>
         public static List<string> ValidateLife(LifeBalance life, ShoppingBalance shopping)
         {
             var errors = new List<string>();
@@ -265,9 +265,25 @@ namespace Negiri.Core.Data
             if (sat.start < 0 || sat.start > sat.max) errors.Add("life.satisfaction.start は0～max にしてください");
             if (sat.passLine < 0 || sat.passLine > sat.max) errors.Add("life.satisfaction.passLine は0～max にしてください");
             if (sat.dailyDecay < 0) errors.Add("life.satisfaction.dailyDecay は0以上にしてください");
+            var debt = life.debt;
+            if (debt == null) errors.Add("life.debt の設定がありません");
+            else
+            {
+                if (debt.repayStep <= 0) errors.Add("life.debt.repayStep は1以上にしてください");
+                var ids = new HashSet<string>();
+                foreach (var l in debt.lenders ?? Array.Empty<Negiri.Core.Economy.LenderData>())
+                {
+                    if (l == null || string.IsNullOrEmpty(l.id)) { errors.Add("life.debt.lenders に id のない借入先があります"); continue; }
+                    if (!ids.Add(l.id)) errors.Add($"借入先の id が重複しています: {l.id}");
+                    if (string.IsNullOrEmpty(l.name)) errors.Add($"借入先の name がありません: {l.id}");
+                    if (l.limit <= 0) errors.Add($"借入先の limit は1以上にしてください: {l.id}");
+                    if (l.interestBp < 0) errors.Add($"借入先の interestBp は0以上にしてください: {l.id}");
+                }
+            }
             foreach (var d in shopping?.difficulties ?? Array.Empty<ShoppingRule>())
             {
                 if (d.foodCap > 0 && st.foodStart > d.foodCap) errors.Add($"食料の初期値が上限を超えています: {d.label}");
+                if (d.CanBorrow && debt?.Find(d.borrowFrom) == null) errors.Add($"borrowFrom の借入先がありません: {d.label} → {d.borrowFrom}");
             }
             return errors;
         }

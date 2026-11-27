@@ -128,10 +128,11 @@ namespace Negiri.Game.Screens
         public static string ShortageDescription(ShoppingRule rule)
         {
             string penalty = rule.satisfactionPerReturn > 0 ? $"1品ごとに満足度－{rule.satisfactionPerReturn}" : "ペナルティなし";
+            string loan = rule.CanBorrow ? "借金して購入するか、" : "";
             switch (rule.ShortageValue)
             {
-                case ShortageRule.AutoReturnHighestFirst: return $"支払額の高い順に自動で返品（{penalty}）";
-                case ShortageRule.AutoReturnLowestFirst: return $"支払額の安い順に自動で返品（{penalty}）";
+                case ShortageRule.AutoReturnHighestFirst: return $"{loan}支払額の高い順に自動で返品（{penalty}）";
+                case ShortageRule.AutoReturnLowestFirst: return $"{loan}支払額の安い順に自動で返品（{penalty}）";
                 default: return $"返品する商品を自分で選ぶ（{penalty}）";
             }
         }

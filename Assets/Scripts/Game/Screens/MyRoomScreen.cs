@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using Negiri.Core.Life;
 using Negiri.Game.Ui;
@@ -8,16 +9,34 @@ using UnityEngine.UI;
 namespace Negiri.Game.Screens
 {
     /// <summary>
-    /// マイルーム（1日の拠点）。左に部屋とキャラ、右に在庫・満足度・次の買い物・今日の特売・目標、下にコマンド。
+    /// マイルーム（1日の拠点）。左に部屋とキャラ、右に在庫・満足度・借金・次の買い物・今日の特売・目標、下にコマンド。
     /// </summary>
     public sealed class MyRoomScreen : ScreenBase
     {
-        static readonly string[] Commands = { "1 買い物に行く", "2 家で過ごす（1日進む）", "3 数日進める", "4 家計簿", "5 中断する" };
+        enum Command { Shop, Stay, Advance, Ledger, Repay, Quit }
+
+        static string Label(Command c)
+        {
+            switch (c)
+            {
+                case Command.Shop: return "買い物に行く";
+                case Command.Stay: return "家で過ごす（1日進む）";
+                case Command.Advance: return "数日進める";
+                case Command.Ledger: return "家計簿";
+                case Command.Repay: return "借金を返す";
+                default: return "中断する";
+            }
+        }
+
+        /// <summary>今出しているコマンド。「借金を返す」は借金があるか、買い物で借りられる難易度のときだけ出す。</summary>
+        readonly List<Command> commands = new List<Command>();
 
         readonly Text stockText, shopText, saleText, goalText, menuText, noticeText;
         int cursor;
         bool choosingDays;
         int nights;
+        bool choosingRepay;
+        int repayIndex;
         string notice = "";
         float noticeTime;
 
@@ -47,9 +66,51 @@ namespace Negiri.Game.Screens
         public override void Enter()
         {
             var m = Flow.Month;
+            BuildCommands();
             cursor = m != null && m.CanShop ? 0 : 1;
             choosingDays = false;
+            choosingRepay = false;
             notice = "";
+        }
+
+        void BuildCommands()
+        {
+            var m = Flow.Month;
+            commands.Clear();
+            commands.Add(Command.Shop);
+            commands.Add(Command.Stay);
+            commands.Add(Command.Advance);
+            commands.Add(Command.Ledger);
+            if (m != null && (m.Debt.Total > 0 || m.Rule.CanBorrow)) commands.Add(Command.Repay);
+            commands.Add(Command.Quit);
+            cursor = Mathf.Clamp(cursor, 0, commands.Count - 1);
+        }
+
+        /// <summary>返す借入先（残高のある最初の借入先。なければ買い物で借りる借入先）。</summary>
+        static string RepayLender(MonthState m)
+        {
+            foreach (var a in m.Debt.Accounts) if (a.Balance > 0) return a.lender;
+            return m.ShopLender;
+        }
+
+        /// <summary>「借金を返す」の額を選ぶ。←→で額、スペースで返す、Escでやめる。</summary>
+        void TickChoosingRepay(Keyboard kb)
+        {
+            var m = Flow.Month;
+            var choices = m.RepayChoices(RepayLender(m));
+            if (Pressed(kb.escapeKey) || choices.Count == 0)
+            {
+                choosingRepay = false;
+                return;
+            }
+            if (Pressed(kb.rightArrowKey) || Pressed(kb.upArrowKey)) repayIndex = Mathf.Min(choices.Count - 1, repayIndex + 1);
+            if (Pressed(kb.leftArrowKey) || Pressed(kb.downArrowKey)) repayIndex = Mathf.Max(0, repayIndex - 1);
+            repayIndex = Mathf.Clamp(repayIndex, 0, choices.Count - 1);
+            if (!Decide(kb)) return;
+            int amount = choices[repayIndex];
+            Flow.Repay(RepayLender(m), amount);
+            choosingRepay = false;
+            ShowNotice($"{UiFactory.Yen(amount)}返しました" + (m.Debt.Total == 0 ? "。借金はなくなりました" : ""));
         }
 
         /// <summary>「数日進める」の日数を選ぶ。←→で日数、スペースで進める、Escでやめる。</summary>
@@ -76,30 +137,46 @@ namespace Negiri.Game.Screens
                 TickChoosingDays(kb);
                 return;
             }
-            cursor = MoveCursor(kb, cursor, Commands.Length);
+            if (choosingRepay)
+            {
+                TickChoosingRepay(kb);
+                return;
+            }
+            BuildCommands();
+            cursor = MoveCursor(kb, cursor, commands.Count);
             int chosen = -1;
-            if (Pressed(kb.digit1Key)) chosen = 0;
-            if (Pressed(kb.digit2Key)) chosen = 1;
-            if (Pressed(kb.digit3Key)) chosen = 2;
-            if (Pressed(kb.digit4Key)) chosen = 3;
-            if (Pressed(kb.digit5Key)) chosen = 4;
+            var digits = new[] { kb.digit1Key, kb.digit2Key, kb.digit3Key, kb.digit4Key, kb.digit5Key, kb.digit6Key };
+            for (int i = 0; i < commands.Count && i < digits.Length; i++)
+            {
+                if (Pressed(digits[i])) chosen = i;
+            }
             if (Decide(kb)) chosen = cursor;
             if (chosen < 0) return;
             cursor = chosen;
 
             var m = Flow.Month;
-            switch (chosen)
+            switch (commands[chosen])
             {
-                case 0:
+                case Command.Shop:
                     if (m.CanShop) Flow.GoShopping();
                     else ShowNotice(m.ShoppedToday ? "今日はもう買い物に行きました" : $"買い物に行けるのは{ShopDayLabel(m)}です");
                     break;
-                case 1: Flow.EndDay(); break;
-                case 2:
+                case Command.Stay: Flow.EndDay(); break;
+                case Command.Advance:
                     nights = m.SuggestedNights;
                     choosingDays = true;
                     break;
-                case 3: Flow.OpenLedger(); break;
+                case Command.Ledger: Flow.OpenLedger(); break;
+                case Command.Repay:
+                    var choices = m.RepayChoices(RepayLender(m));
+                    if (m.Debt.Total <= 0) ShowNotice("借金はありません");
+                    else if (choices.Count == 0) ShowNotice($"財布が{UiFactory.Yen(m.Debt.RepayStep)}未満なので返せません");
+                    else
+                    {
+                        repayIndex = choices.Count - 1;
+                        choosingRepay = true;
+                    }
+                    break;
                 default: Flow.Quit(); break;
             }
         }
@@ -131,6 +208,13 @@ namespace Negiri.Game.Screens
             var satColor = sat < life.satisfaction.passLine ? UiFactory.Bad : UiFactory.Good;
             sb.Append("満足度　").Append(UiFactory.Paint(UiFactory.Meter(sat, m.Satisfaction.Max, 10), satColor))
               .Append($" {sat}").Append(UiFactory.Paint($"（月末に{life.satisfaction.passLine}以上）", UiFactory.Quiet));
+            int debt = m.Debt.Total;
+            if (debt > 0)
+            {
+                var lender = m.Debt.Lender(RepayLender(m));
+                sb.Append('\n').Append("借金　　").Append(UiFactory.Paint(UiFactory.Yen(debt), UiFactory.Bad));
+                if (lender != null) sb.Append(UiFactory.Paint($"（月末に{lender.interestBp / 100f:0.##}%の利息）", UiFactory.Quiet));
+            }
             stockText.text = sb.ToString();
 
             if (m.CanShop) shopText.text = UiFactory.Paint("今日は買い物に行けます", UiFactory.Good);
@@ -157,9 +241,27 @@ namespace Negiri.Game.Screens
             goalText.text = $"目標：{month.targetName} {UiFactory.Yen(month.targetPrice)}\n" +
                             $"{box}　" + UiFactory.Paint($"財布と合わせて {UiFactory.Yen(have)}", UiFactory.Quiet);
 
-            var disabled = new bool[Commands.Length];
-            disabled[0] = !m.CanShop;
-            if (choosingDays)
+            var labels = new string[commands.Count];
+            var disabled = new bool[commands.Count];
+            for (int i = 0; i < commands.Count; i++)
+            {
+                labels[i] = $"{i + 1} {Label(commands[i])}";
+                if (commands[i] == Command.Shop) disabled[i] = !m.CanShop;
+                if (commands[i] == Command.Repay) disabled[i] = m.Debt.Total <= 0;
+            }
+            if (choosingRepay)
+            {
+                var lender = RepayLender(m);
+                var choices = m.RepayChoices(lender);
+                int amount = choices.Count > 0 ? choices[Mathf.Clamp(repayIndex, 0, choices.Count - 1)] : 0;
+                int bal = m.Debt.BalanceOf(lender);
+                string all = amount == bal ? "（全額）" : "";
+                menuText.text = $"{m.Debt.LenderName(lender)}にいくら返しますか？\n" +
+                                $"◀ <b>{UiFactory.Yen(amount)}</b>{all} ▶\n" +
+                                UiFactory.Paint($"借金 {UiFactory.Yen(bal)} → {UiFactory.Yen(bal - amount)}\n財布 {UiFactory.Yen(m.Wallet.Cash)} → {UiFactory.Yen(m.Wallet.Cash - amount)}", UiFactory.Quiet);
+                Message.text = "←→：額　スペース：返す　Esc：やめる";
+            }
+            else if (choosingDays)
             {
                 int until = m.Day + nights;
                 string untilLabel = until > m.Days ? "月末まで" : $"{Calendar.DateLabel(until, life.month)}の朝まで";
@@ -170,8 +272,8 @@ namespace Negiri.Game.Screens
             }
             else
             {
-                menuText.text = UiFactory.Menu(Commands, cursor, disabled);
-                Message.text = "↑↓／1～5：選ぶ　スペース：決定";
+                menuText.text = UiFactory.Menu(labels, cursor, disabled);
+                Message.text = $"↑↓／1～{commands.Count}：選ぶ　スペース：決定";
             }
             noticeText.text = noticeTime > 0f ? notice : "";
         }
