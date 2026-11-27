@@ -8,6 +8,7 @@
 #   ・達人は「英字＋名前＋～副題～」を半分まで、残りは長い説明形の商品名
 #   ・量や個数だけが違う名前は、各難易度で2割まで。同じ名前の量違いは1つまで
 #   ・同じ種類や同じ語ばかりにならないよう、なるべく均等に使う
+#   ・言い換えだけの名前（大きな卵と大玉卵など）は同じ難易度に並べない。ミルクと牛乳は別の名前として扱う
 #
 # 使い方：python3 tools/SentenceGen/generate_sentences.py（同じ内容なら毎回同じ結果になる）
 import collections
@@ -15,6 +16,7 @@ import json
 import math
 import os
 import random
+import re
 import sys
 
 sys.dont_write_bytecode = True
@@ -34,14 +36,43 @@ HAND = [s for s in data['sentences'] if '_g' not in s['id']]
 used_text = {s['text'] for s in HAND}
 
 
-def norm(t):
-    """言い換えで同じになる名前を同じものとみなす（ミルク＝牛乳、北海道産大豆＝北海道大豆 など）"""
-    for a, b in (('ミルク', '牛乳'), ('たまご', '卵'), ('の', ''), ('産', ''), (' ', '')):
+# 言い換え（同じ意味の語）。同じ難易度に言い換えだけの名前を並べない（違う難易度なら置いてよい）。
+# ミルクと牛乳は別の名前として扱う。
+SYN = (
+    ('大きな', '大玉', '大きい'),
+    ('粉末', '粉'),
+    ('台所用', '食器用', 'キッチン用'),
+    ('衣料用', '洗濯用', '洗濯'),
+    ('ボックス', '箱'),
+    ('詰め替え', 'つめかえ'),
+    ('朝採れ', '朝採り', '朝どれ'),
+    ('朝しぼり', '搾りたて'),
+    ('瓶入り', '瓶'),
+    ('一口', 'ひとくち'),
+    ('卵', 'たまご', '玉子'),
+)
+
+
+SYN_TO = {w: f'<{i}>' for i, g in enumerate(SYN) for w in g}
+SYN_RE = re.compile('|'.join(sorted(map(re.escape, SYN_TO), key=len, reverse=True)))
+
+
+def plain(t):
+    """「の」「産」の有無だけが違う名前を同じものとみなす（北海道産大豆＝北海道大豆、地鶏の卵＝地鶏卵）"""
+    for a, b in (('の', ''), ('産', ''), (' ', '')):
         t = t.replace(a, b)
     return t
 
 
-used_norm = {norm(t) for t in used_text}
+def norm(t):
+    """言い換えで同じになる名前を同じものとみなす（大きな卵＝大玉卵 など）"""
+    return SYN_RE.sub(lambda m: SYN_TO[m.group(0)], plain(t))
+
+
+# 読みが同じ名前と「の」「産」の有無だけの違いは、難易度が違っても作らない。言い換えは同じ商品・同じ難易度の中だけ避ける
+used_read = {s['reading'] for s in HAND}
+used_plain = {plain(s['text']) for s in HAND}
+used_norm = {(s['itemIds'][0], s['level'], norm(s['text'])) for s in HAND}
 
 
 def overlap(*texts):
@@ -132,7 +163,7 @@ def two_attr(k):
     return [c for c in out if c]
 
 
-def pick(rng, pool, n, level, kind_cap, tag_cap, qty_bases, extra_ok=None, max_relax=2):
+def pick(rng, item, pool, n, level, kind_cap, tag_cap, qty_bases, extra_ok=None, max_relax=2):
     """候補から n 個選ぶ。種類と語の使用回数の上限を少しずつ緩めながら選び、なるべく均等にする。"""
     pool = [c for c in pool if fits(level, c['r'])]
     rng.shuffle(pool)
@@ -145,7 +176,7 @@ def pick(rng, pool, n, level, kind_cap, tag_cap, qty_bases, extra_ok=None, max_r
         for c in pool:
             if len(chosen) >= n:
                 return chosen
-            if c['t'] in used_text or norm(c['t']) in used_norm:
+            if c['t'] in used_text or c['r'] in used_read or plain(c['t']) in used_plain or (item, level, norm(c['t'])) in used_norm:
                 continue
             if kinds[c['kind']] >= kind_cap + relax:
                 continue
@@ -162,7 +193,9 @@ def pick(rng, pool, n, level, kind_cap, tag_cap, qty_bases, extra_ok=None, max_r
                 continue
             chosen.append(c)
             used_text.add(c['t'])
-            used_norm.add(norm(c['t']))
+            used_read.add(c['r'])
+            used_plain.add(plain(c['t']))
+            used_norm.add((item, level, norm(c['t'])))
             kinds[c['kind']] += 1
             for g in c['tags']:
                 tags[g] += 1
@@ -185,7 +218,7 @@ def main():
         # 初級：手で選んだ短い名前と、種類そのものの名前（短いもの）
         l1pool = [C([w], w[0], []) for w in v['l1']] + [C([(k['t'], k['r'])], k['t'], []) for k in kinds]
         need1 = max(0, TARGET[1] - hand[1])
-        got[1] = pick(rng, l1pool, need1, 1, 99, 99, qty_bases, max_relax=0)
+        got[1] = pick(rng, item, l1pool, need1, 1, 99, 99, qty_bases, max_relax=0)
         short = need1 - len(got[1])
         target = dict(TARGET)
         target[3] += short // 2
@@ -194,12 +227,12 @@ def main():
         # 中級：種類＋一つ
         p2 = [c for k in kinds for c in one_attr(k)]
         need = max(0, target[2] - hand[2])
-        got[2] = pick(rng, p2, need, 2, math.ceil(need / len(kinds)) + 1, 2, qty_bases)
+        got[2] = pick(rng, item, p2, need, 2, math.ceil(need / len(kinds)) + 1, 2, qty_bases)
 
         # 上級：種類＋二つまで（一つで長いものも可）
         p3 = [c for k in kinds for c in two_attr(k)] + p2
         need = max(0, target[3] - hand[3])
-        got[3] = pick(rng, p3, need, 3, math.ceil(need / len(kinds)) + 1, 3, qty_bases)
+        got[3] = pick(rng, item, p3, need, 3, math.ceil(need / len(kinds)) + 1, 3, qty_bases)
 
         # 達人：説明形（残り）と英字＋副題（半分まで）
         need = max(0, target[4] - hand[4])
@@ -218,7 +251,7 @@ def main():
                     for o in k['org']:
                         plong.append(C([pt, o, kt], kn, ['p:' + ph['t'], 'o:' + o[0]]))
         plong = [c for c in plong if c]
-        got_long = pick(rng, plong, n_long, 4, 3, 3, qty_bases, max_relax=0)
+        got_long = pick(rng, item, plong, n_long, 4, 3, 3, qty_bases, max_relax=0)
         pen = []
         bodies = [c for c in p2 if not c['qty']]
         for e in v['en']:
@@ -239,7 +272,7 @@ def main():
                 return False
             bodies_used.add(c['body'])
             return True
-        got_en = pick(rng, pen, n_en, 4, 2, 2, qty_bases, extra_ok=body_once, max_relax=1)
+        got_en = pick(rng, item, pen, n_en, 4, 2, 2, qty_bases, extra_ok=body_once, max_relax=1)
         got[4] = got_long + got_en
 
         for lv in (1, 2, 3, 4):

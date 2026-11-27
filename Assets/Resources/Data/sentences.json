@@ -199,15 +199,6 @@
       "level": 4
     },
     {
-      "id": "s_egg_01",
-      "itemIds": [
-        "egg"
-      ],
-      "text": "たまご",
-      "reading": "たまご",
-      "level": 1
-    },
-    {
       "id": "s_egg_02",
       "itemIds": [
         "egg"
@@ -1672,7 +1663,7 @@
       ],
       "text": "台所用洗剤",
       "reading": "だいどころようせんざい",
-      "level": 2
+      "level": 3
     },
     {
       "id": "s_detergent_04",
@@ -2948,12 +2939,21 @@
       "itemIds": [
         "milk"
       ],
+      "text": "特濃ミルク",
+      "reading": "とくのうみるく",
+      "level": 1
+    },
+    {
+      "id": "s_milk_g005",
+      "itemIds": [
+        "milk"
+      ],
       "text": "低脂肪乳",
       "reading": "ていしぼうにゅう",
       "level": 1
     },
     {
-      "id": "s_milk_g005",
+      "id": "s_milk_g006",
       "itemIds": [
         "milk"
       ],
@@ -2962,7 +2962,7 @@
       "level": 1
     },
     {
-      "id": "s_milk_g006",
+      "id": "s_milk_g007",
       "itemIds": [
         "milk"
       ],
@@ -2971,7 +2971,16 @@
       "level": 1
     },
     {
-      "id": "s_milk_g007",
+      "id": "s_milk_g008",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "低脂肪ミルク",
+      "reading": "ていしぼうみるく",
+      "level": 2
+    },
+    {
+      "id": "s_milk_g009",
       "itemIds": [
         "milk"
       ],
@@ -2980,7 +2989,16 @@
       "level": 2
     },
     {
-      "id": "s_milk_g008",
+      "id": "s_milk_g010",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "ジャージーミルク",
+      "reading": "じゃーじーみるく",
+      "level": 2
+    },
+    {
+      "id": "s_milk_g011",
       "itemIds": [
         "milk"
       ],
@@ -2989,7 +3007,7 @@
       "level": 2
     },
     {
-      "id": "s_milk_g009",
+      "id": "s_milk_g012",
       "itemIds": [
         "milk"
       ],
@@ -2998,7 +3016,7 @@
       "level": 2
     },
     {
-      "id": "s_milk_g010",
+      "id": "s_milk_g013",
       "itemIds": [
         "milk"
       ],
@@ -3007,7 +3025,7 @@
       "level": 2
     },
     {
-      "id": "s_milk_g011",
+      "id": "s_milk_g014",
       "itemIds": [
         "milk"
       ],
@@ -3016,7 +3034,16 @@
       "level": 2
     },
     {
-      "id": "s_milk_g012",
+      "id": "s_milk_g015",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "瓶入りミルク",
+      "reading": "びんいりみるく",
+      "level": 2
+    },
+    {
+      "id": "s_milk_g016",
       "itemIds": [
         "milk"
       ],
@@ -3025,7 +3052,7 @@
       "level": 2
     },
     {
-      "id": "s_milk_g013",
+      "id": "s_milk_g017",
       "itemIds": [
         "milk"
       ],
@@ -3034,7 +3061,7 @@
       "level": 2
     },
     {
-      "id": "s_milk_g014",
+      "id": "s_milk_g018",
       "itemIds": [
         "milk"
       ],
@@ -3043,16 +3070,16 @@
       "level": 2
     },
     {
-      "id": "s_milk_g015",
+      "id": "s_milk_g019",
       "itemIds": [
         "milk"
       ],
-      "text": "岩手県産牛乳",
-      "reading": "いわてけんさんぎゅうにゅう",
+      "text": "高原牛乳",
+      "reading": "こうげんぎゅうにゅう",
       "level": 2
     },
     {
-      "id": "s_milk_g016",
+      "id": "s_milk_g020",
       "itemIds": [
         "milk"
       ],
@@ -3061,7 +3088,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g017",
+      "id": "s_milk_g021",
       "itemIds": [
         "milk"
       ],
@@ -3070,7 +3097,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g018",
+      "id": "s_milk_g022",
       "itemIds": [
         "milk"
       ],
@@ -3079,7 +3106,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g019",
+      "id": "s_milk_g023",
       "itemIds": [
         "milk"
       ],
@@ -3088,7 +3115,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g020",
+      "id": "s_milk_g024",
       "itemIds": [
         "milk"
       ],
@@ -3097,7 +3124,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g021",
+      "id": "s_milk_g025",
       "itemIds": [
         "milk"
       ],
@@ -3106,7 +3133,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g022",
+      "id": "s_milk_g026",
       "itemIds": [
         "milk"
       ],
@@ -3115,7 +3142,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g023",
+      "id": "s_milk_g027",
       "itemIds": [
         "milk"
       ],
@@ -3124,7 +3151,16 @@
       "level": 3
     },
     {
-      "id": "s_milk_g024",
+      "id": "s_milk_g028",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "朝しぼり特濃牛乳",
+      "reading": "あさしぼりとくのうぎゅうにゅう",
+      "level": 3
+    },
+    {
+      "id": "s_milk_g029",
       "itemIds": [
         "milk"
       ],
@@ -3133,7 +3169,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g025",
+      "id": "s_milk_g030",
       "itemIds": [
         "milk"
       ],
@@ -3142,7 +3178,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g026",
+      "id": "s_milk_g031",
       "itemIds": [
         "milk"
       ],
@@ -3151,7 +3187,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g027",
+      "id": "s_milk_g032",
       "itemIds": [
         "milk"
       ],
@@ -3160,7 +3196,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g028",
+      "id": "s_milk_g033",
       "itemIds": [
         "milk"
       ],
@@ -3169,16 +3205,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g029",
-      "itemIds": [
-        "milk"
-      ],
-      "text": "朝しぼりジャージー牛乳",
-      "reading": "あさしぼりじゃーじーぎゅうにゅう",
-      "level": 3
-    },
-    {
-      "id": "s_milk_g030",
+      "id": "s_milk_g034",
       "itemIds": [
         "milk"
       ],
@@ -3187,7 +3214,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g031",
+      "id": "s_milk_g035",
       "itemIds": [
         "milk"
       ],
@@ -3196,7 +3223,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g032",
+      "id": "s_milk_g036",
       "itemIds": [
         "milk"
       ],
@@ -3205,7 +3232,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g033",
+      "id": "s_milk_g037",
       "itemIds": [
         "milk"
       ],
@@ -3214,7 +3241,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g034",
+      "id": "s_milk_g038",
       "itemIds": [
         "milk"
       ],
@@ -3223,7 +3250,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g035",
+      "id": "s_milk_g039",
       "itemIds": [
         "milk"
       ],
@@ -3232,7 +3259,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g036",
+      "id": "s_milk_g040",
       "itemIds": [
         "milk"
       ],
@@ -3241,7 +3268,16 @@
       "level": 3
     },
     {
-      "id": "s_milk_g037",
+      "id": "s_milk_g041",
+      "itemIds": [
+        "milk"
+      ],
+      "text": "朝しぼりジャージー牛乳",
+      "reading": "あさしぼりじゃーじーぎゅうにゅう",
+      "level": 3
+    },
+    {
+      "id": "s_milk_g042",
       "itemIds": [
         "milk"
       ],
@@ -3250,7 +3286,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g038",
+      "id": "s_milk_g043",
       "itemIds": [
         "milk"
       ],
@@ -3259,7 +3295,7 @@
       "level": 3
     },
     {
-      "id": "s_milk_g039",
+      "id": "s_milk_g044",
       "itemIds": [
         "milk"
       ],
@@ -3268,7 +3304,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g040",
+      "id": "s_milk_g045",
       "itemIds": [
         "milk"
       ],
@@ -3277,7 +3313,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g041",
+      "id": "s_milk_g046",
       "itemIds": [
         "milk"
       ],
@@ -3286,7 +3322,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g042",
+      "id": "s_milk_g047",
       "itemIds": [
         "milk"
       ],
@@ -3295,7 +3331,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g043",
+      "id": "s_milk_g048",
       "itemIds": [
         "milk"
       ],
@@ -3304,7 +3340,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g044",
+      "id": "s_milk_g049",
       "itemIds": [
         "milk"
       ],
@@ -3313,7 +3349,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g045",
+      "id": "s_milk_g050",
       "itemIds": [
         "milk"
       ],
@@ -3322,7 +3358,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g046",
+      "id": "s_milk_g051",
       "itemIds": [
         "milk"
       ],
@@ -3331,7 +3367,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g047",
+      "id": "s_milk_g052",
       "itemIds": [
         "milk"
       ],
@@ -3340,7 +3376,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g048",
+      "id": "s_milk_g053",
       "itemIds": [
         "milk"
       ],
@@ -3349,7 +3385,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g049",
+      "id": "s_milk_g054",
       "itemIds": [
         "milk"
       ],
@@ -3358,7 +3394,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g050",
+      "id": "s_milk_g055",
       "itemIds": [
         "milk"
       ],
@@ -3367,7 +3403,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g051",
+      "id": "s_milk_g056",
       "itemIds": [
         "milk"
       ],
@@ -3376,7 +3412,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g052",
+      "id": "s_milk_g057",
       "itemIds": [
         "milk"
       ],
@@ -3385,7 +3421,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g053",
+      "id": "s_milk_g058",
       "itemIds": [
         "milk"
       ],
@@ -3394,7 +3430,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g054",
+      "id": "s_milk_g059",
       "itemIds": [
         "milk"
       ],
@@ -3403,7 +3439,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g055",
+      "id": "s_milk_g060",
       "itemIds": [
         "milk"
       ],
@@ -3412,7 +3448,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g056",
+      "id": "s_milk_g061",
       "itemIds": [
         "milk"
       ],
@@ -3421,7 +3457,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g057",
+      "id": "s_milk_g062",
       "itemIds": [
         "milk"
       ],
@@ -3430,7 +3466,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g058",
+      "id": "s_milk_g063",
       "itemIds": [
         "milk"
       ],
@@ -3439,7 +3475,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g059",
+      "id": "s_milk_g064",
       "itemIds": [
         "milk"
       ],
@@ -3448,7 +3484,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g060",
+      "id": "s_milk_g065",
       "itemIds": [
         "milk"
       ],
@@ -3457,7 +3493,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g061",
+      "id": "s_milk_g066",
       "itemIds": [
         "milk"
       ],
@@ -3466,7 +3502,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g062",
+      "id": "s_milk_g067",
       "itemIds": [
         "milk"
       ],
@@ -3475,7 +3511,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g063",
+      "id": "s_milk_g068",
       "itemIds": [
         "milk"
       ],
@@ -3484,7 +3520,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g064",
+      "id": "s_milk_g069",
       "itemIds": [
         "milk"
       ],
@@ -3493,7 +3529,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g065",
+      "id": "s_milk_g070",
       "itemIds": [
         "milk"
       ],
@@ -3502,7 +3538,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g066",
+      "id": "s_milk_g071",
       "itemIds": [
         "milk"
       ],
@@ -3511,7 +3547,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g067",
+      "id": "s_milk_g072",
       "itemIds": [
         "milk"
       ],
@@ -3520,7 +3556,7 @@
       "level": 4
     },
     {
-      "id": "s_milk_g068",
+      "id": "s_milk_g073",
       "itemIds": [
         "milk"
       ],
@@ -10031,21 +10067,12 @@
       "itemIds": [
         "detergent"
       ],
-      "text": "粉末洗剤",
-      "reading": "ふんまつせんざい",
-      "level": 1
-    },
-    {
-      "id": "s_detergent_g003",
-      "itemIds": [
-        "detergent"
-      ],
       "text": "カビ取り剤",
       "reading": "かびとりざい",
       "level": 1
     },
     {
-      "id": "s_detergent_g004",
+      "id": "s_detergent_g003",
       "itemIds": [
         "detergent"
       ],
@@ -10054,7 +10081,7 @@
       "level": 1
     },
     {
-      "id": "s_detergent_g005",
+      "id": "s_detergent_g004",
       "itemIds": [
         "detergent"
       ],
@@ -10063,7 +10090,7 @@
       "level": 1
     },
     {
-      "id": "s_detergent_g006",
+      "id": "s_detergent_g005",
       "itemIds": [
         "detergent"
       ],
@@ -10072,7 +10099,7 @@
       "level": 1
     },
     {
-      "id": "s_detergent_g007",
+      "id": "s_detergent_g006",
       "itemIds": [
         "detergent"
       ],
@@ -10081,7 +10108,7 @@
       "level": 1
     },
     {
-      "id": "s_detergent_g008",
+      "id": "s_detergent_g007",
       "itemIds": [
         "detergent"
       ],
@@ -10090,7 +10117,7 @@
       "level": 1
     },
     {
-      "id": "s_detergent_g009",
+      "id": "s_detergent_g008",
       "itemIds": [
         "detergent"
       ],
@@ -10099,7 +10126,7 @@
       "level": 1
     },
     {
-      "id": "s_detergent_g010",
+      "id": "s_detergent_g009",
       "itemIds": [
         "detergent"
       ],
@@ -10108,7 +10135,7 @@
       "level": 1
     },
     {
-      "id": "s_detergent_g011",
+      "id": "s_detergent_g010",
       "itemIds": [
         "detergent"
       ],
@@ -10117,7 +10144,7 @@
       "level": 1
     },
     {
-      "id": "s_detergent_g012",
+      "id": "s_detergent_g011",
       "itemIds": [
         "detergent"
       ],
@@ -10126,7 +10153,7 @@
       "level": 1
     },
     {
-      "id": "s_detergent_g013",
+      "id": "s_detergent_g012",
       "itemIds": [
         "detergent"
       ],
@@ -10135,7 +10162,7 @@
       "level": 2
     },
     {
-      "id": "s_detergent_g014",
+      "id": "s_detergent_g013",
       "itemIds": [
         "detergent"
       ],
@@ -10144,7 +10171,7 @@
       "level": 2
     },
     {
-      "id": "s_detergent_g015",
+      "id": "s_detergent_g014",
       "itemIds": [
         "detergent"
       ],
@@ -10153,7 +10180,7 @@
       "level": 2
     },
     {
-      "id": "s_detergent_g016",
+      "id": "s_detergent_g015",
       "itemIds": [
         "detergent"
       ],
@@ -10162,7 +10189,7 @@
       "level": 2
     },
     {
-      "id": "s_detergent_g017",
+      "id": "s_detergent_g016",
       "itemIds": [
         "detergent"
       ],
@@ -10171,7 +10198,7 @@
       "level": 2
     },
     {
-      "id": "s_detergent_g018",
+      "id": "s_detergent_g017",
       "itemIds": [
         "detergent"
       ],
@@ -10180,12 +10207,21 @@
       "level": 2
     },
     {
-      "id": "s_detergent_g019",
+      "id": "s_detergent_g018",
       "itemIds": [
         "detergent"
       ],
       "text": "部屋干し用ジェルボール",
       "reading": "へやぼしようじぇるぼーる",
+      "level": 2
+    },
+    {
+      "id": "s_detergent_g019",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "粉末洗剤",
+      "reading": "ふんまつせんざい",
       "level": 2
     },
     {
@@ -10346,12 +10382,21 @@
       "itemIds": [
         "detergent"
       ],
+      "text": "無リン洗剤",
+      "reading": "むりんせんざい",
+      "level": 2
+    },
+    {
+      "id": "s_detergent_g038",
+      "itemIds": [
+        "detergent"
+      ],
       "text": "泡トイレ用洗剤",
       "reading": "あわといれようせんざい",
       "level": 2
     },
     {
-      "id": "s_detergent_g038",
+      "id": "s_detergent_g039",
       "itemIds": [
         "detergent"
       ],
@@ -10360,21 +10405,12 @@
       "level": 2
     },
     {
-      "id": "s_detergent_g039",
+      "id": "s_detergent_g040",
       "itemIds": [
         "detergent"
       ],
       "text": "濃縮洗剤",
       "reading": "のうしゅくせんざい",
-      "level": 2
-    },
-    {
-      "id": "s_detergent_g040",
-      "itemIds": [
-        "detergent"
-      ],
-      "text": "無リン洗剤",
-      "reading": "むりんせんざい",
       "level": 2
     },
     {
@@ -10870,6 +10906,15 @@
       ],
       "text": "Family 花の香りの柔軟剤 ～毎日の洗濯に～",
       "reading": "familyはなのかおりのじゅうなんざいまいにちのせんたくに",
+      "level": 4
+    },
+    {
+      "id": "s_detergent_g096",
+      "itemIds": [
+        "detergent"
+      ],
+      "text": "Natural お掃除用クエン酸 ～お風呂そうじに～",
+      "reading": "naturalおそうじようくえんさんおふろそうじに",
       "level": 4
     },
     {
