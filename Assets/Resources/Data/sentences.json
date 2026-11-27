@@ -13622,30 +13622,12 @@
       "itemIds": [
         "chocolate"
       ],
-      "text": "チョコウエハース",
-      "reading": "ちょこうえはーす",
+      "text": "抹茶チョコ",
+      "reading": "まっちゃちょこ",
       "level": 1
     },
     {
       "id": "s_chocolate_g002",
-      "itemIds": [
-        "chocolate"
-      ],
-      "text": "チョコクッキー",
-      "reading": "ちょこくっきー",
-      "level": 1
-    },
-    {
-      "id": "s_chocolate_g003",
-      "itemIds": [
-        "chocolate"
-      ],
-      "text": "オランジェット",
-      "reading": "おらんじぇっと",
-      "level": 1
-    },
-    {
-      "id": "s_chocolate_g004",
       "itemIds": [
         "chocolate"
       ],
@@ -13654,12 +13636,30 @@
       "level": 1
     },
     {
-      "id": "s_chocolate_g005",
+      "id": "s_chocolate_g003",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "チョコバー",
+      "reading": "ちょこばー",
+      "level": 1
+    },
+    {
+      "id": "s_chocolate_g004",
       "itemIds": [
         "chocolate"
       ],
       "text": "トリュフチョコ",
       "reading": "とりゅふちょこ",
+      "level": 1
+    },
+    {
+      "id": "s_chocolate_g005",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "チョコウエハース",
+      "reading": "ちょこうえはーす",
       "level": 1
     },
     {
@@ -13685,8 +13685,8 @@
       "itemIds": [
         "chocolate"
       ],
-      "text": "チョコバー",
-      "reading": "ちょこばー",
+      "text": "ブラウニー",
+      "reading": "ぶらうにー",
       "level": 1
     },
     {
@@ -13703,48 +13703,12 @@
       "itemIds": [
         "chocolate"
       ],
-      "text": "アーモンドチョコ",
-      "reading": "あーもんどちょこ",
-      "level": 1
-    },
-    {
-      "id": "s_chocolate_g011",
-      "itemIds": [
-        "chocolate"
-      ],
       "text": "ボンボン",
       "reading": "ぼんぼん",
       "level": 1
     },
     {
-      "id": "s_chocolate_g012",
-      "itemIds": [
-        "chocolate"
-      ],
-      "text": "生チョコ",
-      "reading": "なまちょこ",
-      "level": 1
-    },
-    {
-      "id": "s_chocolate_g013",
-      "itemIds": [
-        "chocolate"
-      ],
-      "text": "ショコラ",
-      "reading": "しょこら",
-      "level": 1
-    },
-    {
-      "id": "s_chocolate_g014",
-      "itemIds": [
-        "chocolate"
-      ],
-      "text": "抹茶チョコ",
-      "reading": "まっちゃちょこ",
-      "level": 1
-    },
-    {
-      "id": "s_chocolate_g015",
+      "id": "s_chocolate_g011",
       "itemIds": [
         "chocolate"
       ],
@@ -13753,16 +13717,43 @@
       "level": 1
     },
     {
-      "id": "s_chocolate_g016",
+      "id": "s_chocolate_g012",
       "itemIds": [
         "chocolate"
       ],
-      "text": "ブラウニー",
-      "reading": "ぶらうにー",
+      "text": "アーモンドチョコ",
+      "reading": "あーもんどちょこ",
       "level": 1
     },
     {
-      "id": "s_chocolate_g017",
+      "id": "s_chocolate_g013",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "チョコクッキー",
+      "reading": "ちょこくっきー",
+      "level": 1
+    },
+    {
+      "id": "s_chocolate_g014",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "生チョコ",
+      "reading": "なまちょこ",
+      "level": 1
+    },
+    {
+      "id": "s_chocolate_g015",
+      "itemIds": [
+        "chocolate"
+      ],
+      "text": "オランジェット",
+      "reading": "おらんじぇっと",
+      "level": 1
+    },
+    {
+      "id": "s_chocolate_g016",
       "itemIds": [
         "chocolate"
       ],
@@ -13771,7 +13762,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g018",
+      "id": "s_chocolate_g017",
       "itemIds": [
         "chocolate"
       ],
@@ -13780,7 +13771,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g019",
+      "id": "s_chocolate_g018",
       "itemIds": [
         "chocolate"
       ],
@@ -13789,7 +13780,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g020",
+      "id": "s_chocolate_g019",
       "itemIds": [
         "chocolate"
       ],
@@ -13798,7 +13789,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g021",
+      "id": "s_chocolate_g020",
       "itemIds": [
         "chocolate"
       ],
@@ -13807,7 +13798,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g022",
+      "id": "s_chocolate_g021",
       "itemIds": [
         "chocolate"
       ],
@@ -13816,7 +13807,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g023",
+      "id": "s_chocolate_g022",
       "itemIds": [
         "chocolate"
       ],
@@ -13825,7 +13816,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g024",
+      "id": "s_chocolate_g023",
       "itemIds": [
         "chocolate"
       ],
@@ -13834,7 +13825,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g025",
+      "id": "s_chocolate_g024",
       "itemIds": [
         "chocolate"
       ],
@@ -13843,7 +13834,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g026",
+      "id": "s_chocolate_g025",
       "itemIds": [
         "chocolate"
       ],
@@ -13852,7 +13843,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g027",
+      "id": "s_chocolate_g026",
       "itemIds": [
         "chocolate"
       ],
@@ -13861,7 +13852,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g028",
+      "id": "s_chocolate_g027",
       "itemIds": [
         "chocolate"
       ],
@@ -13870,7 +13861,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g029",
+      "id": "s_chocolate_g028",
       "itemIds": [
         "chocolate"
       ],
@@ -13879,7 +13870,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g030",
+      "id": "s_chocolate_g029",
       "itemIds": [
         "chocolate"
       ],
@@ -13888,7 +13879,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g031",
+      "id": "s_chocolate_g030",
       "itemIds": [
         "chocolate"
       ],
@@ -13897,7 +13888,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g032",
+      "id": "s_chocolate_g031",
       "itemIds": [
         "chocolate"
       ],
@@ -13906,7 +13897,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g033",
+      "id": "s_chocolate_g032",
       "itemIds": [
         "chocolate"
       ],
@@ -13915,7 +13906,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g034",
+      "id": "s_chocolate_g033",
       "itemIds": [
         "chocolate"
       ],
@@ -13924,7 +13915,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g035",
+      "id": "s_chocolate_g034",
       "itemIds": [
         "chocolate"
       ],
@@ -13933,7 +13924,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g036",
+      "id": "s_chocolate_g035",
       "itemIds": [
         "chocolate"
       ],
@@ -13942,7 +13933,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g037",
+      "id": "s_chocolate_g036",
       "itemIds": [
         "chocolate"
       ],
@@ -13951,7 +13942,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g038",
+      "id": "s_chocolate_g037",
       "itemIds": [
         "chocolate"
       ],
@@ -13960,7 +13951,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g039",
+      "id": "s_chocolate_g038",
       "itemIds": [
         "chocolate"
       ],
@@ -13969,7 +13960,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g040",
+      "id": "s_chocolate_g039",
       "itemIds": [
         "chocolate"
       ],
@@ -13978,7 +13969,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g041",
+      "id": "s_chocolate_g040",
       "itemIds": [
         "chocolate"
       ],
@@ -13987,7 +13978,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g042",
+      "id": "s_chocolate_g041",
       "itemIds": [
         "chocolate"
       ],
@@ -13996,7 +13987,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g043",
+      "id": "s_chocolate_g042",
       "itemIds": [
         "chocolate"
       ],
@@ -14005,7 +13996,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g044",
+      "id": "s_chocolate_g043",
       "itemIds": [
         "chocolate"
       ],
@@ -14014,7 +14005,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g045",
+      "id": "s_chocolate_g044",
       "itemIds": [
         "chocolate"
       ],
@@ -14023,7 +14014,7 @@
       "level": 2
     },
     {
-      "id": "s_chocolate_g046",
+      "id": "s_chocolate_g045",
       "itemIds": [
         "chocolate"
       ],
@@ -14032,7 +14023,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g047",
+      "id": "s_chocolate_g046",
       "itemIds": [
         "chocolate"
       ],
@@ -14041,7 +14032,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g048",
+      "id": "s_chocolate_g047",
       "itemIds": [
         "chocolate"
       ],
@@ -14050,7 +14041,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g049",
+      "id": "s_chocolate_g048",
       "itemIds": [
         "chocolate"
       ],
@@ -14059,7 +14050,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g050",
+      "id": "s_chocolate_g049",
       "itemIds": [
         "chocolate"
       ],
@@ -14068,7 +14059,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g051",
+      "id": "s_chocolate_g050",
       "itemIds": [
         "chocolate"
       ],
@@ -14077,7 +14068,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g052",
+      "id": "s_chocolate_g051",
       "itemIds": [
         "chocolate"
       ],
@@ -14086,7 +14077,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g053",
+      "id": "s_chocolate_g052",
       "itemIds": [
         "chocolate"
       ],
@@ -14095,7 +14086,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g054",
+      "id": "s_chocolate_g053",
       "itemIds": [
         "chocolate"
       ],
@@ -14104,7 +14095,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g055",
+      "id": "s_chocolate_g054",
       "itemIds": [
         "chocolate"
       ],
@@ -14113,7 +14104,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g056",
+      "id": "s_chocolate_g055",
       "itemIds": [
         "chocolate"
       ],
@@ -14122,7 +14113,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g057",
+      "id": "s_chocolate_g056",
       "itemIds": [
         "chocolate"
       ],
@@ -14131,7 +14122,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g058",
+      "id": "s_chocolate_g057",
       "itemIds": [
         "chocolate"
       ],
@@ -14140,7 +14131,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g059",
+      "id": "s_chocolate_g058",
       "itemIds": [
         "chocolate"
       ],
@@ -14149,7 +14140,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g060",
+      "id": "s_chocolate_g059",
       "itemIds": [
         "chocolate"
       ],
@@ -14158,7 +14149,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g061",
+      "id": "s_chocolate_g060",
       "itemIds": [
         "chocolate"
       ],
@@ -14167,7 +14158,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g062",
+      "id": "s_chocolate_g061",
       "itemIds": [
         "chocolate"
       ],
@@ -14176,7 +14167,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g063",
+      "id": "s_chocolate_g062",
       "itemIds": [
         "chocolate"
       ],
@@ -14185,7 +14176,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g064",
+      "id": "s_chocolate_g063",
       "itemIds": [
         "chocolate"
       ],
@@ -14194,7 +14185,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g065",
+      "id": "s_chocolate_g064",
       "itemIds": [
         "chocolate"
       ],
@@ -14203,7 +14194,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g066",
+      "id": "s_chocolate_g065",
       "itemIds": [
         "chocolate"
       ],
@@ -14212,7 +14203,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g067",
+      "id": "s_chocolate_g066",
       "itemIds": [
         "chocolate"
       ],
@@ -14221,7 +14212,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g068",
+      "id": "s_chocolate_g067",
       "itemIds": [
         "chocolate"
       ],
@@ -14230,7 +14221,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g069",
+      "id": "s_chocolate_g068",
       "itemIds": [
         "chocolate"
       ],
@@ -14239,7 +14230,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g070",
+      "id": "s_chocolate_g069",
       "itemIds": [
         "chocolate"
       ],
@@ -14248,7 +14239,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g071",
+      "id": "s_chocolate_g070",
       "itemIds": [
         "chocolate"
       ],
@@ -14257,7 +14248,7 @@
       "level": 3
     },
     {
-      "id": "s_chocolate_g072",
+      "id": "s_chocolate_g071",
       "itemIds": [
         "chocolate"
       ],
@@ -14266,7 +14257,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g073",
+      "id": "s_chocolate_g072",
       "itemIds": [
         "chocolate"
       ],
@@ -14275,7 +14266,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g074",
+      "id": "s_chocolate_g073",
       "itemIds": [
         "chocolate"
       ],
@@ -14284,7 +14275,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g075",
+      "id": "s_chocolate_g074",
       "itemIds": [
         "chocolate"
       ],
@@ -14293,7 +14284,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g076",
+      "id": "s_chocolate_g075",
       "itemIds": [
         "chocolate"
       ],
@@ -14302,7 +14293,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g077",
+      "id": "s_chocolate_g076",
       "itemIds": [
         "chocolate"
       ],
@@ -14311,7 +14302,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g078",
+      "id": "s_chocolate_g077",
       "itemIds": [
         "chocolate"
       ],
@@ -14320,7 +14311,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g079",
+      "id": "s_chocolate_g078",
       "itemIds": [
         "chocolate"
       ],
@@ -14329,7 +14320,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g080",
+      "id": "s_chocolate_g079",
       "itemIds": [
         "chocolate"
       ],
@@ -14338,7 +14329,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g081",
+      "id": "s_chocolate_g080",
       "itemIds": [
         "chocolate"
       ],
@@ -14347,7 +14338,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g082",
+      "id": "s_chocolate_g081",
       "itemIds": [
         "chocolate"
       ],
@@ -14356,7 +14347,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g083",
+      "id": "s_chocolate_g082",
       "itemIds": [
         "chocolate"
       ],
@@ -14365,7 +14356,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g084",
+      "id": "s_chocolate_g083",
       "itemIds": [
         "chocolate"
       ],
@@ -14374,7 +14365,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g085",
+      "id": "s_chocolate_g084",
       "itemIds": [
         "chocolate"
       ],
@@ -14383,7 +14374,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g086",
+      "id": "s_chocolate_g085",
       "itemIds": [
         "chocolate"
       ],
@@ -14392,7 +14383,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g087",
+      "id": "s_chocolate_g086",
       "itemIds": [
         "chocolate"
       ],
@@ -14401,7 +14392,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g088",
+      "id": "s_chocolate_g087",
       "itemIds": [
         "chocolate"
       ],
@@ -14410,7 +14401,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g089",
+      "id": "s_chocolate_g088",
       "itemIds": [
         "chocolate"
       ],
@@ -14419,7 +14410,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g090",
+      "id": "s_chocolate_g089",
       "itemIds": [
         "chocolate"
       ],
@@ -14428,7 +14419,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g091",
+      "id": "s_chocolate_g090",
       "itemIds": [
         "chocolate"
       ],
@@ -14437,7 +14428,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g092",
+      "id": "s_chocolate_g091",
       "itemIds": [
         "chocolate"
       ],
@@ -14446,7 +14437,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g093",
+      "id": "s_chocolate_g092",
       "itemIds": [
         "chocolate"
       ],
@@ -14455,7 +14446,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g094",
+      "id": "s_chocolate_g093",
       "itemIds": [
         "chocolate"
       ],
@@ -14464,7 +14455,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g095",
+      "id": "s_chocolate_g094",
       "itemIds": [
         "chocolate"
       ],
@@ -14473,7 +14464,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g096",
+      "id": "s_chocolate_g095",
       "itemIds": [
         "chocolate"
       ],
@@ -14482,7 +14473,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g097",
+      "id": "s_chocolate_g096",
       "itemIds": [
         "chocolate"
       ],
@@ -14491,7 +14482,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g098",
+      "id": "s_chocolate_g097",
       "itemIds": [
         "chocolate"
       ],
@@ -14500,7 +14491,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g099",
+      "id": "s_chocolate_g098",
       "itemIds": [
         "chocolate"
       ],
@@ -14509,7 +14500,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g100",
+      "id": "s_chocolate_g099",
       "itemIds": [
         "chocolate"
       ],
@@ -14518,7 +14509,7 @@
       "level": 4
     },
     {
-      "id": "s_chocolate_g101",
+      "id": "s_chocolate_g100",
       "itemIds": [
         "chocolate"
       ],
