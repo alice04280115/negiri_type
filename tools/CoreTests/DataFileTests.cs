@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Text.Json;
 using Negiri.Core.Data;
@@ -139,6 +140,43 @@ namespace Negiri.Core.Tests
         // 読みがなの文字数の目安（商品名データ 見直し・拡張計画）。初級2～8・中級6～13・上級10～20・達人18～35
         static readonly int[] MinReading = { 0, 2, 6, 10, 18 };
         static readonly int[] MaxReading = { 0, 8, 13, 20, 35 };
+
+        [Test]
+        public void 同じ食材名の商品名が続けて出ない()
+        {
+            var items = Load<ItemList>("items.json");
+            var sentences = Load<SentenceList>("sentences.json");
+            var rnd = new System.Random(42);
+            foreach (var item in items.items)
+            {
+                Assert.IsNotEmpty(item.foods, $"{item.name} の foods");
+                string last = null;
+                var used = new Dictionary<int, List<string>>();
+                for (int i = 0; i < 400; i++)
+                {
+                    int level = 1 + rnd.Next(4);
+                    if (!used.TryGetValue(level, out var u)) used[level] = u = new List<string>();
+                    var picked = SentenceCatalog.Pick(sentences, item.id, level, n => rnd.Next(n), u, item.foods, last);
+                    if (u.Contains(picked.id)) u.Clear();
+                    u.Add(picked.id);
+                    var key = SentenceCatalog.FoodKey(picked.text, item.foods);
+                    // 候補がすべて同じ食材名（納豆など）のときだけ続いてよい
+                    bool allSame = sentences.sentences.Where(x => x.level == level && x.itemIds.Contains(item.id)).All(x => SentenceCatalog.FoodKey(x.text, item.foods) == key);
+                    if (!allSame) Assert.AreNotEqual(last, key, $"{item.name} レベル{level}：{picked.text}");
+                    last = key;
+                }
+            }
+        }
+
+        [Test]
+        public void 食材名は商品名に入っているいちばん短い語()
+        {
+            var foods = new[] { "キャベツ", "春キャベツ", "レタス", "サニーレタス" };
+            Assert.AreEqual("キャベツ", SentenceCatalog.FoodKey("千葉県産朝採れ春キャベツ", foods));
+            Assert.AreEqual("キャベツ", SentenceCatalog.FoodKey("高原キャベツ一玉", foods));
+            Assert.AreEqual("レタス", SentenceCatalog.FoodKey("サニーレタス", foods));
+            Assert.AreEqual("サラダ用ミックス野菜", SentenceCatalog.FoodKey("サラダ用ミックス野菜", foods));
+        }
 
         [Test]
         public void 商品名の読みの長さが難易度ごとの目安に収まる()

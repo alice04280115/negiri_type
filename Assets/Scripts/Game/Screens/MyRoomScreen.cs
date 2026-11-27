@@ -39,6 +39,12 @@ namespace Negiri.Game.Screens
         int repayIndex;
         string notice = "";
         float noticeTime;
+        /// <summary>給料日の朝のお知らせを出しているか。0：貯金箱に入れる（家計簿へ）、1：あとで。</summary>
+        bool paydayPrompt;
+        int paydayIndex;
+        /// <summary>給料日のお知らせを出した月と日（家計簿から戻ったときにもう一度出さない）。</summary>
+        MonthState paydayShownMonth;
+        int paydayShownDay;
 
         public MyRoomScreen(ShoppingFlow flow, RectTransform parent) : base(flow, parent, "MyRoom")
         {
@@ -71,6 +77,35 @@ namespace Negiri.Game.Screens
             choosingDays = false;
             choosingRepay = false;
             notice = "";
+            paydayPrompt = false;
+            if (m != null && m.IsPaydayToday && !m.IsOver && (paydayShownMonth != m || paydayShownDay != m.Day))
+            {
+                paydayShownMonth = m;
+                paydayShownDay = m.Day;
+                paydayPrompt = true;
+                paydayIndex = m.MaxLockToday > 0 ? 0 : 1;
+            }
+        }
+
+        /// <summary>給料日の朝のお知らせ。貯金箱に入れられるなら家計簿へ誘う。</summary>
+        void TickPayday(Keyboard kb)
+        {
+            var m = Flow.Month;
+            bool canLock = m.MaxLockToday > 0;
+            if (Pressed(kb.escapeKey))
+            {
+                paydayPrompt = false;
+                return;
+            }
+            if (canLock)
+            {
+                if (Pressed(kb.upArrowKey) || Pressed(kb.leftArrowKey)) paydayIndex = 0;
+                if (Pressed(kb.downArrowKey) || Pressed(kb.rightArrowKey)) paydayIndex = 1;
+            }
+            else paydayIndex = 1;
+            if (!Decide(kb)) return;
+            paydayPrompt = false;
+            if (paydayIndex == 0) Flow.OpenLedger();
         }
 
         void BuildCommands()
@@ -132,6 +167,11 @@ namespace Negiri.Game.Screens
         public override void Tick(Keyboard kb, float deltaTime)
         {
             noticeTime = Mathf.Max(0f, noticeTime - deltaTime);
+            if (paydayPrompt)
+            {
+                TickPayday(kb);
+                return;
+            }
             if (choosingDays)
             {
                 TickChoosingDays(kb);
@@ -251,7 +291,19 @@ namespace Negiri.Game.Screens
                 if (commands[i] == Command.Shop) disabled[i] = !m.CanShop;
                 if (commands[i] == Command.Repay) disabled[i] = m.Debt.Total <= 0;
             }
-            if (choosingRepay)
+            if (paydayPrompt)
+            {
+                int pay = life.month.PaydayOn(m.Day);
+                bool canLock = m.MaxLockToday > 0;
+                string boxLabel = life.month.lockTotalMax > 0 ? $"{UiFactory.Yen(m.Wallet.Locked)}／{UiFactory.Yen(life.month.lockTotalMax)}" : UiFactory.Yen(m.Wallet.Locked);
+                menuText.text = UiFactory.Paint($"今日は給料日！ {UiFactory.Yen(pay)}入りました", UiFactory.Good) + "\n" +
+                                (canLock
+                                    ? UiFactory.Paint($"貯金箱 {boxLabel}", UiFactory.Quiet) + "\n" +
+                                      UiFactory.Menu(new[] { "貯金箱に入れる（家計簿へ）", "あとで" }, paydayIndex, new bool[2])
+                                    : UiFactory.Paint($"貯金箱 {boxLabel}", UiFactory.Quiet));
+                Message.text = canLock ? "↑↓：選ぶ　スペース：決定" : "スペース：閉じる";
+            }
+            else if (choosingRepay)
             {
                 var lender = RepayLender(m);
                 var choices = m.RepayChoices(lender);

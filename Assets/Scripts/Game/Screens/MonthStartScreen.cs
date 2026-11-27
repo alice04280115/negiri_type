@@ -81,19 +81,19 @@ namespace Negiri.Game.Screens
             int payday = m.NextPayday;
             int estimate = payday > 0 ? EstimateUntil(month, payday - 1) : month.essentialsEstimate;
             string estimateLabel = payday > 0
-                ? $"給料日（{payday}日）までの必需品の目安：約{UiFactory.Yen(estimate)}（通常価格）"
-                : $"1か月の必需品の目安：約{UiFactory.Yen(estimate)}（通常価格）";
+                ? $"給料日（{payday}日）までの必需品の目安：約{UiFactory.Yen(estimate)}"
+                : $"1か月の必需品の目安：約{UiFactory.Yen(estimate)}";
             int pay = payday > 0 ? month.PaydayOn(payday) : 0;
+            // 必需品の目安は初級・中級だけ（上級・達人は自分で考える）
+            bool showEstimate = m.Rule.showEssentials;
             hintText.text =
                 (payday > 0
                     ? $"いまの予算　{UiFactory.Yen(cash)}" + UiFactory.Paint($"（{payday}日に給料 {UiFactory.Yen(pay)}）", UiFactory.Quiet) + "\n"
                     : $"今月の予算　{UiFactory.Yen(cash)}\n") +
+                $"貯金箱に入れた後の財布　{UiFactory.Paint(UiFactory.Yen(left), showEstimate && left < estimate ? UiFactory.Bad : UiFactory.Warn)}\n" +
+                (showEstimate ? UiFactory.Paint(estimateLabel, UiFactory.Quiet) + "\n" : "") +
                 BoxLimitLine(month) + "\n" +
-                $"貯金箱に入れた後の財布　{UiFactory.Paint(UiFactory.Yen(left), left < estimate ? UiFactory.Bad : UiFactory.Warn)}\n" +
-                UiFactory.Paint(estimateLabel, UiFactory.Quiet) + "\n" +
-                UiFactory.Paint($"買い物：{TitleScreen.IntervalLabel(m.Rule.shopIntervalDays)}　食料は{m.Rule.foodCap}日分まで", UiFactory.Quiet) + "\n" +
-                UiFactory.Paint($"満足度は月末に{m.Life.satisfaction.passLine}以上が目標。在庫が切れると下がります", UiFactory.Quiet) + "\n" +
-                UiFactory.Paint("貯金箱には後から家計簿で追加できます。取り出せません。", UiFactory.Quiet);
+                UiFactory.Paint("貯金箱は取り出せません（家計簿から追加できます）", UiFactory.Quiet);
             if (lockAmount >= m.MaxStartLock && m.MaxStartLock > 0) lockText.text += UiFactory.Paint("（上限）", UiFactory.Quiet);
 
             confirmText.text = confirming

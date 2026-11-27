@@ -39,7 +39,8 @@
         "satisfactionPerReturn": 0,
         "shopIntervalDays": 1,
         "foodCap": 7,
-        "borrowFrom": ""
+        "borrowFrom": "",
+        "showEssentials": true
       },
       {
         "label": "中級",
@@ -48,7 +49,8 @@
         "satisfactionPerReturn": 3,
         "shopIntervalDays": 3,
         "foodCap": 7,
-        "borrowFrom": ""
+        "borrowFrom": "",
+        "showEssentials": true
       },
       {
         "label": "上級",
@@ -57,7 +59,8 @@
         "satisfactionPerReturn": 3,
         "shopIntervalDays": 7,
         "foodCap": 10,
-        "borrowFrom": "card"
+        "borrowFrom": "card",
+        "showEssentials": false
       },
       {
         "label": "達人",
@@ -66,7 +69,8 @@
         "satisfactionPerReturn": 3,
         "shopIntervalDays": 7,
         "foodCap": 10,
-        "borrowFrom": "card"
+        "borrowFrom": "card",
+        "showEssentials": false
       }
     ]
   },

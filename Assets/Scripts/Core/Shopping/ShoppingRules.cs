@@ -32,6 +32,8 @@ namespace Negiri.Core.Shopping
         public string borrowFrom = "";
 
         public bool CanBorrow => !string.IsNullOrEmpty(borrowFrom);
+        /// <summary>月初の画面に「必需品の目安」を出すか（初級・中級だけ出す）。</summary>
+        public bool showEssentials = true;
         public ShortageRule ShortageValue => (ShortageRule)Enum.Parse(typeof(ShortageRule), shortage, true);
         public bool IsAutoReturn => ShortageValue != ShortageRule.ChooseReturn;
     }
@@ -55,8 +57,8 @@ namespace Negiri.Core.Shopping
             {
                 new ShoppingRule { label = "初級", maxItems = 4, shortage = nameof(ShortageRule.ChooseReturn), satisfactionPerReturn = 0, shopIntervalDays = 1, foodCap = 7 },
                 new ShoppingRule { label = "中級", maxItems = 7, shortage = nameof(ShortageRule.ChooseReturn), satisfactionPerReturn = 3, shopIntervalDays = 3, foodCap = 7 },
-                new ShoppingRule { label = "上級", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnHighestFirst), satisfactionPerReturn = 3, shopIntervalDays = 7, foodCap = 10, borrowFrom = "card" },
-                new ShoppingRule { label = "達人", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnLowestFirst), satisfactionPerReturn = 3, shopIntervalDays = 7, foodCap = 10, borrowFrom = "card" },
+                new ShoppingRule { label = "上級", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnHighestFirst), satisfactionPerReturn = 3, shopIntervalDays = 7, foodCap = 10, borrowFrom = "card", showEssentials = false },
+                new ShoppingRule { label = "達人", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnLowestFirst), satisfactionPerReturn = 3, shopIntervalDays = 7, foodCap = 10, borrowFrom = "card", showEssentials = false },
             };
         }
     }
