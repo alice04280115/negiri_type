@@ -24,6 +24,7 @@ namespace Negiri.Core.Tests
         {
             var life = new LifeBalance();
             life.month.budget = budget;
+            life.month.paydays = new PaydayData[0];
             life.debt.lenders[0].limit = limit;
             return MonthState.Start(life, Rule(shortage, borrowFrom), 2);
         }

@@ -102,7 +102,8 @@ namespace Negiri.Game.Screens
             var rule = Flow.Rule;
             var month = Flow.Life.month;
             ruleText.text =
-                $"月の予算 {UiFactory.Yen(month.budget)}　｜　買い物 {IntervalLabel(rule.shopIntervalDays)}　｜　1回に{rule.maxItems}品まで　｜　食料は{rule.foodCap}日分まで\n" +
+                $"{BudgetLabel(month)}\n" +
+                $"買い物 {IntervalLabel(rule.shopIntervalDays)}　｜　1回に{rule.maxItems}品まで　｜　食料は{rule.foodCap}日分まで\n" +
                 $"会計で財布が足りないとき：{ShortageDescription(rule)}";
 
             var labels = new string[items.Count];
@@ -135,6 +136,20 @@ namespace Negiri.Game.Screens
                 case ShortageRule.AutoReturnLowestFirst: return $"{loan}支払額の安い順に自動で返品（{penalty}）";
                 default: return $"返品する商品を自分で選ぶ（{penalty}）";
             }
+        }
+
+        /// <summary>「予算 5,000円＋15日に給料 14,000円」（給料日がなければ「月の予算 19,000円」）。</summary>
+        public static string BudgetLabel(Negiri.Core.Life.MonthBalance month)
+        {
+            var sb = new System.Text.StringBuilder();
+            bool any = false;
+            foreach (var p in month.paydays ?? new Negiri.Core.Life.PaydayData[0])
+            {
+                if (p == null || p.day < 2 || p.day > month.days || p.amount <= 0) continue;
+                sb.Append($"＋{p.day}日に{p.name} {UiFactory.Yen(p.amount)}");
+                any = true;
+            }
+            return any ? $"予算 {UiFactory.Yen(month.budget)}{sb}" : $"月の予算 {UiFactory.Yen(month.budget)}";
         }
     }
 }

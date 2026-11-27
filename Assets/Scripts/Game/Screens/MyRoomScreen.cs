@@ -220,6 +220,8 @@ namespace Negiri.Game.Screens
             if (m.CanShop) shopText.text = UiFactory.Paint("今日は買い物に行けます", UiFactory.Good);
             else if (m.ShoppedToday) shopText.text = UiFactory.Paint("今日は買い物に行きました", UiFactory.Quiet);
             else shopText.text = $"次の買い物：{ShopDayLabel(m)}";
+            if (m.IsPaydayToday) shopText.text += UiFactory.Paint("　今日は給料日", UiFactory.Good);
+            else if (m.NextPayday > 0) shopText.text += UiFactory.Paint($"　給料日まであと{m.NextPayday - m.Day}日", UiFactory.Quiet);
 
             var sales = Flow.Db.Store.SalesOn(m.Weekday);
             var saleSb = new StringBuilder($"今日（{Calendar.WeekdayNames[m.Weekday]}曜）の特売：");

@@ -252,6 +252,15 @@ namespace Negiri.Core.Data
             if (m == null || st == null || sat == null) { errors.Add("life.month / life.stock / life.satisfaction をすべて書いてください"); return errors; }
             if (m.days <= 0) errors.Add("life.month.days は1以上にしてください");
             if (m.budget <= 0) errors.Add("life.month.budget は1以上にしてください");
+            var paydayDays = new HashSet<int>();
+            foreach (var p in m.paydays ?? Array.Empty<PaydayData>())
+            {
+                if (p == null) { errors.Add("life.month.paydays に空の項目があります"); continue; }
+                if (p.day < 2 || p.day > m.days) errors.Add($"給料日 {p.day} は2～{m.days}日にしてください");
+                if (p.amount <= 0) errors.Add($"給料日 {p.day} の額は1以上にしてください");
+                if (string.IsNullOrEmpty(p.name)) errors.Add($"給料日 {p.day} の name を書いてください");
+                if (!paydayDays.Add(p.day)) errors.Add($"給料日 {p.day} が重複しています");
+            }
             if (m.firstWeekday < 0 || m.firstWeekday > 6) errors.Add("life.month.firstWeekday は0（月）～6（日）にしてください");
             if (m.month < 1 || m.month > 12) errors.Add("life.month.month は1～12にしてください");
             if (m.lockStep <= 0) errors.Add("life.month.lockStep は1以上にしてください");

@@ -32,6 +32,8 @@ namespace Negiri.Core.Life
         public int Interest;
         /// <summary>利息を足した後の借金残高（月末の夜だけ）。</summary>
         public int DebtAfter;
+        /// <summary>次の朝が給料日なら、財布に入った額（夜が明けたときに入る）。</summary>
+        public int Payday;
     }
 
     /// <summary>
@@ -132,6 +134,25 @@ namespace Negiri.Core.Life
             Debt.Repay(lender, amount, Day);
         }
         public string DateLabel => Calendar.DateLabel(Day, Life.month);
+
+        /// <summary>次の給料日（今日より後）。もうなければ0。</summary>
+        public int NextPayday => IsOver ? 0 : Life.month.NextPaydayAfter(Day);
+
+        /// <summary>今日が給料日か（朝にお金が入った日）。</summary>
+        public bool IsPaydayToday => Life.month.PaydayOn(Day) > 0;
+
+        /// <summary>ここまでに入ったお金（1日目の予算と、今日までの給料）。家計簿に出す。</summary>
+        public List<(int day, string name, int amount)> IncomeLog
+        {
+            get
+            {
+                var list = new List<(int, string, int)> { (1, "今月の予算", Life.month.budget) };
+                foreach (var p in Life.month.paydays ?? Array.Empty<PaydayData>())
+                    if (p != null && p.day > 1 && p.day <= Day && p.amount > 0) list.Add((p.day, p.name, p.amount));
+                list.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+                return list;
+            }
+        }
         public int Weekday => Calendar.Weekday(Day, Life.month.firstWeekday);
 
         public int NextShopDay => Calendar.NextShopDay(Day, LastShopDay, Rule.shopIntervalDays);
@@ -277,7 +298,17 @@ namespace Negiri.Core.Life
                 r.DebtAfter = Debt.Total;
                 IsOver = true;
             }
-            else Day++;
+            else
+            {
+                Day++;
+                // 給料日：朝に財布へ入る
+                int pay = Life.month.PaydayOn(Day);
+                if (pay > 0)
+                {
+                    Wallet.Receive(pay);
+                    r.Payday = pay;
+                }
+            }
             r.MonthOver = IsOver;
             return r;
         }

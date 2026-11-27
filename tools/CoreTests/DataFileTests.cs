@@ -80,7 +80,9 @@ namespace Negiri.Core.Tests
             var b = Load<BalanceData>("balance.json");
             var errors = DataValidator.ValidateLife(b.life, b.shopping);
             Assert.IsEmpty(errors, string.Join("\n", errors));
-            Assert.AreEqual(19000, b.life.month.budget);
+            Assert.AreEqual(5000, b.life.month.budget);
+            Assert.AreEqual(14000, b.life.month.PaydayOn(15));
+            Assert.AreEqual(19000, b.life.month.TotalBudget);
             Assert.AreEqual(30, b.life.month.days);
             Assert.AreEqual(60, b.life.satisfaction.start);
         }

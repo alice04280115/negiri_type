@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Negiri.Game.Screens
 {
-    /// <summary>家計簿。今月買った物と借りた・返した記録（新しい順）、支出と節約額の合計、借金、ロック貯金の追加。</summary>
+    /// <summary>家計簿。今月の収入、買った物と借りた・返した記録（新しい順）、支出と節約額の合計、借金、ロック貯金の追加。</summary>
     public sealed class LedgerScreen : ScreenBase
     {
         const int VisibleRows = 12;
@@ -31,7 +31,7 @@ namespace Negiri.Game.Screens
             scrollText = UiFactory.MakeText(Root, "", 13, UiFactory.Quiet, new Vector2(0, 1), new Vector2(24, -420), new Vector2(520, 20), TextAnchor.MiddleCenter);
 
             UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0, 1), new Vector2(560, -48), new Vector2(376, 400));
-            totalsText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(576, -60), new Vector2(350, 170), TextAnchor.UpperLeft);
+            totalsText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(576, -60), new Vector2(350, 190), TextAnchor.UpperLeft);
             totalsText.lineSpacing = 1.3f;
             lockText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(576, -250), new Vector2(350, 180), TextAnchor.UpperLeft);
             lockText.lineSpacing = 1.3f;
@@ -59,14 +59,15 @@ namespace Negiri.Game.Screens
 
         List<Row> rows = new List<Row>();
 
-        /// <summary>買った物と借金の記録を日付順に並べる（同じ日は買った物が先）。</summary>
+        /// <summary>収入・買った物・借金の記録を日付順に並べる（同じ日は収入、買った物、借金の順）。</summary>
         void BuildRows()
         {
             var m = Flow.Month;
             var list = new List<Row>();
+            foreach (var (day, name, amount) in m.IncomeLog)
+                list.Add(new Row { Day = day, Name = name, Note = "収入", Amount = "＋" + UiFactory.Yen(amount), Color = UiFactory.Good });
             foreach (var e in m.Ledger.Entries)
                 list.Add(new Row { Day = e.day, Name = e.name, Note = e.rank, Amount = UiFactory.Yen(e.paid), Color = UiFactory.Ink });
-            int purchases = list.Count;
             foreach (var e in m.Debt.Log)
             {
                 string note;
@@ -136,9 +137,10 @@ namespace Negiri.Game.Screens
                 var e = rows[count - 1 - scroll - i];
                 list.Set(i, e.Color, false, Calendar.DateLabel(e.Day, m.Life.month), e.Name, e.Note, e.Amount);
             }
-            scrollText.text = count == 0 ? "まだ何も買っていません" : (MaxScroll > 0 ? "↑↓でスクロール" : "");
+            scrollText.text = ledger.Entries.Count == 0 && m.Debt.Log.Count == 0 ? "まだ何も買っていません" : (MaxScroll > 0 ? "↑↓でスクロール" : "");
 
             totalsText.text =
+                $"今月の収入　{UiFactory.Paint(UiFactory.Yen(m.Wallet.TotalIncome), UiFactory.Good)}" + (m.NextPayday > 0 ? UiFactory.Paint($"（{m.NextPayday}日に給料）", UiFactory.Quiet) : "") + "\n" +
                 $"今月の支出　{UiFactory.Paint(UiFactory.Yen(ledger.TotalPaid), UiFactory.Bad)}\n" +
                 $"今日の支出　{UiFactory.Yen(ledger.PaidOn(m.Day))}\n" +
                 $"今月の節約額　{UiFactory.Paint(UiFactory.Yen(ledger.TotalSaved), UiFactory.Good)}\n" +

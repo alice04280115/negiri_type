@@ -77,11 +77,20 @@ namespace Negiri.Game.Screens
             int cash = m.Wallet.Cash;
             lockText.text = UiFactory.Yen(lockAmount);
             int left = cash - lockAmount;
+            // 給料日があれば、給料日の前の日までの必需品の目安と比べる
+            int payday = m.NextPayday;
+            int estimate = payday > 0 ? EstimateUntil(month, payday - 1) : month.essentialsEstimate;
+            string estimateLabel = payday > 0
+                ? $"給料日（{payday}日）までの必需品の目安：約{UiFactory.Yen(estimate)}（通常価格）"
+                : $"1か月の必需品の目安：約{UiFactory.Yen(estimate)}（通常価格）";
+            int pay = payday > 0 ? month.PaydayOn(payday) : 0;
             hintText.text =
-                $"今月の予算　{UiFactory.Yen(cash)}\n" +
+                (payday > 0
+                    ? $"いまの予算　{UiFactory.Yen(cash)}" + UiFactory.Paint($"（{payday}日に給料 {UiFactory.Yen(pay)}）", UiFactory.Quiet) + "\n"
+                    : $"今月の予算　{UiFactory.Yen(cash)}\n") +
                 BoxLimitLine(month) + "\n" +
-                $"貯金箱に入れた後の財布　{UiFactory.Paint(UiFactory.Yen(left), left < month.essentialsEstimate ? UiFactory.Bad : UiFactory.Warn)}\n" +
-                UiFactory.Paint($"1か月の必需品の目安：約{UiFactory.Yen(month.essentialsEstimate)}（通常価格）", UiFactory.Quiet) + "\n" +
+                $"貯金箱に入れた後の財布　{UiFactory.Paint(UiFactory.Yen(left), left < estimate ? UiFactory.Bad : UiFactory.Warn)}\n" +
+                UiFactory.Paint(estimateLabel, UiFactory.Quiet) + "\n" +
                 UiFactory.Paint($"買い物：{TitleScreen.IntervalLabel(m.Rule.shopIntervalDays)}　食料は{m.Rule.foodCap}日分まで", UiFactory.Quiet) + "\n" +
                 UiFactory.Paint($"満足度は月末に{m.Life.satisfaction.passLine}以上が目標。在庫が切れると下がります", UiFactory.Quiet) + "\n" +
                 UiFactory.Paint("貯金箱には後から家計簿で追加できます。取り出せません。", UiFactory.Quiet);
@@ -95,6 +104,15 @@ namespace Negiri.Game.Screens
                 : $"←→：貯金箱に入れる額（{UiFactory.Yen(Step)}ずつ）　スペース：決定して1日目へ　Esc：タイトル";
         }
     
+        /// <summary>1か月の必需品の目安を日数で割り、days 日分にする（100円単位で切り上げ）。</summary>
+        static int EstimateUntil(Negiri.Core.Life.MonthBalance month, int days)
+        {
+            if (month.days <= 0) return month.essentialsEstimate;
+            long v = (long)month.essentialsEstimate * days;
+            int perDays = (int)((v + month.days - 1) / month.days);
+            return (perDays + 99) / 100 * 100;
+        }
+
         /// <summary>「貯金箱の上限 6,000円（残り6,000円は月末の財布から）」。</summary>
         public static string BoxLimitLine(Negiri.Core.Life.MonthBalance month)
         {

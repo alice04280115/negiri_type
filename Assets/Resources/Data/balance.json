@@ -73,7 +73,14 @@
   "life": {
     "month": {
       "days": 30,
-      "budget": 19000,
+      "budget": 5000,
+      "paydays": [
+        {
+          "day": 15,
+          "amount": 14000,
+          "name": "給料"
+        }
+      ],
       "firstWeekday": 0,
       "month": 4,
       "lockStep": 1000,

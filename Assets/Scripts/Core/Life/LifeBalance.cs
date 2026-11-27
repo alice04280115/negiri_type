@@ -9,8 +9,10 @@ namespace Negiri.Core.Life
     {
         /// <summary>1か月の日数。</summary>
         public int days = 30;
-        /// <summary>月初に財布に入る金額（月の予算）。</summary>
-        public int budget = 19000;
+        /// <summary>1日目に財布に入る金額（給料日までの予算）。</summary>
+        public int budget = 5000;
+        /// <summary>月の途中でお金が入る日（給料日）。2日目以降。空なら月初の予算だけ。</summary>
+        public PaydayData[] paydays = { new PaydayData() };
         /// <summary>1日目の曜日（0＝月曜 … 6＝日曜）。</summary>
         public int firstWeekday = 0;
         /// <summary>レシートに書く月（ゲーム内の月）。</summary>
@@ -28,6 +30,44 @@ namespace Negiri.Core.Life
         /// <summary>月末に買いたい目標商品（段階4の決戦で買う。段階3では表示だけ）。</summary>
         public string targetName = "あこがれのバッグ";
         public int targetPrice = 12000;
+
+        /// <summary>その日の朝に入るお金の合計（1日目の予算は含めない）。</summary>
+        public int PaydayOn(int day)
+        {
+            int sum = 0;
+            foreach (var p in paydays ?? Array.Empty<PaydayData>()) if (p != null && p.day == day) sum += p.amount;
+            return sum;
+        }
+
+        /// <summary>今日より後の最初の給料日。なければ0。</summary>
+        public int NextPaydayAfter(int day)
+        {
+            int next = 0;
+            foreach (var p in paydays ?? Array.Empty<PaydayData>())
+                if (p != null && p.day > day && p.day <= days && (next == 0 || p.day < next)) next = p.day;
+            return next;
+        }
+
+        /// <summary>1か月に入るお金の合計（1日目の予算＋給料）。</summary>
+        public int TotalBudget
+        {
+            get
+            {
+                int sum = budget;
+                foreach (var p in paydays ?? Array.Empty<PaydayData>()) if (p != null && p.day <= days) sum += p.amount;
+                return sum;
+            }
+        }
+    }
+
+    /// <summary>給料日1つ（その日の朝に財布へ入る）。</summary>
+    [Serializable]
+    public class PaydayData
+    {
+        public int day = 15;
+        public int amount = 14000;
+        /// <summary>家計簿と画面に出す名前。</summary>
+        public string name = "給料";
     }
 
     /// <summary>必需品の在庫（何日分あるか）の数値。</summary>
