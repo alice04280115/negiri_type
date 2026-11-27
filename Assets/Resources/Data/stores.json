@@ -6,15 +6,33 @@
       "sales": [
         {
           "itemId": "egg",
-          "discountBp": 2000
+          "discountBp": 2000,
+          "days": "火"
         },
         {
           "itemId": "cabbage",
-          "discountBp": 1000
+          "discountBp": 1000,
+          "days": "火"
+        },
+        {
+          "itemId": "pork",
+          "discountBp": 1500,
+          "days": "金"
         },
         {
           "itemId": "chocolate",
-          "discountBp": 1500
+          "discountBp": 1500,
+          "days": "金"
+        },
+        {
+          "itemId": "rice",
+          "discountBp": 1000,
+          "days": "日"
+        },
+        {
+          "itemId": "detergent",
+          "discountBp": 1000,
+          "days": "日"
         }
       ]
     }

@@ -22,8 +22,12 @@ namespace Negiri.Core.Shopping
         public int maxItems;
         /// <summary>ShortageRule の名前（ChooseReturn / AutoReturnHighestFirst / AutoReturnLowestFirst）。</summary>
         public string shortage = nameof(ShortageRule.ChooseReturn);
-        /// <summary>1品返品するごとに減る満足度。段階2には満足度がないので、記録して表示するだけ。</summary>
+        /// <summary>1品返品するごとに減る満足度。</summary>
         public int satisfactionPerReturn;
+        /// <summary>買い物に行ける間隔（日）。1なら毎日、3なら3日に1回。</summary>
+        public int shopIntervalDays = 1;
+        /// <summary>食料の在庫の上限（日分）。</summary>
+        public int foodCap = 7;
 
         public ShortageRule ShortageValue => (ShortageRule)Enum.Parse(typeof(ShortageRule), shortage, true);
         public bool IsAutoReturn => ShortageValue != ShortageRule.ChooseReturn;
@@ -33,7 +37,7 @@ namespace Negiri.Core.Shopping
     [Serializable]
     public class ShoppingBalance
     {
-        /// <summary>試作用に、買い物のはじめに財布へ入れる金額。</summary>
+        /// <summary>段階2の「1回の買い物」の試作で財布に入れていた金額。段階3からは月の予算（life.month.budget）を使うので、今は使っていない。</summary>
         public int startingCash = 3000;
 
         /// <summary>レジで1品打ち終えたあと、結果を出しておく秒数。過ぎたら自動で次の商品へ進む。</summary>
@@ -46,10 +50,10 @@ namespace Negiri.Core.Shopping
         {
             return new[]
             {
-                new ShoppingRule { label = "初級", maxItems = 4, shortage = nameof(ShortageRule.ChooseReturn), satisfactionPerReturn = 0 },
-                new ShoppingRule { label = "中級", maxItems = 7, shortage = nameof(ShortageRule.ChooseReturn), satisfactionPerReturn = 3 },
-                new ShoppingRule { label = "上級", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnHighestFirst), satisfactionPerReturn = 3 },
-                new ShoppingRule { label = "達人", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnLowestFirst), satisfactionPerReturn = 3 },
+                new ShoppingRule { label = "初級", maxItems = 4, shortage = nameof(ShortageRule.ChooseReturn), satisfactionPerReturn = 0, shopIntervalDays = 1, foodCap = 7 },
+                new ShoppingRule { label = "中級", maxItems = 7, shortage = nameof(ShortageRule.ChooseReturn), satisfactionPerReturn = 3, shopIntervalDays = 3, foodCap = 7 },
+                new ShoppingRule { label = "上級", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnHighestFirst), satisfactionPerReturn = 3, shopIntervalDays = 7, foodCap = 10 },
+                new ShoppingRule { label = "達人", maxItems = 12, shortage = nameof(ShortageRule.AutoReturnLowestFirst), satisfactionPerReturn = 3, shopIntervalDays = 7, foodCap = 10 },
             };
         }
     }

@@ -11,7 +11,7 @@ namespace Negiri.Game
         public SentenceList Sentences { get; }
         public BalanceData Balance { get; }
         public StoreList Stores { get; }
-        /// <summary>段階2では店舗は1つだけ。データがなければ特売なしの仮の店舗。</summary>
+        /// <summary>段階3でも店舗は1つだけ。データがなければ特売なしの仮の店舗。</summary>
         public StoreData Store => Stores?.stores != null && Stores.stores.Length > 0 ? Stores.stores[0] : new StoreData { id = "none", name = "お店" };
         public IReadOnlyDictionary<string, ItemData> ItemById => itemById;
         /// <summary>データの不備（画面の左下に出す）。なければ空文字。</summary>
@@ -31,6 +31,7 @@ namespace Negiri.Game
             errors.AddRange(DataValidator.Validate(Items, Sentences));
             errors.AddRange(DataValidator.ValidateStores(Stores, Items));
             errors.AddRange(DataValidator.ValidateShopping(Balance.shopping, Difficulties.All.Length));
+            errors.AddRange(DataValidator.ValidateLife(Balance.life, Balance.shopping));
             foreach (var e in errors) Debug.LogError("[データ] " + e);
             Errors = string.Join("\n", errors);
         }
@@ -40,10 +41,20 @@ namespace Negiri.Game
             return JsonUtility.FromJson<T>(Resources.Load<TextAsset>(path).text);
         }
 
-        /// <summary>その商品の、難易度に合う文章（打つ商品名）を選ぶ。</summary>
+        /// <summary>商品ごとに、出した文章のID。全部出し切るまで同じ文章は出さない（出し切ったら空にしてもう一周）。</summary>
+        readonly Dictionary<string, List<string>> usedByItem = new Dictionary<string, List<string>>();
+
+        /// <summary>その商品の、難易度に合う文章（打つ商品名）を選ぶ。候補を一通り出し切るまで同じ文章は出さない。</summary>
         public SentenceData PickSentence(string itemId, int level)
         {
-            return SentenceCatalog.Pick(Sentences, itemId, level, n => Random.Range(0, n));
+            var key = itemId + "#" + level;
+            if (!usedByItem.TryGetValue(key, out var used)) usedByItem[key] = used = new List<string>();
+            var s = SentenceCatalog.Pick(Sentences, itemId, level, n => Random.Range(0, n), used);
+            if (s == null) return null;
+            // 出し切っていたら（選ばれたものがもう使用済みなら）一周したので、記録をやり直す
+            if (used.Contains(s.id)) used.Clear();
+            used.Add(s.id);
+            return s;
         }
     }
 }

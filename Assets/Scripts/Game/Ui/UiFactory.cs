@@ -18,6 +18,12 @@ namespace Negiri.Game.Ui
         public static readonly Color Good = new Color32(0x6f, 0xd0, 0x8c, 0xff);
         public static readonly Color Bad = new Color32(0xe8, 0x6a, 0x6a, 0xff);
         public static readonly Color Warn = new Color32(0xf0, 0xc0, 0x50, 0xff);
+        /// <summary>選べない項目の色。</summary>
+        public static readonly Color Dim = new Color32(0x62, 0x64, 0x82, 0xff);
+        /// <summary>ロック貯金の色（画面設計：ロック貯金は金色）。</summary>
+        public static readonly Color Gold = new Color32(0xe6, 0xb4, 0x22, 0xff);
+        /// <summary>選択中の帯など、パネルより少し明るい色。</summary>
+        public static readonly Color PanelLight = new Color32(0x3a, 0x3e, 0x6c, 0xff);
 
         static Font font;
 
@@ -148,5 +154,27 @@ namespace Negiri.Game.Ui
         }
 
         public static string Yen(int amount) => $"{amount:N0}円";
+
+        /// <summary>「■■■□□□□」のような文字のメーター。</summary>
+        public static string Meter(int value, int max, int width)
+        {
+            if (max <= 0) max = 1;
+            int filled = Mathf.Clamp(Mathf.RoundToInt((float)value / max * width), 0, width);
+            return new string('■', filled) + new string('□', width - filled);
+        }
+
+        /// <summary>上下の選択メニュー（選んでいる行に ▶ を付ける）。disabled の行は薄く出す。</summary>
+        public static string Menu(string[] items, int cursor, bool[] disabled = null)
+        {
+            var sb = new System.Text.StringBuilder();
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (i > 0) sb.Append('\n');
+                bool off = disabled != null && i < disabled.Length && disabled[i];
+                if (i == cursor) sb.Append(Paint("▶ " + items[i], off ? Quiet : Warn));
+                else sb.Append(Paint("　" + items[i], off ? Dim : Quiet));
+            }
+            return sb.ToString();
+        }
     }
 }

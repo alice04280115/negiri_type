@@ -36,26 +36,64 @@
         "label": "初級",
         "maxItems": 4,
         "shortage": "ChooseReturn",
-        "satisfactionPerReturn": 0
+        "satisfactionPerReturn": 0,
+        "shopIntervalDays": 1,
+        "foodCap": 7
       },
       {
         "label": "中級",
         "maxItems": 7,
         "shortage": "ChooseReturn",
-        "satisfactionPerReturn": 3
+        "satisfactionPerReturn": 3,
+        "shopIntervalDays": 3,
+        "foodCap": 7
       },
       {
         "label": "上級",
         "maxItems": 12,
         "shortage": "AutoReturnHighestFirst",
-        "satisfactionPerReturn": 3
+        "satisfactionPerReturn": 3,
+        "shopIntervalDays": 7,
+        "foodCap": 10
       },
       {
         "label": "達人",
         "maxItems": 12,
         "shortage": "AutoReturnLowestFirst",
-        "satisfactionPerReturn": 3
+        "satisfactionPerReturn": 3,
+        "shopIntervalDays": 7,
+        "foodCap": 10
       }
     ]
+  },
+  "life": {
+    "month": {
+      "days": 30,
+      "budget": 19000,
+      "firstWeekday": 0,
+      "month": 4,
+      "lockStep": 1000,
+      "lockStartMax": 6000,
+      "lockDailyMax": 6000,
+      "lockTotalMax": 6000,
+      "essentialsEstimate": 7000,
+      "targetName": "あこがれのバッグ",
+      "targetPrice": 12000
+    },
+    "stock": {
+      "foodStart": 3,
+      "dailyStart": 7,
+      "foodPerDay": 1,
+      "dailyPerDay": 1,
+      "dailyCap": 0,
+      "foodOutPenalty": 8,
+      "dailyOutPenalty": 4
+    },
+    "satisfaction": {
+      "start": 60,
+      "max": 100,
+      "passLine": 50,
+      "dailyDecay": 1
+    }
   }
 }

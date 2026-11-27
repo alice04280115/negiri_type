@@ -32,7 +32,7 @@
     },
     {
       "id": "bread",
-      "name": "食パン",
+      "name": "パン",
       "category": "food",
       "kind": "essential",
       "basePrice": 158,
@@ -77,7 +77,7 @@
     },
     {
       "id": "cabbage",
-      "name": "キャベツ",
+      "name": "葉物野菜",
       "category": "food",
       "kind": "essential",
       "basePrice": 198,
@@ -137,7 +137,7 @@
     },
     {
       "id": "toilet_paper",
-      "name": "トイレットペーパー",
+      "name": "紙製品",
       "category": "daily",
       "kind": "essential",
       "basePrice": 398,
@@ -152,7 +152,7 @@
     },
     {
       "id": "shampoo",
-      "name": "シャンプー",
+      "name": "ヘアケア",
       "category": "daily",
       "kind": "essential",
       "basePrice": 498,
@@ -167,7 +167,7 @@
     },
     {
       "id": "chips",
-      "name": "ポテトチップス",
+      "name": "スナック菓子",
       "category": "snack",
       "kind": "free",
       "basePrice": 148,
@@ -182,7 +182,7 @@
     },
     {
       "id": "chocolate",
-      "name": "チョコレート",
+      "name": "チョコ菓子",
       "category": "snack",
       "kind": "free",
       "basePrice": 198,

@@ -86,7 +86,7 @@ namespace Negiri.Game.Screens
             int before = 0;
             foreach (var l in checkout.Lines) before += l.Price;
             titleText.text = $"財布が{UiFactory.Yen(System.Math.Max(0, before - cash))}足りません";
-            ruleText.text = $"{rule.label}のルール：{TitleScreen.ShortageDescription(rule)}" + (rule.satisfactionPerReturn > 0 ? "　※段階2では満足度は記録のみ" : "");
+            ruleText.text = $"{rule.label}のルール：{TitleScreen.ShortageDescription(rule)}";
 
             int shown = Mathf.Min(checkout.Lines.Count, list.Capacity);
             list.SetCount(shown);
@@ -101,7 +101,7 @@ namespace Negiri.Game.Screens
             }
 
             var summary = $"返品 {returnCount}品（{UiFactory.Yen(returnedAmount)}）　お支払い {UiFactory.Yen(total)}　財布 {UiFactory.Yen(cash)}";
-            if (rule.satisfactionPerReturn > 0) summary += $"　満足度 −{returnCount * rule.satisfactionPerReturn}";
+            if (rule.satisfactionPerReturn > 0) summary += $"　満足度 －{returnCount * rule.satisfactionPerReturn}";
             summary += "\n" + (shortage > 0
                 ? UiFactory.Paint($"あと{UiFactory.Yen(shortage)}分の返品が必要です", UiFactory.Bad)
                 : UiFactory.Paint("財布で払えます", UiFactory.Good));

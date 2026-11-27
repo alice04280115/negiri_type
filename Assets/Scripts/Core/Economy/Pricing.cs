@@ -4,7 +4,7 @@ namespace Negiri.Core.Economy
 {
     /// <summary>
     /// 支払額の計算。割引はベーシスポイント（1% = 100）で扱う。
-    /// 支払額 = 通常価格 × (1 − min(タイピング割引 ＋ セール割引, 割引上限))、円未満切り捨て。
+    /// 支払額 = 通常価格 × (1 － min(タイピング割引 ＋ セール割引, 割引上限))、円未満切り捨て。
     /// </summary>
     public static class Pricing
     {

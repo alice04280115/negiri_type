@@ -146,7 +146,7 @@ namespace Negiri.Game.Screens
             int number = phase == Phase.Result ? checkout.ScannedCount : checkout.ScannedCount + 1;
             var forecast = best == worst
                 ? UiFactory.Yen(total + best)
-                : $"{UiFactory.Yen(total + best)}〜{UiFactory.Yen(total + worst)}";
+                : $"{UiFactory.Yen(total + best)}～{UiFactory.Yen(total + worst)}";
             var forecastColor = total + worst > cash ? (total + best > cash ? UiFactory.Bad : UiFactory.Warn) : UiFactory.Ink;
             statusText.text = $"{number}／{checkout.Lines.Count}品目　｜　ここまで {UiFactory.Yen(total)}　｜　支払いの見込み " + UiFactory.Paint(forecast, forecastColor);
 
