@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace Negiri.Game.Screens
 {
     /// <summary>
-    /// マイルーム（1日の拠点）。左に部屋とキャラ、右に在庫・満足度・借金・次の買い物・今日の特売・目標、下にコマンド。
+    /// マイルーム（1日の拠点）。左に部屋とキャラ、右に在庫・満足度・借金・次の買い物・今日の特売、下にコマンド。目標と貯金箱の詳しいことは家計簿で見る。
     /// </summary>
     public sealed class MyRoomScreen : ScreenBase
     {
@@ -31,7 +31,7 @@ namespace Negiri.Game.Screens
         /// <summary>今出しているコマンド。「借金を返す」は借金があるか、買い物で借りられる難易度のときだけ出す。</summary>
         readonly List<Command> commands = new List<Command>();
 
-        readonly Text stockText, shopText, saleText, goalText, menuText, noticeText;
+        readonly Text stockText, shopText, saleText, menuText, noticeText;
         int cursor;
         bool choosingDays;
         int nights;
@@ -59,8 +59,6 @@ namespace Negiri.Game.Screens
             shopText = UiFactory.MakeText(Root, "", 17, UiFactory.Ink, new Vector2(0, 1), new Vector2(476, -160), new Vector2(450, 26), TextAnchor.UpperLeft);
             saleText = UiFactory.MakeText(Root, "", 16, UiFactory.Ink, new Vector2(0, 1), new Vector2(476, -190), new Vector2(450, 96), TextAnchor.UpperLeft);
             saleText.lineSpacing = 1.1f;
-            goalText = UiFactory.MakeText(Root, "", 16, UiFactory.Ink, new Vector2(0, 1), new Vector2(476, -294), new Vector2(450, 48), TextAnchor.UpperLeft);
-            goalText.lineSpacing = 1.15f;
 
             // 下：コマンド
             UiFactory.MakeBox(Root, UiFactory.Panel, new Vector2(0, 1), new Vector2(24, -362), new Vector2(420, 136));
@@ -247,7 +245,7 @@ namespace Negiri.Game.Screens
             int sat = m.Satisfaction.Value;
             var satColor = sat < life.satisfaction.passLine ? UiFactory.Bad : UiFactory.Good;
             sb.Append("満足度　").Append(UiFactory.Paint(UiFactory.Meter(sat, m.Satisfaction.Max, 10), satColor))
-              .Append($" {sat}").Append(UiFactory.Paint($"（月末に{life.satisfaction.passLine}以上）", UiFactory.Quiet));
+              .Append($" {sat}");
             int debt = m.Debt.Total;
             if (debt > 0)
             {
@@ -274,14 +272,6 @@ namespace Negiri.Game.Screens
             }
             saleSb.Append('\n').Append(UiFactory.Paint(WeekSales(m), UiFactory.Quiet));
             saleText.text = saleSb.ToString();
-
-            var month = life.month;
-            int have = m.Wallet.Locked + m.Wallet.Cash;
-            string box = month.lockTotalMax > 0
-                ? $"貯金箱 {UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}／{UiFactory.Yen(month.lockTotalMax)}"
-                : $"貯金箱 {UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}";
-            goalText.text = $"目標：{month.targetName} {UiFactory.Yen(month.targetPrice)}\n" +
-                            $"{box}　" + UiFactory.Paint($"財布と合わせて {UiFactory.Yen(have)}", UiFactory.Quiet);
 
             var labels = new string[commands.Count];
             var disabled = new bool[commands.Count];

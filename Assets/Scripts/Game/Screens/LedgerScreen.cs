@@ -152,14 +152,19 @@ namespace Negiri.Game.Screens
                                       (m.Debt.TotalInterest > 0 ? $"・利息 {UiFactory.Yen(m.Debt.TotalInterest)}" : "") + "）", UiFactory.Quiet)
                     : "");
 
+            var month = m.Life.month;
+            string box = month.lockTotalMax > 0
+                ? $"{UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}／{UiFactory.Yen(month.lockTotalMax)}"
+                : UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold);
             lockText.text =
-                $"貯金箱　{UiFactory.Paint(UiFactory.Yen(m.Wallet.Locked), UiFactory.Gold)}\n" +
+                $"目標　{month.targetName} {UiFactory.Yen(month.targetPrice)}\n" +
+                $"貯金箱　{box}\n" + UiFactory.Paint($"財布と合わせて {UiFactory.Yen(m.Wallet.Locked + m.Wallet.Cash)}", UiFactory.Quiet) + "\n" +
                 (m.MaxLockToday > 0
                     ? $"追加する額　<b>{UiFactory.Yen(lockAmount)}</b>" + UiFactory.Paint($"（あと{UiFactory.Yen(m.MaxLockToday)}まで）", UiFactory.Quiet) + "\n"
                     : UiFactory.Paint(m.Life.month.lockTotalMax > 0 && m.Wallet.Locked >= m.Life.month.lockTotalMax ? "貯金箱はいっぱいです" : "今日はもう入れられません", UiFactory.Quiet) + "\n") +
                 (confirming
                     ? UiFactory.Paint($"{UiFactory.Yen(lockAmount)}を貯金箱に入れます。\n取り出せません。よければもう一度スペース", UiFactory.Bad)
-                    : UiFactory.Paint("←→で額を決めてスペース\n貯金箱のお金は目標商品にしか\n使えません", UiFactory.Quiet));
+                    : UiFactory.Paint("貯金箱のお金は目標商品にしか使えません", UiFactory.Quiet));
 
             Message.text = confirming
                 ? "スペース：貯金箱に入れる　Esc：やめる"
