@@ -24,6 +24,7 @@ namespace Negiri.Core.Tests
         {
             var life = new LifeBalance();
             life.month.budget = budget;
+            life.month.paydays = new PaydayData[0];
             return MonthState.Start(life, Rule(interval, foodCap, shortage), 0);
         }
 
@@ -272,6 +273,8 @@ namespace Negiri.Core.Tests
             life.month.lockStartMax = 5000;
             life.month.lockDailyMax = 1000;
             life.month.lockTotalMax = 0;
+            life.month.budget = 19000;
+            life.month.paydays = new PaydayData[0];
             var m = MonthState.Start(life, Rule(1, 7, ShortageRule.ChooseReturn), 0);
             Assert.AreEqual(5000, m.MaxStartLock);
             Assert.Throws<ArgumentException>(() => m.LockAtStart(6000));
@@ -486,6 +489,84 @@ namespace Negiri.Core.Tests
             Assert.IsTrue(errors.Exists(e => e.Contains("budget")));
             Assert.IsTrue(errors.Exists(e => e.Contains("食料の初期値")));
             Assert.IsTrue(errors.Exists(e => e.Contains("satisfaction.start")));
+        }
+
+        static MonthState PaydayMonth()
+        {
+            var life = new LifeBalance();
+            life.month.budget = 5000;
+            life.month.paydays = new[] { new PaydayData { day = 15, amount = 14000, name = "給料" } };
+            return MonthState.Start(life, Rule(1, 7, ShortageRule.ChooseReturn), 0);
+        }
+
+        [Test]
+        public void 給料は15日の朝に財布へ入る()
+        {
+            var m = PaydayMonth();
+            Assert.AreEqual(5000, m.Wallet.Cash);
+            Assert.AreEqual(15, m.NextPayday);
+            Assert.AreEqual(19000, m.Life.month.TotalBudget);
+            for (int d = 1; d < 14; d++) Assert.AreEqual(0, m.EndDay().Payday, $"{d}日目の夜");
+            Assert.AreEqual(14, m.Day);
+            Assert.AreEqual(5000, m.Wallet.Cash);
+            var r = m.EndDay();
+            Assert.AreEqual(15, m.Day);
+            Assert.AreEqual(14000, r.Payday);
+            Assert.IsTrue(m.IsPaydayToday);
+            Assert.AreEqual(19000, m.Wallet.Cash);
+            Assert.AreEqual(19000, m.Wallet.TotalIncome);
+            Assert.AreEqual(0, m.NextPayday);
+            Assert.AreEqual(2, m.IncomeLog.Count);
+            Assert.AreEqual((15, "給料", 14000), m.IncomeLog[1]);
+            Assert.IsTrue(m.IsBalanced);
+            // 次の日はもう入らない
+            Assert.AreEqual(0, m.EndDay().Payday);
+            Assert.AreEqual(19000, m.Wallet.Cash);
+        }
+
+        [Test]
+        public void 数日進めても給料は一度だけ入る()
+        {
+            var m = PaydayMonth();
+            m.Stock.AddFood(99);
+            m.Stock.AddDaily(99);
+            int paid = 0;
+            while (!m.IsOver) foreach (var n in m.AdvanceDays(4)) paid += n.Payday;
+            Assert.AreEqual(14000, paid);
+            Assert.AreEqual(19000, m.Wallet.TotalIncome);
+            Assert.IsTrue(m.IsBalanced);
+        }
+
+        [Test]
+        public void 給料日の後のセーブから戻しても二重に入らない()
+        {
+            var m = PaydayMonth();
+            for (int d = 1; d <= 15; d++) m.EndDay();
+            Assert.AreEqual(16, m.Day);
+            var r = MonthState.FromSave(m.ToSave(), m.Life, m.Rule);
+            Assert.AreEqual(19000, r.Wallet.Cash);
+            while (!r.IsOver) r.EndDay();
+            Assert.AreEqual(19000, r.Wallet.TotalIncome);
+            Assert.IsTrue(r.IsBalanced);
+        }
+
+        [Test]
+        public void 給料日の数値のチェック()
+        {
+            var bad = new LifeBalance();
+            bad.month.paydays = new[]
+            {
+                new PaydayData { day = 1, amount = 100 },
+                new PaydayData { day = 31, amount = 100 },
+                new PaydayData { day = 10, amount = 0 },
+                new PaydayData { day = 20, amount = 100 },
+                new PaydayData { day = 20, amount = 100 },
+            };
+            var errors = DataValidator.ValidateLife(bad, new ShoppingBalance());
+            Assert.IsTrue(errors.Exists(e => e.Contains("給料日 1 は")));
+            Assert.IsTrue(errors.Exists(e => e.Contains("給料日 31 は")));
+            Assert.IsTrue(errors.Exists(e => e.Contains("給料日 10 の額")));
+            Assert.IsTrue(errors.Exists(e => e.Contains("給料日 20 が重複")));
         }
     }
 }

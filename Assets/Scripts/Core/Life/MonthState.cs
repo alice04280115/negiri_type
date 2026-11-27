@@ -28,10 +28,16 @@ namespace Negiri.Core.Life
         public int SatisfactionBefore, SatisfactionAfter;
         /// <summary>この夜で月が終わったか（30日目の夜）。</summary>
         public bool MonthOver;
+        /// <summary>月末に借金に足された利息（月末の夜だけ）。</summary>
+        public int Interest;
+        /// <summary>利息を足した後の借金残高（月末の夜だけ）。</summary>
+        public int DebtAfter;
+        /// <summary>次の朝が給料日なら、財布に入った額（夜が明けたときに入る）。</summary>
+        public int Payday;
     }
 
     /// <summary>
-    /// 今月の状態（日付・財布・在庫・満足度・家計簿）と、1日の進め方。
+    /// 今月の状態（日付・財布・借金・在庫・満足度・家計簿）と、1日の進め方。
     /// 画面はこのクラスを呼ぶだけにして、計算はここに集める。セーブはこのクラスを SaveData にするだけ。
     /// </summary>
     public sealed class MonthState
@@ -48,14 +54,16 @@ namespace Negiri.Core.Life
         public int LastShopDay { get; private set; }
 
         public Wallet Wallet { get; }
+        public Debt Debt { get; }
         public Stock Stock { get; }
         public Satisfaction Satisfaction { get; }
         public Ledger Ledger { get; } = new Ledger();
         /// <summary>今日、家計簿から貯金箱に入れた額。夜が明けると0に戻る。</summary>
         public int LockedToday { get; private set; }
 
-        MonthState(LifeBalance life, ShoppingRule rule, int difficulty, int day, bool isOver, int lastShopDay, Wallet wallet, Stock stock, Satisfaction satisfaction)
+        MonthState(LifeBalance life, ShoppingRule rule, int difficulty, int day, bool isOver, int lastShopDay, Wallet wallet, Debt debt, Stock stock, Satisfaction satisfaction)
         {
+            Debt = debt ?? throw new ArgumentNullException(nameof(debt));
             Life = life ?? throw new ArgumentNullException(nameof(life));
             Rule = rule ?? throw new ArgumentNullException(nameof(rule));
             Difficulty = difficulty;
@@ -74,12 +82,77 @@ namespace Negiri.Core.Life
             var s = life.stock;
             return new MonthState(life, rule, difficulty, 1, false, 0,
                 new Wallet(life.month.budget),
+                new Debt(life.debt ?? new DebtBalance()),
                 new Stock(s.foodStart, s.dailyStart, rule.foodCap, s.dailyCap),
                 new Satisfaction(life.satisfaction.start, life.satisfaction.max));
         }
 
         public int Days => Life.month.days;
+
+        /// <summary>
+        /// お金の式がすべて成り立っているか（テストと開発中のチェック用）。
+        /// 収入合計 ＋ 借入合計 ＝ 支出合計 ＋ 返済合計 ＋ 財布 ＋ ロック貯金、
+        /// 借金残高 ＝ 初めからある借金 ＋ 借入合計 ＋ 利息合計 － 返済合計。
+        /// </summary>
+        public bool IsBalanced
+        {
+            get
+            {
+                if (!Wallet.IsBalanced) return false;
+                if (Wallet.TotalBorrowed != Debt.TotalBorrowed || Wallet.TotalRepaid != Debt.TotalRepaid) return false;
+                int initial = 0;
+                foreach (var a in Debt.Accounts) initial += a.initial;
+                return Debt.Total == initial + Debt.TotalBorrowed + Debt.TotalInterest - Debt.TotalRepaid && Debt.Total >= 0;
+            }
+        }
+
+        /// <summary>買い物で借りる借入先（この難易度で借りられなければ空）。</summary>
+        public string ShopLender => Rule.borrowFrom ?? "";
+
+        /// <summary>
+        /// 返せる額の候補（小さい順）。返済の単位（repayStep）ごとと、財布で払えるなら全額。
+        /// 借金がないか、財布が足りなければ空。
+        /// </summary>
+        public List<int> RepayChoices(string lender)
+        {
+            var list = new List<int>();
+            if (IsOver) return list;
+            int bal = Debt.BalanceOf(lender);
+            int max = Math.Min(bal, Wallet.Cash);
+            int step = Debt.RepayStep;
+            for (int a = step; a <= max && a < bal; a += step) list.Add(a);
+            if (bal > 0 && bal <= Wallet.Cash) list.Add(bal);
+            return list;
+        }
+
+        /// <summary>財布から借金を返す。返済の単位か全額でなければ例外にする。</summary>
+        public void Repay(string lender, int amount)
+        {
+            if (IsOver) throw new InvalidOperationException("月が終わっています");
+            if (!RepayChoices(lender).Contains(amount)) throw new ArgumentException($"{amount}円は返せません（{Debt.RepayStep}円単位か全額）");
+            Wallet.Repay(amount);
+            Debt.Repay(lender, amount, Day);
+        }
         public string DateLabel => Calendar.DateLabel(Day, Life.month);
+
+        /// <summary>次の給料日（今日より後）。もうなければ0。</summary>
+        public int NextPayday => IsOver ? 0 : Life.month.NextPaydayAfter(Day);
+
+        /// <summary>今日が給料日か（朝にお金が入った日）。</summary>
+        public bool IsPaydayToday => Life.month.PaydayOn(Day) > 0;
+
+        /// <summary>ここまでに入ったお金（1日目の予算と、今日までの給料）。家計簿に出す。</summary>
+        public List<(int day, string name, int amount)> IncomeLog
+        {
+            get
+            {
+                var list = new List<(int, string, int)> { (1, "今月の予算", Life.month.budget) };
+                foreach (var p in Life.month.paydays ?? Array.Empty<PaydayData>())
+                    if (p != null && p.day > 1 && p.day <= Day && p.amount > 0) list.Add((p.day, p.name, p.amount));
+                list.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+                return list;
+            }
+        }
         public int Weekday => Calendar.Weekday(Day, Life.month.firstWeekday);
 
         public int NextShopDay => Calendar.NextShopDay(Day, LastShopDay, Rule.shopIntervalDays);
@@ -218,8 +291,24 @@ namespace Negiri.Core.Life
             r.SatisfactionAfter = Satisfaction.Value;
 
             LockedToday = 0;
-            if (Day >= Days) IsOver = true;
-            else Day++;
+            if (Day >= Days)
+            {
+                // 月末：借金に利息を足す（財布は変わらない）
+                r.Interest = Debt.AddInterest(Day);
+                r.DebtAfter = Debt.Total;
+                IsOver = true;
+            }
+            else
+            {
+                Day++;
+                // 給料日：朝に財布へ入る
+                int pay = Life.month.PaydayOn(Day);
+                if (pay > 0)
+                {
+                    Wallet.Receive(pay);
+                    r.Payday = pay;
+                }
+            }
             r.MonthOver = IsOver;
             return r;
         }
@@ -271,6 +360,10 @@ namespace Negiri.Core.Life
                 totalSpent = Wallet.TotalSpent,
                 cash = Wallet.Cash,
                 locked = Wallet.Locked,
+                totalBorrowed = Wallet.TotalBorrowed,
+                totalRepaid = Wallet.TotalRepaid,
+                debts = CopyAccounts(),
+                debtLog = new List<DebtEvent>(Debt.Log).ToArray(),
                 lockedToday = LockedToday,
                 food = Stock.Food,
                 daily = Stock.Daily,
@@ -281,18 +374,28 @@ namespace Negiri.Core.Life
             };
         }
 
-        /// <summary>セーブから戻す。数値（予算や上限）は今のデータファイルのものを使う。</summary>
+        DebtAccount[] CopyAccounts()
+        {
+            var list = new List<DebtAccount>();
+            foreach (var a in Debt.Accounts)
+                list.Add(new DebtAccount { lender = a.lender, initial = a.initial, borrowed = a.borrowed, interest = a.interest, repaid = a.repaid });
+            return list.ToArray();
+        }
+
+        /// <summary>セーブから戻す。数値（予算や上限）は今のデータファイルのものを使う。version 1（借金なし）のセーブも読める。</summary>
         public static MonthState FromSave(Save.SaveData save, LifeBalance life, ShoppingRule rule)
         {
             if (save == null) throw new ArgumentNullException(nameof(save));
             if (save.version < 1 || save.version > Save.SaveData.CurrentVersion) throw new ArgumentException($"読めないセーブです（version {save.version}）");
             if (save.day < 1 || save.day > life.month.days) throw new ArgumentException($"セーブの日付がおかしいです（{save.day}日目）");
             var s = new MonthState(life, rule, save.difficulty, save.day, save.isOver, save.lastShopDay,
-                Wallet.Restore(save.totalIncome, save.totalSpent, save.cash, save.locked),
+                Wallet.Restore(save.totalIncome, save.totalSpent, save.cash, save.locked, save.totalBorrowed, save.totalRepaid),
+                Debt.Restore(life.debt ?? new DebtBalance(), save.debts, save.debtLog),
                 new Stock(save.food, save.daily, rule.foodCap, life.stock.dailyCap, save.foodOutDays, save.dailyOutDays),
                 new Satisfaction(save.satisfaction, life.satisfaction.max));
             foreach (var e in save.ledger ?? Array.Empty<LedgerEntry>()) s.Ledger.Add(e);
             s.LockedToday = Math.Max(0, save.lockedToday);
+            if (!s.IsBalanced) throw new ArgumentException("セーブのお金の値が合いません（借入合計・返済合計と借金の記録が一致しません）");
             return s;
         }
     }

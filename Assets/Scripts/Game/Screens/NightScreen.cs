@@ -57,9 +57,20 @@ namespace Negiri.Game.Screens
                     sb.Append($"{Calendar.DateLabel(n.Day, month)}　食料 {n.FoodAfter}　日用品 {n.DailyAfter}　満足度 {n.SatisfactionAfter}");
                     if (n.FoodOut) sb.Append(UiFactory.Paint("　食料切れ", UiFactory.Bad));
                     if (n.DailyOut) sb.Append(UiFactory.Paint("　日用品切れ", UiFactory.Bad));
+                    if (n.Payday > 0) sb.Append(UiFactory.Paint($"　翌朝 給料 ＋{UiFactory.Yen(n.Payday)}", UiFactory.Good));
                     sb.Append('\n');
                 }
                 sb.Append($"\n満足度　{first.SatisfactionBefore} → <b>{last.SatisfactionAfter}</b>");
+            }
+
+            if (nights.Count == 1 && last.Payday > 0)
+            {
+                sb.Append("\n\n").Append(UiFactory.Paint($"明日は給料日：財布に {UiFactory.Yen(last.Payday)} 入りました", UiFactory.Good));
+            }
+
+            if (last.Interest > 0 && Flow.Month != null)
+            {
+                sb.Append("\n\n").Append(UiFactory.Paint($"月末なので借金に利息 {UiFactory.Yen(last.Interest)} がつきました（借金 {UiFactory.Yen(last.DebtAfter)}）", UiFactory.Bad));
             }
 
             var m = Flow.Month;

@@ -44,13 +44,19 @@ namespace Negiri.Game
         /// <summary>商品ごとに、出した文章のID。全部出し切るまで同じ文章は出さない（出し切ったら空にしてもう一周）。</summary>
         readonly Dictionary<string, List<string>> usedByItem = new Dictionary<string, List<string>>();
 
+        /// <summary>商品ごとに、前に出した商品名の食材名（同じ食材名が続かないようにする）。</summary>
+        readonly Dictionary<string, string> lastFoodByItem = new Dictionary<string, string>();
+
         /// <summary>その商品の、難易度に合う文章（打つ商品名）を選ぶ。候補を一通り出し切るまで同じ文章は出さない。</summary>
         public SentenceData PickSentence(string itemId, int level)
         {
             var key = itemId + "#" + level;
             if (!usedByItem.TryGetValue(key, out var used)) usedByItem[key] = used = new List<string>();
-            var s = SentenceCatalog.Pick(Sentences, itemId, level, n => Random.Range(0, n), used);
+            var foods = ItemById.TryGetValue(itemId, out var item) ? item.foods : null;
+            lastFoodByItem.TryGetValue(itemId, out var lastFood);
+            var s = SentenceCatalog.Pick(Sentences, itemId, level, n => Random.Range(0, n), used, foods, lastFood);
             if (s == null) return null;
+            lastFoodByItem[itemId] = SentenceCatalog.FoodKey(s.text, foods);
             // 出し切っていたら（選ばれたものがもう使用済みなら）一周したので、記録をやり直す
             if (used.Contains(s.id)) used.Clear();
             used.Add(s.id);

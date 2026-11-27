@@ -1,4 +1,5 @@
 using System;
+using Negiri.Core.Economy;
 using Negiri.Core.Life;
 
 namespace Negiri.Core.Save
@@ -10,7 +11,8 @@ namespace Negiri.Core.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 1;
+        /// <summary>1：段階3-1。2：借金（借入合計・返済合計・借入先ごとの借金・借金の記録）を足した。</summary>
+        public const int CurrentVersion = 2;
 
         public int version = CurrentVersion;
         /// <summary>0：初級 … 3：達人。</summary>
@@ -25,6 +27,9 @@ namespace Negiri.Core.Save
         public int locked;
         /// <summary>今日、家計簿から貯金箱に入れた額（1日の上限の判定用）。古いセーブにはないので0。</summary>
         public int lockedToday;
+        /// <summary>借りて財布に入れた合計と、財布から返した合計（version 2 から。古いセーブにはないので0）。</summary>
+        public int totalBorrowed;
+        public int totalRepaid;
 
         public int food;
         public int daily;
@@ -33,5 +38,9 @@ namespace Negiri.Core.Save
         public int satisfaction;
 
         public LedgerEntry[] ledger = Array.Empty<LedgerEntry>();
+        /// <summary>借入先ごとの借金（version 2 から）。</summary>
+        public DebtAccount[] debts = Array.Empty<DebtAccount>();
+        /// <summary>借りた・返した・利息の記録（version 2 から）。</summary>
+        public DebtEvent[] debtLog = Array.Empty<DebtEvent>();
     }
 }

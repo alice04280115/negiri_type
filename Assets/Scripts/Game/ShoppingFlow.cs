@@ -13,7 +13,7 @@ namespace Negiri.Game
 {
     /// <summary>
     /// ゲームの進行役（段階3：30日間）。
-    /// タイトル → 月初 → マイルーム ⇄（店内 → レジ →（足りなければ）返品 → レシート）→ 夜 → … → 月末のまとめ。
+    /// タイトル → 月初 → マイルーム ⇄（店内 → レジ →（足りなければ）借金か返品 → レシート）→ 夜 → … → 月末のまとめ。
     /// 今月の状態は Core の MonthState が持ち、ここは画面の切り替えとセーブだけを受け持つ。
     /// 画面はコードで組み立てるので、空のシーンで再生するだけで動く。
     /// </summary>
@@ -204,19 +204,37 @@ namespace Negiri.Game
             Switch(register);
         }
 
-        /// <summary>全品を打ち終えたら判定する。足りれば払い、足りなければ返品へ。</summary>
+        /// <summary>全品を打ち終えたら判定する。足りれば払い、足りなければ借金か返品を選ぶ画面へ。</summary>
         public void FinishScanning()
         {
             if (Checkout.Shortage(Wallet.Cash) > 0) Switch(returns);
             else Pay();
         }
 
-        public void Pay()
+        public void Pay() => Settle(Checkout.Pay(Wallet));
+
+        /// <summary>不足分を借りて払う（上級・達人）。限度額に収まらない分は先に自動で返品される。</summary>
+        public void PayWithLoan() => Settle(Checkout.PayWithLoan(Wallet, Month.Debt, Month.Day));
+
+        void Settle(Receipt paid)
         {
-            Receipt = Checkout.Pay(Wallet);
+            Receipt = paid;
             LastChange = Month.ApplyShopping(Receipt);
-            if (!Wallet.IsBalanced) Debug.LogError("[お金] 収入合計 ＝ 支出合計 ＋ 財布 ＋ ロック貯金 が成り立っていません");
+            CheckMoney();
             Switch(receipt);
+        }
+
+        void CheckMoney()
+        {
+            if (!Month.IsBalanced) Debug.LogError("[お金] 収入合計 ＋ 借入合計 ＝ 支出合計 ＋ 返済合計 ＋ 財布 ＋ ロック貯金 が成り立っていません");
+        }
+
+        /// <summary>マイルームから借金を返す。</summary>
+        public void Repay(string lender, int amount)
+        {
+            Month.Repay(lender, amount);
+            CheckMoney();
+            Save();
         }
 
         /// <summary>夜を迎えて次の日へ（家で過ごす・買い物の後）。</summary>

@@ -4,8 +4,8 @@ namespace Negiri.Core.Economy
 {
     /// <summary>
     /// 財布とロック貯金。お金はかならずこのクラスを通して動かし、
-    /// 「収入合計 ＝ 支出合計 ＋ 財布 ＋ ロック貯金」が常に成り立つようにする。
-    /// 節約額は統計専用なので、ここには入れない。
+    /// 「収入合計 ＋ 借入合計 ＝ 支出合計 ＋ 返済合計 ＋ 財布 ＋ ロック貯金」が常に成り立つようにする。
+    /// 借金の残高（利息を含む）は Debt が持つ。節約額は統計専用なので、ここには入れない。
     /// </summary>
     public sealed class Wallet
     {
@@ -13,6 +13,10 @@ namespace Negiri.Core.Economy
         public int Locked { get; private set; }
         public int TotalIncome { get; private set; }
         public int TotalSpent { get; private set; }
+        /// <summary>借りて財布に入れたお金の合計。</summary>
+        public int TotalBorrowed { get; private set; }
+        /// <summary>財布から返済したお金の合計。</summary>
+        public int TotalRepaid { get; private set; }
 
         public Wallet(int initialCash = 0)
         {
@@ -21,16 +25,16 @@ namespace Negiri.Core.Economy
         }
 
         /// <summary>セーブから戻す。お金の式が成り立たない値なら例外にする。</summary>
-        public static Wallet Restore(int totalIncome, int totalSpent, int cash, int locked)
+        public static Wallet Restore(int totalIncome, int totalSpent, int cash, int locked, int totalBorrowed = 0, int totalRepaid = 0)
         {
-            if (totalIncome < 0 || totalSpent < 0 || cash < 0 || locked < 0) throw new ArgumentException("お金の値は0以上にしてください");
-            var w = new Wallet { TotalIncome = totalIncome, TotalSpent = totalSpent, Cash = cash, Locked = locked };
-            if (!w.IsBalanced) throw new ArgumentException("セーブのお金の値が合いません（収入合計 ＝ 支出合計 ＋ 財布 ＋ ロック貯金）");
+            if (totalIncome < 0 || totalSpent < 0 || cash < 0 || locked < 0 || totalBorrowed < 0 || totalRepaid < 0) throw new ArgumentException("お金の値は0以上にしてください");
+            var w = new Wallet { TotalIncome = totalIncome, TotalSpent = totalSpent, Cash = cash, Locked = locked, TotalBorrowed = totalBorrowed, TotalRepaid = totalRepaid };
+            if (!w.IsBalanced) throw new ArgumentException("セーブのお金の値が合いません（収入合計 ＋ 借入合計 ＝ 支出合計 ＋ 返済合計 ＋ 財布 ＋ ロック貯金）");
             return w;
         }
 
         /// <summary>お金の式が成り立っているか（テストと開発中のチェック用）。</summary>
-        public bool IsBalanced => TotalIncome == TotalSpent + Cash + Locked;
+        public bool IsBalanced => TotalIncome + TotalBorrowed == TotalSpent + TotalRepaid + Cash + Locked;
 
         public bool CanPay(int amount) => amount >= 0 && amount <= Cash;
 
@@ -42,13 +46,30 @@ namespace Negiri.Core.Economy
             Cash += amount;
         }
 
-        /// <summary>支払い。財布が足りなければ例外にする（借金は段階3以降）。</summary>
+        /// <summary>支払い。財布が足りなければ例外にする（借りるときは先に Borrow で財布に入れる）。</summary>
         public void Pay(int amount)
         {
             if (amount < 0) throw new ArgumentException("支払いは0以上にしてください");
             if (amount > Cash) throw new InvalidOperationException($"財布が{amount - Cash}円足りません");
             Cash -= amount;
             TotalSpent += amount;
+        }
+
+        /// <summary>借りたお金を財布に入れる（Debt.Borrow と一緒に呼ぶ）。</summary>
+        public void Borrow(int amount)
+        {
+            if (amount < 0) throw new ArgumentException("借りる額は0以上にしてください");
+            TotalBorrowed += amount;
+            Cash += amount;
+        }
+
+        /// <summary>財布から返済する（Debt.Repay と一緒に呼ぶ）。</summary>
+        public void Repay(int amount)
+        {
+            if (amount < 0) throw new ArgumentException("返す額は0以上にしてください");
+            if (amount > Cash) throw new InvalidOperationException($"財布が{amount - Cash}円足りません");
+            Cash -= amount;
+            TotalRepaid += amount;
         }
 
         /// <summary>財布からロック貯金へ移す。</summary>

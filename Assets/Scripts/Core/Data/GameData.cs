@@ -22,6 +22,8 @@ namespace Negiri.Core.Data
         public int typingLevel = 1;
         /// <summary>使ったときの効果。段階2では店内に表示するだけで、在庫には反映しない。</summary>
         public ItemEffect[] effects = Array.Empty<ItemEffect>();
+        /// <summary>商品名に入る食材名（キャベツ・レタスなど）。同じ食材名の商品名が続けて出ないようにするのに使う。</summary>
+        public string[] foods = Array.Empty<string>();
     }
 
     [Serializable]
@@ -241,7 +243,7 @@ namespace Negiri.Core.Data
             return errors;
         }
 
-        /// <summary>1か月・在庫・満足度の数値のチェック。</summary>
+        /// <summary>1か月・在庫・満足度・借金の数値のチェック。</summary>
         public static List<string> ValidateLife(LifeBalance life, ShoppingBalance shopping)
         {
             var errors = new List<string>();
@@ -252,6 +254,15 @@ namespace Negiri.Core.Data
             if (m == null || st == null || sat == null) { errors.Add("life.month / life.stock / life.satisfaction をすべて書いてください"); return errors; }
             if (m.days <= 0) errors.Add("life.month.days は1以上にしてください");
             if (m.budget <= 0) errors.Add("life.month.budget は1以上にしてください");
+            var paydayDays = new HashSet<int>();
+            foreach (var p in m.paydays ?? Array.Empty<PaydayData>())
+            {
+                if (p == null) { errors.Add("life.month.paydays に空の項目があります"); continue; }
+                if (p.day < 2 || p.day > m.days) errors.Add($"給料日 {p.day} は2～{m.days}日にしてください");
+                if (p.amount <= 0) errors.Add($"給料日 {p.day} の額は1以上にしてください");
+                if (string.IsNullOrEmpty(p.name)) errors.Add($"給料日 {p.day} の name を書いてください");
+                if (!paydayDays.Add(p.day)) errors.Add($"給料日 {p.day} が重複しています");
+            }
             if (m.firstWeekday < 0 || m.firstWeekday > 6) errors.Add("life.month.firstWeekday は0（月）～6（日）にしてください");
             if (m.month < 1 || m.month > 12) errors.Add("life.month.month は1～12にしてください");
             if (m.lockStep <= 0) errors.Add("life.month.lockStep は1以上にしてください");
@@ -265,9 +276,25 @@ namespace Negiri.Core.Data
             if (sat.start < 0 || sat.start > sat.max) errors.Add("life.satisfaction.start は0～max にしてください");
             if (sat.passLine < 0 || sat.passLine > sat.max) errors.Add("life.satisfaction.passLine は0～max にしてください");
             if (sat.dailyDecay < 0) errors.Add("life.satisfaction.dailyDecay は0以上にしてください");
+            var debt = life.debt;
+            if (debt == null) errors.Add("life.debt の設定がありません");
+            else
+            {
+                if (debt.repayStep <= 0) errors.Add("life.debt.repayStep は1以上にしてください");
+                var ids = new HashSet<string>();
+                foreach (var l in debt.lenders ?? Array.Empty<Negiri.Core.Economy.LenderData>())
+                {
+                    if (l == null || string.IsNullOrEmpty(l.id)) { errors.Add("life.debt.lenders に id のない借入先があります"); continue; }
+                    if (!ids.Add(l.id)) errors.Add($"借入先の id が重複しています: {l.id}");
+                    if (string.IsNullOrEmpty(l.name)) errors.Add($"借入先の name がありません: {l.id}");
+                    if (l.limit <= 0) errors.Add($"借入先の limit は1以上にしてください: {l.id}");
+                    if (l.interestBp < 0) errors.Add($"借入先の interestBp は0以上にしてください: {l.id}");
+                }
+            }
             foreach (var d in shopping?.difficulties ?? Array.Empty<ShoppingRule>())
             {
                 if (d.foodCap > 0 && st.foodStart > d.foodCap) errors.Add($"食料の初期値が上限を超えています: {d.label}");
+                if (d.CanBorrow && debt?.Find(d.borrowFrom) == null) errors.Add($"borrowFrom の借入先がありません: {d.label} → {d.borrowFrom}");
             }
             return errors;
         }
@@ -288,6 +315,27 @@ namespace Negiri.Core.Data
         /// いちばん最近出したもの以外から選ぶ（候補が1つしかなければそれを出す）。
         /// </summary>
         public static SentenceData Pick(SentenceList sentences, string itemId, int level, Func<int, int> pick, IList<string> recent)
+            => Pick(sentences, itemId, level, pick, recent, null, null);
+
+        /// <summary>
+        /// 商品名の食材名。foods のうち商品名に入っているいちばん短い語（「春キャベツ」も「キャベツ」として扱う）。
+        /// どれも入っていなければ商品名そのもの。
+        /// </summary>
+        public static string FoodKey(string text, string[] foods)
+        {
+            string best = null;
+            foreach (var f in foods ?? Array.Empty<string>())
+            {
+                if (string.IsNullOrEmpty(f) || text == null || !text.Contains(f)) continue;
+                if (best == null || f.Length < best.Length) best = f;
+            }
+            return best ?? text ?? "";
+        }
+
+        /// <summary>
+        /// さらに、前に出した商品名と同じ食材名（lastFood）のものを避ける（ほかに候補がなければ避けない）。産地などが同じなのはよい。
+        /// </summary>
+        public static SentenceData Pick(SentenceList sentences, string itemId, int level, Func<int, int> pick, IList<string> recent, string[] foods, string lastFood)
         {
             var candidates = new List<SentenceData>();
             int bestDistance = int.MaxValue;
@@ -306,6 +354,7 @@ namespace Negiri.Core.Data
                 if (distance == bestDistance && s.level == bestLevel) candidates.Add(s);
             }
             if (candidates.Count == 0) return null;
+            var all = candidates;
             if (recent != null && recent.Count > 0 && candidates.Count > 1)
             {
                 var fresh = candidates.FindAll(c => !recent.Contains(c.id));
@@ -319,6 +368,13 @@ namespace Negiri.Core.Data
                     fresh = candidates.FindAll(c => c.id != last);
                 }
                 candidates = fresh;
+            }
+            if (!string.IsNullOrEmpty(lastFood) && all.Count > 1)
+            {
+                // まだ出していないものの中に別の食材名がなければ、出したことのあるものからでも別の食材名を選ぶ
+                var other = candidates.FindAll(c => FoodKey(c.text, foods) != lastFood);
+                if (other.Count == 0) other = all.FindAll(c => FoodKey(c.text, foods) != lastFood);
+                if (other.Count > 0) candidates = other;
             }
             int index = pick(candidates.Count);
             if (index < 0 || index >= candidates.Count) index = 0;
