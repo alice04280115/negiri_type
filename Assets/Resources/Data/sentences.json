@@ -2147,8 +2147,8 @@
       "itemIds": [
         "chips"
       ],
-      "text": "うすしお",
-      "reading": "うすしお",
+      "text": "うすしおポテチ",
+      "reading": "うすしおぽてち",
       "level": 1
     },
     {
@@ -2156,8 +2156,8 @@
       "itemIds": [
         "chips"
       ],
-      "text": "のり塩",
-      "reading": "のりしお",
+      "text": "のり塩ポテチ",
+      "reading": "のりしおぽてち",
       "level": 1
     },
     {
@@ -2165,8 +2165,8 @@
       "itemIds": [
         "chips"
       ],
-      "text": "コンソメ",
-      "reading": "こんそめ",
+      "text": "コンソメポテチ",
+      "reading": "こんそめぽてち",
       "level": 1
     },
     {
@@ -2219,9 +2219,9 @@
       "itemIds": [
         "chips"
       ],
-      "text": "九州しょうゆ味",
-      "reading": "きゅうしゅうしょうゆあじ",
-      "level": 2
+      "text": "九州しょうゆ味ポテチ",
+      "reading": "きゅうしゅうしょうゆあじぽてち",
+      "level": 3
     },
     {
       "id": "s_chips_04",
@@ -12677,8 +12677,8 @@
       "itemIds": [
         "chips"
       ],
-      "text": "ポテトスティック",
-      "reading": "ぽてとすてぃっく",
+      "text": "サラダせん",
+      "reading": "さらだせん",
       "level": 1
     },
     {
@@ -12722,8 +12722,8 @@
       "itemIds": [
         "chips"
       ],
-      "text": "サラダせん",
-      "reading": "さらだせん",
+      "text": "ポテトスティック",
+      "reading": "ぽてとすてぃっく",
       "level": 1
     },
     {
@@ -13037,12 +13037,21 @@
       "itemIds": [
         "chips"
       ],
+      "text": "えびせん塩味",
+      "reading": "えびせんしおあじ",
+      "level": 2
+    },
+    {
+      "id": "s_chips_g047",
+      "itemIds": [
+        "chips"
+      ],
       "text": "期間限定ポテトチップスしょうゆ味",
       "reading": "きかんげんていぽてとちっぷすしょうゆあじ",
       "level": 3
     },
     {
-      "id": "s_chips_g047",
+      "id": "s_chips_g048",
       "itemIds": [
         "chips"
       ],
@@ -13051,7 +13060,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g048",
+      "id": "s_chips_g049",
       "itemIds": [
         "chips"
       ],
@@ -13060,7 +13069,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g049",
+      "id": "s_chips_g050",
       "itemIds": [
         "chips"
       ],
@@ -13069,7 +13078,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g050",
+      "id": "s_chips_g051",
       "itemIds": [
         "chips"
       ],
@@ -13078,7 +13087,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g051",
+      "id": "s_chips_g052",
       "itemIds": [
         "chips"
       ],
@@ -13087,7 +13096,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g052",
+      "id": "s_chips_g053",
       "itemIds": [
         "chips"
       ],
@@ -13096,7 +13105,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g053",
+      "id": "s_chips_g054",
       "itemIds": [
         "chips"
       ],
@@ -13105,7 +13114,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g054",
+      "id": "s_chips_g055",
       "itemIds": [
         "chips"
       ],
@@ -13114,7 +13123,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g055",
+      "id": "s_chips_g056",
       "itemIds": [
         "chips"
       ],
@@ -13123,7 +13132,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g056",
+      "id": "s_chips_g057",
       "itemIds": [
         "chips"
       ],
@@ -13132,7 +13141,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g057",
+      "id": "s_chips_g058",
       "itemIds": [
         "chips"
       ],
@@ -13141,7 +13150,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g058",
+      "id": "s_chips_g059",
       "itemIds": [
         "chips"
       ],
@@ -13150,7 +13159,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g059",
+      "id": "s_chips_g060",
       "itemIds": [
         "chips"
       ],
@@ -13159,7 +13168,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g060",
+      "id": "s_chips_g061",
       "itemIds": [
         "chips"
       ],
@@ -13168,7 +13177,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g061",
+      "id": "s_chips_g062",
       "itemIds": [
         "chips"
       ],
@@ -13177,7 +13186,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g062",
+      "id": "s_chips_g063",
       "itemIds": [
         "chips"
       ],
@@ -13186,7 +13195,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g063",
+      "id": "s_chips_g064",
       "itemIds": [
         "chips"
       ],
@@ -13195,7 +13204,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g064",
+      "id": "s_chips_g065",
       "itemIds": [
         "chips"
       ],
@@ -13204,7 +13213,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g065",
+      "id": "s_chips_g066",
       "itemIds": [
         "chips"
       ],
@@ -13213,7 +13222,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g066",
+      "id": "s_chips_g067",
       "itemIds": [
         "chips"
       ],
@@ -13222,7 +13231,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g067",
+      "id": "s_chips_g068",
       "itemIds": [
         "chips"
       ],
@@ -13231,7 +13240,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g068",
+      "id": "s_chips_g069",
       "itemIds": [
         "chips"
       ],
@@ -13240,7 +13249,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g069",
+      "id": "s_chips_g070",
       "itemIds": [
         "chips"
       ],
@@ -13249,7 +13258,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g070",
+      "id": "s_chips_g071",
       "itemIds": [
         "chips"
       ],
@@ -13258,7 +13267,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g071",
+      "id": "s_chips_g072",
       "itemIds": [
         "chips"
       ],
@@ -13267,7 +13276,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g072",
+      "id": "s_chips_g073",
       "itemIds": [
         "chips"
       ],
@@ -13276,7 +13285,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g073",
+      "id": "s_chips_g074",
       "itemIds": [
         "chips"
       ],
@@ -13285,7 +13294,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g074",
+      "id": "s_chips_g075",
       "itemIds": [
         "chips"
       ],
@@ -13294,7 +13303,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g075",
+      "id": "s_chips_g076",
       "itemIds": [
         "chips"
       ],
@@ -13303,7 +13312,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g076",
+      "id": "s_chips_g077",
       "itemIds": [
         "chips"
       ],
@@ -13312,7 +13321,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g077",
+      "id": "s_chips_g078",
       "itemIds": [
         "chips"
       ],
@@ -13321,7 +13330,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g078",
+      "id": "s_chips_g079",
       "itemIds": [
         "chips"
       ],
@@ -13330,7 +13339,7 @@
       "level": 3
     },
     {
-      "id": "s_chips_g079",
+      "id": "s_chips_g080",
       "itemIds": [
         "chips"
       ],
@@ -13339,21 +13348,12 @@
       "level": 3
     },
     {
-      "id": "s_chips_g080",
+      "id": "s_chips_g081",
       "itemIds": [
         "chips"
       ],
       "text": "銚子ぬれせんべい",
       "reading": "ちょうしぬれせんべい",
-      "level": 3
-    },
-    {
-      "id": "s_chips_g081",
-      "itemIds": [
-        "chips"
-      ],
-      "text": "三河厚焼きえびせん",
-      "reading": "みかわあつやきえびせん",
       "level": 3
     },
     {
