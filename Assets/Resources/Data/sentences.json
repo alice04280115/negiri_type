@@ -199,6 +199,15 @@
       "level": 4
     },
     {
+      "id": "s_egg_01",
+      "itemIds": [
+        "egg"
+      ],
+      "text": "たまご",
+      "reading": "たまご",
+      "level": 1
+    },
+    {
       "id": "s_egg_02",
       "itemIds": [
         "egg"
